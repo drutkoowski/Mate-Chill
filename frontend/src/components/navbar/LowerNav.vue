@@ -1,12 +1,70 @@
 <template>
   <div class="lower-nav__wrapper">
     <ul>
-      <ExpandableCard :text="'Yerba Mate'" />
-      <ExpandableCard :text="'Bombille'" />
-      <ExpandableCard :text="'Zestawy'" />
-      <ExpandableCard :text="'Akcesoria'" />
-      <ExpandableCard :text="'Kawy'" />
-      <ExpandableCard :text="'Herbaty'" />
+      <ExpandableCard
+        :text="'Yerba Mate'"
+        :cols="3"
+        :items="{
+          countries: ['Urugwaj', 'Argentyna', 'Brazylia', 'Peru'],
+          type: ['Klasyczne', 'Pobudzające', 'Smakowe', 'Ziołowe'],
+          brand: ['Producent1', 'Producent2', 'Producent3', 'Producent4'],
+        }"
+      />
+      <ExpandableCard
+        :text="'Bombille'"
+        :cols="1"
+        :items="[
+          { title: 'Paragwaj' },
+          { title: 'Urugwaj' },
+          { title: 'Argentyna' },
+          { title: 'Brazylia' },
+          { title: 'Peru' },
+        ]"
+      />
+      <ExpandableCard
+        :text="'Naczynka'"
+        :cols="1"
+        :items="[
+          { title: 'Paragwaj' },
+          { title: 'Urugwaj' },
+          { title: 'Argentyna' },
+          { title: 'Brazylia' },
+          { title: 'Peru' },
+        ]"
+      />
+      <ExpandableCard
+        :text="'Zestawy'"
+        :cols="1"
+        :items="[
+          { title: 'Paragwaj' },
+          { title: 'Urugwaj' },
+          { title: 'Argentyna' },
+          { title: 'Brazylia' },
+          { title: 'Peru' },
+        ]"
+      />
+      <ExpandableCard
+        :text="'Kawy'"
+        :cols="1"
+        :items="[
+          { title: 'Paragwaj' },
+          { title: 'Urugwaj' },
+          { title: 'Argentyna' },
+          { title: 'Brazylia' },
+          { title: 'Peru' },
+        ]"
+      />
+      <ExpandableCard
+        :text="'Herbaty'"
+        :cols="1"
+        :items="[
+          { title: 'Paragwaj' },
+          { title: 'Urugwaj' },
+          { title: 'Argentyna' },
+          { title: 'Brazylia' },
+          { title: 'Peru' },
+        ]"
+      />
     </ul>
   </div>
 </template>
@@ -22,12 +80,6 @@ export default {
   },
   components: {
     ExpandableCard,
-  },
-  methods: {
-    expandCard(ev) {
-      console.log(ev.target);
-      this.isExpanded = !this.isExpanded;
-    },
   },
 };
 </script>

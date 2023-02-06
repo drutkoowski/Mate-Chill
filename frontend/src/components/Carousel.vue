@@ -1,5 +1,11 @@
 <template>
-  <v-carousel height="400" show-arrows hide-delimiter-background cycle>
+  <v-carousel
+    height="600"
+    show-arrows
+    hide-delimiter-background
+    cycle
+    style="margin-top: 5rem"
+  >
     <template v-slot:prev="{ props }">
       <svg
         @click="props.onClick"
@@ -33,11 +39,11 @@
       </svg>
     </template>
     <v-carousel-item v-for="(slide, i) in slides" :key="i">
-      <v-sheet :color="colors[i]" height="100%">
-        <div class="d-flex fill-height justify-center align-center">
-          <div class="text-h2" style="color: black">{{ slide }} Slide</div>
-        </div>
-      </v-sheet>
+      <!--      <div-->
+      <!--        v-bind:style="{ backgroundImage: 'url(' + slide + ')' }"-->
+      <!--        class="slider__image"-->
+      <!--      ></div>-->
+      <img :src="slide" alt="Photo" class="slider__image" />
     </v-carousel-item>
   </v-carousel>
 </template>
@@ -47,14 +53,13 @@ export default {
   name: "Carousel",
   data() {
     return {
-      colors: [
-        "indigo",
-        "warning",
-        "pink darken-2",
-        "red lighten-1",
-        "deep-purple accent-4",
+      slides: [
+        "/slider-image1.png",
+        "/slider-image2.png",
+        "/slider-image3.png",
+        "/slider-image4.png",
+        "/slider-image5.png",
       ],
-      slides: ["First", "Second", "Third", "Fourth", "Fifth"],
     };
   },
 };
@@ -67,5 +72,15 @@ svg {
   &:hover {
     transform: scale(1.2);
   }
+}
+.slider__image {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  -webkit-background-size: 100%;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 </style>
