@@ -1,23 +1,18 @@
 <template>
   <div class="lower-nav__wrapper">
     <ul>
-      <li @mouseenter="expandCard" @mouseleave="expandCard">
-        Yerba Mate
-        <ExpandableCard :isDisplayed="isExpanded" :elements="['123', '234']" />
-      </li>
-      <li>Naczynia</li>
-      <li>Bombille</li>
-      <li>Zestawy</li>
-      <li>Akcesoria</li>
-      <li>Kawy</li>
-      <li>Herbaty</li>
+      <ExpandableCard :text="'Yerba Mate'" />
+      <ExpandableCard :text="'Bombille'" />
+      <ExpandableCard :text="'Zestawy'" />
+      <ExpandableCard :text="'Akcesoria'" />
+      <ExpandableCard :text="'Kawy'" />
+      <ExpandableCard :text="'Herbaty'" />
     </ul>
   </div>
 </template>
 
 <script>
 import ExpandableCard from "./ExpandableCard.vue";
-
 export default {
   name: "LowerNav.vue",
   data() {
@@ -48,13 +43,5 @@ ul {
   justify-content: space-between;
   list-style: none;
   color: var(--primary-white);
-  li {
-    transition: all 0.3s ease-in;
-    cursor: pointer;
-    &:hover {
-      transform: scale(1.03);
-      color: var(--primary-green);
-    }
-  }
 }
 </style>
