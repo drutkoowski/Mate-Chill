@@ -1,10 +1,15 @@
-/* color palette from <https://github.com/vuejs/theme> */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap');
+
 :root {
-
-
    --color-background: #181818;
+
    --primary-green: #04b60e;
+
+   --primary-white: rgba(255,255,255, 0.9);
+   --white: rgba(255,255,255);
+
 }
+
 
 
 *,
@@ -14,6 +19,7 @@
   margin: 0;
   position: relative;
   font-weight: normal;
+  font-family: 'Rubik', sans-serif;
 }
 
 body {
@@ -27,4 +33,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   padding: 2rem 2rem;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+
+}
+
+body::-webkit-scrollbar {
+    /* WebKit */
+    width: 0;
+    height: 0;
 }

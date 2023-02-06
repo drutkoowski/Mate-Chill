@@ -1,4 +1,6 @@
-<template>essasasasa</template>
+<template>
+  <h3>HELLO</h3>
+</template>
 
 <script>
 export default {
@@ -6,4 +8,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped lang="scss">
+h3 {
+  margin-top: 50rem;
+}
+</style>
