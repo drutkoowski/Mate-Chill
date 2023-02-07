@@ -57,7 +57,7 @@ export default {
         "/slider-image1.png",
         "/slider-image2.png",
         "/slider-image3.png",
-        "/slider-image4.png",
+        // "/slider-image4.png",
         "/slider-image5.png",
       ],
     };

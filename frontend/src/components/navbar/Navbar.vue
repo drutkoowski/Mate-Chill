@@ -3,7 +3,6 @@
     <ul>
       <li><img src="/logo.svg" alt="Site logo" class="logo" /></li>
       <li>Mate <span class="primary-green">&</span> Chill</li>
-      <li></li>
       <li>Zaloguj</li>
       <li>Zarejestruj</li>
       <li>Produkty</li>
@@ -27,7 +26,7 @@ export default {
 
 <style scoped lang="scss">
 .logo {
-  height: 100%;
+  height: 5rem;
 }
 
 .cart-logo {
@@ -35,15 +34,12 @@ export default {
 }
 ul {
   list-style: none;
-  display: table;
-
-  border-collapse: separate;
-  border-spacing: 10px;
-  -webkit-border-horizontal-spacing: 30px;
+  display: flex;
+  align-items: center;
+  column-gap: 30px;
+  height: 5rem;
   li {
-    display: table-cell;
-    vertical-align: middle;
-    height: 5rem;
+    align-self: center;
     white-space: nowrap;
     font-size: 1.5rem;
     transition: all 0.3s ease-in;
@@ -52,24 +48,27 @@ ul {
     font-size: 2rem;
     color: var(--primary-white);
   }
-  li:nth-of-type(3) {
-    width: 100%;
-  }
 }
 
-ul li:not(:nth-of-type(3)) {
-  cursor: pointer;
+ul li:nth-of-type(3) {
+  color: var(--primary-white);
+  margin-left: auto;
 }
 
 ul li:nth-of-type(4) {
   color: var(--primary-white);
 }
-
 ul li:nth-of-type(5) {
   color: var(--primary-white);
 }
-ul li:nth-of-type(6) {
-  color: var(--primary-white);
+
+ul li:nth-of-type(3):after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 2px;
+  background: var(--primary-green);
+  transition: width 0.3s;
 }
 
 ul li:nth-of-type(4):after {
@@ -90,13 +89,8 @@ ul li:nth-of-type(5):after {
   transition: width 0.3s;
 }
 
-ul li:nth-of-type(6):after {
-  content: "";
-  display: block;
-  width: 0;
-  height: 2px;
-  background: var(--primary-green);
-  transition: width 0.3s;
+ul li:nth-of-type(3):hover::after {
+  width: 100%;
 }
 
 ul li:nth-of-type(4):hover::after {
@@ -104,10 +98,6 @@ ul li:nth-of-type(4):hover::after {
 }
 
 ul li:nth-of-type(5):hover::after {
-  width: 100%;
-}
-
-ul li:nth-of-type(6):hover::after {
   width: 100%;
 }
 

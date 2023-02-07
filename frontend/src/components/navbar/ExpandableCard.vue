@@ -38,7 +38,7 @@ export default {
   props: {
     text: String,
     cols: Number,
-    items: Array,
+    items: Object,
   },
 };
 </script>
