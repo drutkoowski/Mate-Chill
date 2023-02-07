@@ -46,11 +46,10 @@ export default {
 
 .modal {
   text-align: center;
-  background-color: var(--white);
-  padding: 60px 0;
-  border-radius: 20px;
   position: relative;
-
+  border-radius: 30px;
+  background-color: var(--color-background);
+  padding: 3rem 5rem;
   &__close {
     position: absolute;
     top: 1rem;

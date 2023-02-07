@@ -5,28 +5,43 @@
       <v-text-field
         v-model="email.value.value"
         :error-messages="email.errorMessage.value"
-        label="E-mail"
+        bg-color="white"
+        color="green-darken-1"
+        hint="Pole powinno zawierać poprawny adres e-mail."
+        label="Adres Email"
       ></v-text-field>
 
       <v-text-field
         v-model="password.value.value"
         :error-messages="password.errorMessage.value"
-        label="Password"
+        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        :type="showPassword ? 'text' : 'password'"
+        bg-color="white"
+        color="green-darken-1"
+        label="Hasło"
+        hint="Hasło powinno zawierać conajmniej 8 znaków"
+        counter
+        @click:append="showPassword = !showPassword"
       ></v-text-field>
-
-      <Button :text="'Zaloguj'" class="button" />
-      <Button :text="'Wyczyść'" class="button" @click="handleReset" />
+      <div class="mt-5">
+        <Button :text="'Zaloguj'" class="button" type="submit" />
+        <Button :text="'Wyczyść'" class="button" @click.prevent="handleReset" />
+      </div>
     </form>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
 import { useField, useForm } from "vee-validate";
 import Button from "@/components/Button.vue";
 
 export default {
   name: "LoginModal",
+  data() {
+    return {
+      showPassword: false,
+    };
+  },
   components: {
     // eslint-disable-next-line vue/no-reserved-component-names
     Button,
@@ -35,22 +50,25 @@ export default {
     const { handleSubmit, handleReset } = useForm({
       validationSchema: {
         email(value) {
-          if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
+          if (/^[a-z.-]+@[a-z.-]+[0-9]\.[a-z]+$/i.test(value)) return true;
 
-          return "Mail must be a valid email.";
+          return "Pole musi zawierać poprawny adres e-mail.";
+        },
+        password(value) {
+          if (value?.length >= 8) return true;
+
+          return "Hasło musi składać się z conajmniej 8 znaków.";
         },
       },
     });
     const email = useField("email");
     const password = useField("password");
 
-    const items = ref(["Item 1", "Item 2", "Item 3", "Item 4"]);
-
     const submit = handleSubmit((values) => {
       alert(JSON.stringify(values, null, 2));
     });
 
-    return { email, password, items, submit, handleReset };
+    return { email, password, submit, handleReset };
   },
 };
 </script>
@@ -61,6 +79,7 @@ export default {
   padding: 0 5rem;
   h3 {
     font-size: 2rem;
+    color: var(--primary-white);
   }
 }
 .button {
