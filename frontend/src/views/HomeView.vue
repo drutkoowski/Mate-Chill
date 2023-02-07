@@ -3,7 +3,6 @@
   <v-sheet min-height="250" class="fill-height" color="transparent">
     <v-lazy
       transition="slide-y"
-      :model="sectionPopularVisible"
       min-height="5"
       :options="{
         threshold: 0.5,
@@ -16,7 +15,6 @@
   <v-sheet min-height="250" class="fill-height" color="transparent">
     <v-lazy
       transition="slide-y"
-      :model="sectionNewVisible"
       min-height="5"
       :options="{
         threshold: 0.5,
@@ -29,7 +27,6 @@
   <v-sheet min-height="250" class="fill-height" color="transparent">
     <v-lazy
       transition="slide-y"
-      :model="sectionBestsellerVisible"
       min-height="5"
       :options="{
         threshold: 0.5,
@@ -38,24 +35,46 @@
       <Section :headerText="'Bestsellery'" />
     </v-lazy>
   </v-sheet>
+
+  <v-sheet min-height="250" class="fill-height" color="transparent">
+    <v-lazy
+      transition="slide-y"
+      min-height="5"
+      :options="{
+        threshold: 0.5,
+      }"
+    >
+      <About />
+    </v-lazy>
+  </v-sheet>
+
+  <v-sheet min-height="250" class="fill-height" color="transparent">
+    <v-lazy
+      transition="slide-y"
+      min-height="5"
+      :options="{
+        threshold: 0.5,
+      }"
+    >
+      <WebsiteFooter />
+    </v-lazy>
+  </v-sheet>
 </template>
 
 <script>
-import Carousel from "@/components/Carousel.vue";
-import Section from "../components/Section.vue";
+import Carousel from "@/components/home/Carousel.vue";
+import Section from "@/components/home/Section.vue";
+import WebsiteFooter from "@/components/Footer.vue";
+import About from "@/components/home/About.vue";
+
 export default {
   name: "HomeView",
-  data() {
-    return {
-      sectionPopularVisible: false,
-      sectionNewVisible: false,
-      sectionBestsellerVisible: false,
-    };
-  },
   components: {
+    About,
     // eslint-disable-next-line vue/no-reserved-component-names
     Section,
     Carousel,
+    WebsiteFooter,
   },
 };
 </script>
