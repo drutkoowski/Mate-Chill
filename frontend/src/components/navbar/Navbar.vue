@@ -6,8 +6,9 @@
       <li>Zaloguj</li>
       <li>Zarejestruj</li>
       <li>Produkty</li>
-      <li>
+      <li class="cart">
         <img class="cart-logo" src="/bag.svg" alt="Shopping cart logo" />
+        <span>0</span>
       </li>
     </ul>
     <LowerNav />
@@ -29,9 +30,22 @@ export default {
   height: 5rem;
 }
 
+.cart {
+  position: relative;
+  span {
+    position: absolute;
+    top: 40%;
+    left: 75%;
+    font-size: 1.3rem;
+    color: var(--primary-white);
+    font-weight: bold;
+  }
+}
+
 .cart-logo {
   height: 2rem;
 }
+
 ul {
   list-style: none;
   display: flex;
@@ -53,13 +67,20 @@ ul {
 ul li:nth-of-type(3) {
   color: var(--primary-white);
   margin-left: auto;
+  cursor: pointer;
 }
 
 ul li:nth-of-type(4) {
   color: var(--primary-white);
+  cursor: pointer;
 }
 ul li:nth-of-type(5) {
   color: var(--primary-white);
+  cursor: pointer;
+}
+
+ul li:nth-of-type(6) {
+  cursor: pointer;
 }
 
 ul li:nth-of-type(3):after {

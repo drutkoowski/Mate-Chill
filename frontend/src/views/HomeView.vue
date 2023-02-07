@@ -8,7 +8,26 @@
         threshold: 0.5,
       }"
     >
-      <Section :headerText="'Popularne kategorie'" />
+      <PopularCategories
+        :categories="[
+          {
+            name: 'Yerba mate',
+            url: '/logo.svg',
+          },
+          {
+            name: 'Naczynka',
+            url: '/naczynka-icon.svg',
+          },
+          {
+            name: 'Bombille',
+            url: '/bombilla-icon.svg',
+          },
+          {
+            name: 'Zestawy',
+            url: '/zestawy-icon.svg',
+          },
+        ]"
+      />
     </v-lazy>
   </v-sheet>
 
@@ -66,6 +85,7 @@ import Carousel from "@/components/home/Carousel.vue";
 import Section from "@/components/home/Section.vue";
 import WebsiteFooter from "@/components/Footer.vue";
 import About from "@/components/home/About.vue";
+import PopularCategories from "@/components/home/PopularCategories.vue";
 
 export default {
   name: "HomeView",
@@ -75,6 +95,7 @@ export default {
     Section,
     Carousel,
     WebsiteFooter,
+    PopularCategories,
   },
 };
 </script>
