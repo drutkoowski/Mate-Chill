@@ -3,8 +3,8 @@
     <ul>
       <li><img src="/logo.svg" alt="Site logo" class="logo" /></li>
       <li>Mate <span class="primary-green">&</span> Chill</li>
-      <li>Zaloguj</li>
-      <li>Zarejestruj</li>
+      <li @click.prevent="this.$emit('openModal', 'login')">Zaloguj</li>
+      <li @click.prevent="this.$emit('openModal', 'signup')">Zarejestruj</li>
       <li>Produkty</li>
       <li class="cart">
         <img class="cart-logo" src="/bag.svg" alt="Shopping cart logo" />

@@ -35,6 +35,7 @@ export default {
   grid-template-rows: 1fr;
   grid-template-columns: repeat(4, 1fr);
   grid-column: 2/3;
+  grid-column-gap: 2rem;
 }
 h1 {
   color: var(--primary-white);

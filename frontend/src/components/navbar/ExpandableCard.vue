@@ -6,19 +6,19 @@
     <div class="card-container" :class="`col${cols}`">
       <div v-if="cols === 3" class="card-container__wrapper">
         <div class="card-container__flex-container">
-          <h2>Kraje</h2>
+          <h1>Kraje</h1>
           <p v-for="(country, index) in items['countries']" :key="index">
             {{ country }}
           </p>
         </div>
         <div class="card-container__flex-container">
-          <h2>Rodzaje</h2>
+          <h1>Rodzaje</h1>
           <p v-for="(country, index) in items['type']" :key="index">
             {{ country }}
           </p>
         </div>
         <div class="card-container__flex-container">
-          <h2>Producenci</h2>
+          <h1>Producenci</h1>
           <p v-for="(country, index) in items['brand']" :key="index">
             {{ country }}
           </p>
@@ -67,6 +67,9 @@ li {
   &__flex-container {
     display: flex;
     flex-direction: column;
+    h1 {
+      font-size: 1.5rem;
+    }
   }
 }
 

@@ -88,7 +88,6 @@ import About from "@/components/home/About.vue";
 import PopularCategories from "@/components/home/PopularCategories.vue";
 
 export default {
-  name: "HomeView",
   components: {
     About,
     // eslint-disable-next-line vue/no-reserved-component-names

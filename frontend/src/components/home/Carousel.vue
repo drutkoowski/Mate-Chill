@@ -4,6 +4,7 @@
     show-arrows
     hide-delimiter-background
     cycle
+    hide-delimiters
     style="margin-top: 5rem"
   >
     <template v-slot:prev="{ props }">
