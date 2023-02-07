@@ -75,8 +75,8 @@ export default {
 
 <style scoped lang="scss">
 .login {
-  width: 45rem;
-  padding: 0 5rem;
+  width: 35rem;
+  padding: 0 2rem;
   h3 {
     font-size: 2rem;
     color: var(--primary-white);

@@ -1,14 +1,30 @@
 <template>
   <nav>
     <ul>
-      <li><img src="/logo.svg" alt="Site logo" class="logo" /></li>
-      <li>Mate <span class="primary-green">&</span> Chill</li>
+      <li>
+        <router-link :to="{ name: 'home' }"
+          ><img src="/logo.svg" alt="Site logo" class="logo"
+        /></router-link>
+      </li>
+
+      <li>
+        <router-link :to="{ name: 'home' }"
+          >Mate <span class="primary-green">&</span> Chill</router-link
+        >
+      </li>
+
       <li @click.prevent="this.$emit('openModal', 'login')">Zaloguj</li>
       <li @click.prevent="this.$emit('openModal', 'signup')">Zarejestruj</li>
-      <li>Produkty</li>
+
+      <li>
+        <router-link :to="{ name: 'products' }">Produkty</router-link>
+      </li>
+
       <li class="cart">
         <img class="cart-logo" src="/bag.svg" alt="Shopping cart logo" />
-        <span>0</span>
+        <div>
+          <span>1</span>
+        </div>
       </li>
     </ul>
     <LowerNav />
@@ -32,13 +48,22 @@ export default {
 
 .cart {
   position: relative;
-  span {
+  div {
+    display: flex;
+    justify-content: center;
+    align-content: center;
     position: absolute;
-    top: 40%;
+    top: 75%;
     left: 75%;
-    font-size: 1.3rem;
-    color: var(--primary-white);
-    font-weight: bold;
+    background-color: var(--primary-green);
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    span {
+      font-size: 1rem;
+      font-weight: bold;
+      color: var(--primary-white);
+    }
   }
 }
 

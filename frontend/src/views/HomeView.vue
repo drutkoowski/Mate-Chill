@@ -83,7 +83,7 @@
 <script>
 import Carousel from "@/components/home/Carousel.vue";
 import Section from "@/components/home/Section.vue";
-import WebsiteFooter from "@/components/Footer.vue";
+import WebsiteFooter from "@/components/home/Footer.vue";
 import About from "@/components/home/About.vue";
 import PopularCategories from "@/components/home/PopularCategories.vue";
 
