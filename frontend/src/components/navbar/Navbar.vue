@@ -60,7 +60,7 @@ export default {
     height: 20px;
     border-radius: 20px;
     span {
-      font-size: 1rem;
+      font-size: 0.85rem;
       font-weight: bold;
       color: var(--primary-white);
     }
