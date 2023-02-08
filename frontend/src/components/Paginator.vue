@@ -1,19 +1,11 @@
 <template>
-  <div class="text-center">
-    <v-container>
-      <v-row justify="center">
-        <v-col cols="8">
-          <v-container class="max-width">
-            <v-pagination
-              :model="pageNum"
-              class="my-4"
-              :length="length"
-            ></v-pagination>
-          </v-container>
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
+  <v-pagination
+    :model="pageNum"
+    class="my-4"
+    :length="length"
+    size="small"
+    total-visible="5"
+  />
 </template>
 
 <script>
@@ -26,4 +18,4 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss"></style>

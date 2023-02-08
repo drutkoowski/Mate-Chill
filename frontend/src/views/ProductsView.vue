@@ -68,19 +68,34 @@
         <small class="mb-2">3 wyszukanych produktów</small>
         <div class="products-container__products__container__wrapper">
           <ProductCard
-            :name="'Yerba mate El Pajaro Tradicional Con Palo'"
+            :name="'Yerba mate El Pajaro Tradicional'"
             :price="32.82"
             :photoUrl="'https://www.yerbamarket.com/pol_il_Yerba-Mate-Yari-Menta-Peper-500g-13914.png'"
           />
           <ProductCard
-            :name="'Yerba mate El Pajaro Tradicional Con Palo'"
+            :name="'Yerba Mate Green DESPALADA'"
+            :price="32.82"
+            :photoUrl="'https://www.yerbamarket.com/pol_il_Yerba-Mate-Green-DESPALADA-8172.jpg'"
+          />
+          <ProductCard
+            :name="'Yerba Mate Green LEMON'"
+            :price="32.82"
+            :photoUrl="'https://www.yerbamarket.com/pol_pm_Yerba-Mate-Green-LEMON-8183_10.jpg'"
+          />
+          <ProductCard
+            :name="'Yerba mate El Pajaro Tradicional'"
             :price="32.82"
             :photoUrl="'https://www.yerbamarket.com/pol_il_Yerba-Mate-Yari-Menta-Peper-500g-13914.png'"
           />
           <ProductCard
-            :name="'Yerba mate El Pajaro Tradicional Con Palo'"
+            :name="'Yerba Mate Green DESPALADA'"
             :price="32.82"
-            :photoUrl="'https://www.yerbamarket.com/pol_il_Yerba-Mate-Yari-Menta-Peper-500g-13914.png'"
+            :photoUrl="'https://www.yerbamarket.com/pol_il_Yerba-Mate-Green-DESPALADA-8172.jpg'"
+          />
+          <ProductCard
+            :name="'Yerba Mate Green LEMON'"
+            :price="32.82"
+            :photoUrl="'https://www.yerbamarket.com/pol_pm_Yerba-Mate-Green-LEMON-8183_10.jpg'"
           />
         </div>
       </div>
@@ -131,7 +146,7 @@ export default {
   grid-template-columns: 0.4fr 1fr;
   grid-column-gap: 5rem;
   width: 100%;
-  flex-grow: 1;
+
   padding: 0 5rem;
   margin-top: 5rem;
 }
@@ -159,7 +174,6 @@ export default {
 .products-container__products {
   display: flex;
   flex-direction: column;
-  height: 100%;
 
   background-color: var(--primary-white);
   border-radius: 10px;
@@ -168,15 +182,15 @@ export default {
     background-color: var(--color-background);
     display: flex;
     flex-direction: column;
-    height: 100%;
+
     &__wrapper {
-      height: 100%;
       flex-grow: 1;
       display: grid;
       grid-template-rows: repeat(2, 1fr);
       grid-template-columns: repeat(4, 1fr);
       grid-column-gap: 2rem;
       grid-row-gap: 2rem;
+      padding: 0.5rem 0.5rem;
     }
     &__indicators {
       display: flex;

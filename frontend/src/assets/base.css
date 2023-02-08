@@ -4,10 +4,12 @@
    --color-background: #181818;
 
    --primary-green: #04b60e;
+   --green-light: #75d37e;
 
    --primary-white: rgba(255,255,255, 0.9);
    --white: rgba(255,255,255);
 
+    --primary-red: rgb(232, 89, 89)
 }
 
 
