@@ -3,6 +3,7 @@
     v-model="store.isActive"
     :timeout="timeout"
     :color="store.color"
+    location="bottom right"
     class="toast"
   >
     <p class="toast-message text-center">{{ store.message }}</p>
@@ -41,5 +42,6 @@ export default {
   position: absolute;
   top: 3%;
   right: 1%;
+  cursor: pointer;
 }
 </style>
