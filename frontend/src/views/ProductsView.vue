@@ -50,6 +50,7 @@
             class="products-container__products__container__indicators--search"
           >
             <v-text-field
+              bg-color="white"
               label="Wyszukaj produkt"
               append-inner-icon="mdi-magnify"
             />
@@ -58,11 +59,13 @@
             class="products-container__products__container__indicators--sorting"
           >
             <v-select
+              bg-color="white"
               label="Sortuj"
               :items="['Cena rosnąco', 'Cena malejąco ']"
             />
           </div>
         </div>
+        <small class="mb-2">3 wyszukanych produktów</small>
         <div class="products-container__products__container__wrapper">
           <ProductCard
             :name="'Yerba mate El Pajaro Tradicional Con Palo'"

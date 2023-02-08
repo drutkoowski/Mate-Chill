@@ -1,6 +1,12 @@
 <template>
-  <v-select v-if="type === 'select'" :label="text" :items="items" multiple />
-  <v-text-field :type="type" :label="text" v-else />
+  <v-select
+    v-if="type === 'select'"
+    :label="text"
+    :items="items"
+    multiple
+    bg-color="white"
+  />
+  <v-text-field :type="type" :label="text" bg-color="white" v-else />
 </template>
 
 <script>

@@ -34,7 +34,7 @@ export default {
   box-shadow: 0px 0px 13px 2px rgba(208, 205, 205, 1);
 }
 .image {
-  height: 70%;
+  height: 65%;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -48,5 +48,6 @@ p {
 p {
   float: right;
   color: var(--primary-green);
+  font-weight: bold;
 }
 </style>
