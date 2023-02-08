@@ -1,6 +1,7 @@
 <template>
   <Navbar @openModal="openModal" />
   <RouterView />
+
   <ModalOverlay
     v-if="modalLoginVisible || modalSignupVisible"
     @closeModal="closeModal"
@@ -8,6 +9,8 @@
     <LoginModal v-if="modalLoginVisible" />
     <SignupModal v-if="modalSignupVisible" />
   </ModalOverlay>
+
+  <Toast />
 </template>
 
 <script>
@@ -15,6 +18,7 @@ import Navbar from "@/components/navbar/Navbar.vue";
 import ModalOverlay from "@/components/ModalOverlay.vue";
 import LoginModal from "./components/login/LoginModal.vue";
 import SignupModal from "@/components/signup/SignupModal.vue";
+import Toast from "@/components/Toast.vue";
 
 export default {
   name: "App",
@@ -29,6 +33,7 @@ export default {
     ModalOverlay,
     Navbar,
     SignupModal,
+    Toast,
   },
   methods: {
     openModal(type) {

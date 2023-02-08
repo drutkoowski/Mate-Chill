@@ -44,7 +44,9 @@
           </div>
         </v-form>
       </div>
-      <div class="products-container__products"></div>
+      <div class="products-container__products">
+        <Paginator :pageNum="page" :length="maxPages" />
+      </div>
     </div>
   </div>
 </template>
@@ -52,6 +54,7 @@
 <script>
 import filterInput from "@/components/filters/filterInput.vue";
 import Button from "@/components/Button.vue";
+import Paginator from "@/components/Paginator.vue";
 
 export default {
   name: "ProductsView",
@@ -59,6 +62,13 @@ export default {
     // eslint-disable-next-line vue/no-reserved-component-names
     Button,
     filterInput,
+    Paginator,
+  },
+  data() {
+    return {
+      page: 1,
+      maxPages: 5,
+    };
   },
   methods: {
     resetFilters() {
