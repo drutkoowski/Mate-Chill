@@ -12,9 +12,10 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from decouple import config
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,6 +26,8 @@ SECRET_KEY = config('SECRET_KEY', cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
+
+AUTH_USER_MODEL = "accounts.Account"
 
 ALLOWED_HOSTS = []
 
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'phone_field',
 
     'accounts'
 ]
@@ -76,16 +80,24 @@ WSGI_APPLICATION = 'mate.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DATABASE_NAME', cast=str),
-        'USER': config('DATABASE_USER', cast=str),
-        'PASSWORD': config('DATABASE_PASSWORD', cast=str),
-        'HOST': config('DATABASE_HOST', cast=str),
-        'PORT': config('DATABASE_PORT', cast=str),
+if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DATABASE_NAME', cast=str),
+            'USER': config('DATABASE_USER', cast=str),
+            'PASSWORD': config('DATABASE_PASSWORD', cast=str),
+            'HOST': config('DATABASE_HOST', cast=str),
+            'PORT': config('DATABASE_PORT', cast=str),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
