@@ -60,14 +60,11 @@
 <script>
 export default {
   name: "ProductGallery",
+  props: {
+    slides: Array,
+  },
   data() {
     return {
-      slides: [
-        "https://www.yerbamarket.com/pol_pm_Yerba-Mate-Green-LEMON-8183_10.jpg",
-        "https://www.yerbamarket.com/pol_pm_Yerba-Mate-Green-LEMON-8183_1.png",
-        "https://www.yerbamarket.com/pol_pm_Yerba-Mate-Green-LEMON-8183_2.jpg",
-        "https://www.yerbamarket.com/pol_pm_Yerba-Mate-Laranjeiras-Yari-terere-limao-siciliano-500-g-15104_1.png",
-      ],
       current: 0,
     };
   },

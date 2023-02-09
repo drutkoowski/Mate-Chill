@@ -3,7 +3,7 @@
     v-if="type === 'select'"
     :label="text"
     :items="items"
-    multiple
+    :multiple="multiple"
     bg-color="white"
   />
   <v-text-field :type="type" :label="text" bg-color="white" v-else />
@@ -13,9 +13,17 @@
 export default {
   name: "filterInput",
   props: {
-    type: String,
+    type: {
+      type: String,
+      default: "text",
+    },
     text: String,
     items: Array,
+    multiple: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
   },
 };
 </script>

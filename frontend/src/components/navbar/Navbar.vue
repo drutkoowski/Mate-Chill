@@ -7,7 +7,7 @@
         /></router-link>
       </li>
 
-      <li>
+      <li class="site-name">
         <router-link :to="{ name: 'home' }"
           >Mate <span class="primary-green">&</span> Chill</router-link
         >
@@ -44,6 +44,13 @@ export default {
 <style scoped lang="scss">
 .logo {
   height: 5rem;
+}
+
+.site-name {
+  a,
+  span {
+    font-family: "Pacifico", cursive;
+  }
 }
 
 .cart {

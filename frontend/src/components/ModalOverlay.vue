@@ -50,6 +50,9 @@ export default {
   border-radius: 30px;
   background-color: var(--color-background);
   padding: 3rem 5rem;
+  -webkit-box-shadow: 0px 0px 17px -14px rgba(255, 255, 255, 1);
+  -moz-box-shadow: 0px 0px 17px -14px rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 17px -14px rgba(255, 255, 255, 1);
   &__close {
     position: absolute;
     top: 1rem;
