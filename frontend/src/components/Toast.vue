@@ -1,5 +1,6 @@
 <template>
   <v-snackbar
+    transition="slide-x-reverse-transition"
     v-model="store.isActive"
     :timeout="timeout"
     :color="store.color"
@@ -21,7 +22,7 @@ export default {
   props: ["color", "text"],
   data: () => ({
     snackbar: false,
-    timeout: 25000,
+    timeout: 5000,
   }),
   setup() {
     const store = useToastStore();

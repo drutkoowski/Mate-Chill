@@ -5,18 +5,21 @@
     @keydown.esc="$emit('close-modal')"
     ref="modalOverlay"
   >
-    <div class="modal">
-      <slot @closeModal="$emit('close-modal')"></slot>
-      <span class="modal__close" @click.prevent="$emit('close-modal')"
-        >&#10005;</span
-      >
-    </div>
+    <Transition name="fade" appear>
+      <div class="modal">
+        <slot @closeModal="$emit('close-modal')"></slot>
+        <span class="modal__close" @click.prevent="$emit('close-modal')"
+          >&#10005;</span
+        >
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script>
 export default {
   name: "ModalOverlay",
+
   created() {
     document.body.style.overflow = "hidden!important";
     document.body.style.position = "fixed";
@@ -38,10 +41,14 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
+  max-width: 100vw;
+  max-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #000000da;
+  background-color: rgba(0, 0, 0, 0.95);
 }
 
 .modal {
@@ -63,5 +70,15 @@ export default {
       transform: scale(1.25);
     }
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -47,7 +47,7 @@
         24,99 zł <small>brutto / szt.</small>
       </h3>
       <div class="product-info-container__actions">
-        <div class="product-info-container__actions__counter px-5 py-2">
+        <div class="product-info-container__actions__counter">
           <v-icon class="mr-auto" color="red">mdi-minus</v-icon>
 
           <h5 class="text-center font-weight-bold text-h5">0</h5>
@@ -84,7 +84,6 @@ export default {
   margin-top: 5rem;
 }
 .product-image-container {
-  padding: 0 2rem;
   height: 100%;
   width: 30rem;
   justify-self: center;
@@ -127,13 +126,14 @@ export default {
     display: flex;
     align-items: center;
     height: 3rem;
-    width: 15rem;
+    width: 7rem;
     border-radius: 5px;
     background-color: var(--white);
     h5 {
       color: var(--color-background);
     }
     .v-icon {
+      width: 2rem;
       cursor: pointer;
       transition: all 0.3s ease-in-out;
       &:hover {
