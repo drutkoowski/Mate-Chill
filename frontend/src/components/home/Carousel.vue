@@ -40,10 +40,6 @@
       </svg>
     </template>
     <v-carousel-item v-for="(slide, i) in slides" :key="i">
-      <!--      <div-->
-      <!--        v-bind:style="{ backgroundImage: 'url(' + slide + ')' }"-->
-      <!--        class="slider__image"-->
-      <!--      ></div>-->
       <img :src="slide" alt="Photo" class="slider__image" />
     </v-carousel-item>
   </v-carousel>
