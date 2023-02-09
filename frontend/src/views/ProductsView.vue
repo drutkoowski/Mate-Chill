@@ -111,7 +111,6 @@ import filterInput from "@/components/filters/filterInput.vue";
 import Button from "@/components/Button.vue";
 import Paginator from "@/components/Paginator.vue";
 import ProductCard from "@/components/products/ProductCard.vue";
-import useToastStore from "@/stores/toast";
 
 export default {
   name: "ProductsView",
@@ -128,10 +127,10 @@ export default {
       maxPages: 15,
     };
   },
-  created() {
-    const store = useToastStore();
-    store.displayToast("eloeloeloelo", "success");
-  },
+  // created() {
+  //   const store = useToastStore();
+  //   store.displayToast("eloeloeloelo", "success");
+  // },
   methods: {
     resetFilters() {
       this.$refs.form.reset();
