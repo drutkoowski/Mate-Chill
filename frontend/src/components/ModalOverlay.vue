@@ -2,13 +2,13 @@
   <div
     class="modal-overlay"
     tabindex="0"
-    @keydown.esc="$emit('close-modal')"
+    @keydown.esc="$emit('closeModal')"
     ref="modalOverlay"
   >
     <Transition name="fade" appear>
       <div class="modal">
-        <slot @closeModal="$emit('close-modal')"></slot>
-        <span class="modal__close" @click.prevent="$emit('close-modal')"
+        <slot @closeModal="$emit('closeModal')"></slot>
+        <span class="modal__close" @click.prevent="$emit('closeModal')"
           >&#10005;</span
         >
       </div>

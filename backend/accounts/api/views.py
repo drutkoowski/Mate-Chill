@@ -59,7 +59,7 @@ class MyTokenRefreshView(TokenRefreshView):
             httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
             samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
         )
-        # Remove tokens from response body for enchanced security.
+        # Remove tokens from response body for enhanced security.
         del response.data[settings.SIMPLE_JWT["AUTH_COOKIE"]]
         del response.data[settings.SIMPLE_JWT["REFRESH_COOKIE"]]
 
@@ -75,7 +75,7 @@ class MyTokenBlacklistView(TokenBlacklistView):
     def finalize_response(
             self, request, response, *args, **kwargs
     ) -> Response:
-        # Remove tokens from response body for enchanced security.
+        # Remove tokens from response body for enhanced security.
         response.delete_cookie(settings.SIMPLE_JWT["AUTH_COOKIE"])
         response.delete_cookie(settings.SIMPLE_JWT["REFRESH_COOKIE"])
 

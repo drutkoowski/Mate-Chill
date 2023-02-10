@@ -33,8 +33,10 @@
 
 <script>
 import { useField, useForm } from "vee-validate";
-import Button from "@/components/Button.vue";
 import axios from "axios";
+import useUserStore from "@/stores/user";
+import useToastStore from "@/stores/toast";
+import Button from "@/components/Button.vue";
 
 export default {
   name: "LoginModal",
@@ -47,7 +49,8 @@ export default {
     // eslint-disable-next-line vue/no-reserved-component-names
     Button,
   },
-  setup() {
+  emits: ["closeModal"],
+  setup(props, context) {
     const { handleSubmit, handleReset } = useForm({
       validationSchema: {
         email(value) {
@@ -56,7 +59,7 @@ export default {
           return "Pole musi zawierać poprawny adres e-mail.";
         },
         password(value) {
-          if (value?.length >= 5) return true;
+          if (value?.length >= 8) return true;
 
           return "Hasło musi składać się z conajmniej 8 znaków.";
         },
@@ -65,9 +68,15 @@ export default {
     const email = useField("email");
     const password = useField("password");
 
-    const submit = handleSubmit(async (values) => {
+    const submit = handleSubmit(async function (values) {
       const response = await axios.post("auth/login/", values);
-      console.log(response);
+      if (response.status === 200) {
+        const userStore = useUserStore();
+        const toastStore = useToastStore();
+        toastStore.displayToast("Pomyślnie zalogowano.", "success");
+        userStore.isAuthenticated = true;
+        context.emit("closeModal");
+      }
     });
 
     return { email, password, submit, handleReset };

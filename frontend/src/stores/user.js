@@ -1,3 +1,7 @@
 import { defineStore } from "pinia";
 
-export default defineStore("user", {});
+export default defineStore("user", {
+  state: () => ({
+    isAuthenticated: false,
+  }),
+});

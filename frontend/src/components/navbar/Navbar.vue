@@ -12,13 +12,28 @@
           >Mate <span class="primary-green">&</span> Chill</router-link
         >
       </li>
-
-      <li @click.prevent="this.$emit('openModal', 'login')">Zaloguj</li>
-      <li @click.prevent="this.$emit('openModal', 'signup')">Zarejestruj</li>
-
       <li>
         <router-link :to="{ name: 'products' }">Produkty</router-link>
       </li>
+      <li
+        @click.prevent="this.$emit('openModal', 'login')"
+        v-if="!store.isAuthenticated"
+      >
+        Zaloguj
+      </li>
+      <li
+        @click.prevent="this.$emit('openModal', 'signup')"
+        v-if="!store.isAuthenticated"
+      >
+        Zarejestruj
+      </li>
+      <li
+        @click.prevent="this.$emit('openModal', 'signup')"
+        v-if="store.isAuthenticated"
+      >
+        Twój Panel
+      </li>
+      <li @click.prevent="userLogout" v-if="store.isAuthenticated">Wyloguj</li>
 
       <li class="cart">
         <img class="cart-logo" src="/bag.svg" alt="Shopping cart logo" />
@@ -33,10 +48,25 @@
 
 <script>
 import LowerNav from "./LowerNav.vue";
+import useUserStore from "@/stores/user";
+import userAuth from "@/utils/userAuth";
+import useToastStore from "@/stores/toast";
+
 export default {
   name: "Navbar",
   components: {
     LowerNav,
+  },
+  setup() {
+    const store = useUserStore();
+    return { store };
+  },
+  methods: {
+    async userLogout() {
+      await userAuth.logoutUser();
+      const toastStore = useToastStore();
+      toastStore.displayToast("Wylogowano z konta.", "red-lighten-1");
+    },
   },
 };
 </script>

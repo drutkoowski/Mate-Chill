@@ -7,15 +7,15 @@
     v-if="modalLoginVisible || modalSignupVisible"
     @closeModal="closeModal"
   >
-    <LoginModal v-if="modalLoginVisible" />
-    <SignupModal v-if="modalSignupVisible" />
+    <LoginModal v-if="modalLoginVisible" @closeModal="closeModal" />
+    <SignupModal v-if="modalSignupVisible" @closeModal="closeModal" />
   </ModalOverlay>
 
   <!--  toast-->
   <Toast />
 
   <!--  loader-->
-  <PageOverlay v-if="store.isLoading">
+  <PageOverlay v-if="mainStore.isLoading">
     <v-progress-circular indeterminate color="green" size="50" width="4" />
   </PageOverlay>
 </template>
@@ -28,13 +28,16 @@ import LoginModal from "./components/login/LoginModal.vue";
 import SignupModal from "@/components/signup/SignupModal.vue";
 import Toast from "@/components/Toast.vue";
 import useMainStore from "@/stores/main";
-import axios from "axios";
+import userAuth from "@/utils/userAuth";
 
 export default {
   name: "App",
   setup() {
-    const store = useMainStore();
-    return { store };
+    const mainStore = useMainStore();
+    return { mainStore };
+  },
+  async created() {
+    await userAuth.getCurrentUser();
   },
   data() {
     return {
