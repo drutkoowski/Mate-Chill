@@ -1,5 +1,8 @@
 <template>
+  <!--	navbar-->
   <Navbar @openModal="openModal" />
+
+  <!--	view-->
   <RouterView />
 
   <!--  account actions modal-->

@@ -23,9 +23,10 @@
         counter
         @click:append="showPassword = !showPassword"
       ></v-text-field>
+      <FormMessage :text="errorMsg" />
       <div class="mt-5">
         <Button :text="'Zaloguj'" class="button" type="submit" />
-        <Button :text="'Wyczyść'" class="button" @click.prevent="handleReset" />
+        <Button :text="'Wyczyść'" class="button" @click.prevent="handleClear" />
       </div>
     </form>
   </div>
@@ -37,6 +38,8 @@ import axios from "axios";
 import useUserStore from "@/stores/user";
 import useToastStore from "@/stores/toast";
 import Button from "@/components/Button.vue";
+import FormMessage from "@/components/FormMessage.vue";
+import { ref } from "vue";
 
 export default {
   name: "LoginModal",
@@ -48,9 +51,11 @@ export default {
   components: {
     // eslint-disable-next-line vue/no-reserved-component-names
     Button,
+    FormMessage,
   },
   emits: ["closeModal"],
   setup(props, context) {
+    let errorMsg = ref("");
     const { handleSubmit, handleReset } = useForm({
       validationSchema: {
         email(value) {
@@ -69,17 +74,31 @@ export default {
     const password = useField("password");
 
     const submit = handleSubmit(async function (values) {
-      const response = await axios.post("auth/login/", values);
-      if (response.status === 200) {
-        const userStore = useUserStore();
-        const toastStore = useToastStore();
-        toastStore.displayToast("Pomyślnie zalogowano.", "success");
-        userStore.isAuthenticated = true;
-        context.emit("closeModal");
+      try {
+        const response = await axios.post("auth/login/", values);
+        if (response.status === 200) {
+          errorMsg.value = "";
+          const userStore = useUserStore();
+          const toastStore = useToastStore();
+          toastStore.displayToast("Pomyślnie zalogowano.", "success");
+          userStore.isAuthenticated = true;
+          context.emit("closeModal");
+        }
+      } catch (error) {
+        error.response.status === 401
+          ? (errorMsg.value = "Błędne dane do logowania.")
+          : (errorMsg.value =
+              "Nie udało się zalogować użytkownika z tymi danymi.");
       }
     });
 
-    return { email, password, submit, handleReset };
+    return { email, password, submit, handleReset, errorMsg };
+  },
+  methods: {
+    handleClear() {
+      this.errorMsg = "";
+      this.handleReset();
+    },
   },
 };
 </script>

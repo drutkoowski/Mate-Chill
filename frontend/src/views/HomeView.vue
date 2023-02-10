@@ -78,6 +78,8 @@
       <WebsiteFooter />
     </v-lazy>
   </v-sheet>
+
+  <PolicyAcceptance />
 </template>
 
 <script>
@@ -86,6 +88,7 @@ import Section from "@/components/home/Section.vue";
 import WebsiteFooter from "@/components/home/Footer.vue";
 import About from "@/components/home/About.vue";
 import PopularCategories from "@/components/home/PopularCategories.vue";
+import PolicyAcceptance from "@/components/home/PolicyAcceptance.vue";
 
 export default {
   components: {
@@ -95,6 +98,7 @@ export default {
     Carousel,
     WebsiteFooter,
     PopularCategories,
+    PolicyAcceptance,
   },
 };
 </script>

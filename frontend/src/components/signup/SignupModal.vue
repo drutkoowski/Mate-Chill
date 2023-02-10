@@ -66,10 +66,10 @@
         counter
         @click:append="showPasswordConfirm = !showPasswordConfirm"
       ></v-text-field>
-
+      <FormMessage :text="errorMsg" />
       <div class="mt-5">
         <Button :text="'Załóż konto'" class="button" type="submit" />
-        <Button :text="'Wyczyść'" class="button" @click.prevent="handleReset" />
+        <Button :text="'Wyczyść'" class="button" @click.prevent="handleClear" />
       </div>
     </form>
   </div>
@@ -78,7 +78,10 @@
 <script>
 import { useField, useForm } from "vee-validate";
 import Button from "@/components/Button.vue";
+import FormMessage from "@/components/FormMessage.vue";
 import axios from "axios";
+import useToastStore from "@/stores/toast";
+import { ref } from "vue";
 
 export default {
   name: "SignupModal",
@@ -89,10 +92,13 @@ export default {
     };
   },
   components: {
+    FormMessage,
     // eslint-disable-next-line vue/no-reserved-component-names
     Button,
   },
-  setup() {
+  emits: ["closeModal"],
+  setup(props, context) {
+    let errorMsg = ref("");
     const { handleSubmit, handleReset } = useForm({
       validationSchema: {
         fname(value) {
@@ -116,13 +122,14 @@ export default {
           return "Pole musi zawierać poprawny adres e-mail.";
         },
         password(value) {
-          if (value?.length >= 3) return true;
+          if (value?.length >= 8) return true;
 
-          return "Hasło musi składać się z conajmniej trzech znaków.";
+          return "Hasło musi składać się z conajmniej ośmiu znaków.";
         },
 
         passwordConfirm(value) {
-          if (value?.length >= 3) return true;
+          if (value?.length >= 8 && passwordConfirm.value.value === value)
+            return true;
 
           return "Hasła muszą być identyczne.";
         },
@@ -134,18 +141,27 @@ export default {
     const email = useField("email");
     const password = useField("password");
     const passwordConfirm = useField("passwordConfirm");
-
     const submit = handleSubmit(async (values) => {
-      const response = await axios.post("register/", {
-        email: values.email,
-        first_name: values.fname,
-        last_name: values.lname,
-        phone: values.phone,
-        password: values.password,
-      });
-      console.log(response);
+      try {
+        errorMsg.value = "";
+        const response = await axios.post("register/", {
+          email: values.email,
+          first_name: values.fname,
+          last_name: values.lname,
+          phone: values.phone,
+          password: values.password,
+        });
+        if (response.status === 201) {
+          const toastStore = useToastStore();
+          toastStore.displayToast("Pomyślnie utworzono konto.", "success");
+          context.emit("closeModal");
+        }
+      } catch (error) {
+        error.response.status === 400
+          ? (errorMsg.value = "Konto z podanymi danymi już istnieje.")
+          : (errorMsg.value = "Założenie konta nie powiodło się.");
+      }
     });
-
     return {
       fname,
       lname,
@@ -155,7 +171,14 @@ export default {
       passwordConfirm,
       submit,
       handleReset,
+      errorMsg,
     };
+  },
+  methods: {
+    handleClear() {
+      this.errorMsg = "";
+      this.handleReset();
+    },
   },
 };
 </script>
