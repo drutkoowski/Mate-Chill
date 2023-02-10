@@ -28,6 +28,7 @@ import LoginModal from "./components/login/LoginModal.vue";
 import SignupModal from "@/components/signup/SignupModal.vue";
 import Toast from "@/components/Toast.vue";
 import useMainStore from "@/stores/main";
+import axios from "axios";
 
 export default {
   name: "App",

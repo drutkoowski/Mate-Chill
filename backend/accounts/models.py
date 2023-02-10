@@ -6,7 +6,7 @@ from phone_field import PhoneField
 
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self, email, phone=None, first_name='', last_name='', password=None):
+    def create_user(self, email, password, phone=None, first_name='', last_name=''):
         if not email:
             raise ValueError("User must have an email address")
 
