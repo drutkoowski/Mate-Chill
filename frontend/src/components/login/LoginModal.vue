@@ -34,6 +34,7 @@
 <script>
 import { useField, useForm } from "vee-validate";
 import Button from "@/components/Button.vue";
+import axios from "axios";
 
 export default {
   name: "LoginModal",
@@ -50,12 +51,12 @@ export default {
     const { handleSubmit, handleReset } = useForm({
       validationSchema: {
         email(value) {
-          if (/^[a-z.-]+@[a-z.-]+[0-9]\.[a-z]+$/i.test(value)) return true;
+          if (/^[a-z0-9.]{1,64}@[a-z0-9.]{1,64}$/i.test(value)) return true;
 
           return "Pole musi zawierać poprawny adres e-mail.";
         },
         password(value) {
-          if (value?.length >= 8) return true;
+          if (value?.length >= 5) return true;
 
           return "Hasło musi składać się z conajmniej 8 znaków.";
         },
@@ -64,8 +65,9 @@ export default {
     const email = useField("email");
     const password = useField("password");
 
-    const submit = handleSubmit((values) => {
-      alert(JSON.stringify(values, null, 2));
+    const submit = handleSubmit(async (values) => {
+      const response = await axios.post("auth/login/", values);
+      console.log(response);
     });
 
     return { email, password, submit, handleReset };

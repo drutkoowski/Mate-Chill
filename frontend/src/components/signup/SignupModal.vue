@@ -78,6 +78,7 @@
 <script>
 import { useField, useForm } from "vee-validate";
 import Button from "@/components/Button.vue";
+import axios from "axios";
 
 export default {
   name: "SignupModal",
@@ -134,8 +135,15 @@ export default {
     const password = useField("password");
     const passwordConfirm = useField("passwordConfirm");
 
-    const submit = handleSubmit((values) => {
-      alert(JSON.stringify(values, null, 2));
+    const submit = handleSubmit(async (values) => {
+      const response = await axios.post("register/", {
+        email: values.email,
+        first_name: values.fname,
+        last_name: values.lname,
+        phone: values.phone,
+        password: values.password,
+      });
+      console.log(response);
     });
 
     return {

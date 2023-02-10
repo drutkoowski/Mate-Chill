@@ -1,6 +1,3 @@
-from typing import Union
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import AnonymousUser
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -18,19 +15,14 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
     serializer_class = AccountSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_object(self) -> Union[AbstractBaseUser, AnonymousUser]:
+    def get_object(self):
         return self.request.user
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
-    """
-    API view to log in - create JWT access and refresh tokens and place them into cookie.
-    Takes request with user credentials, credentials check against database and if correct returns
-    JWT access and refresh tokens placed into hhtponly cookies.
-    Remove access abd refresh JWT's from response body.
-    The idea here is to persist token at client side in the cookie not
-    in the local storage therefore protect JWTs against access by javascripts/ XSS.
-    """
 
     def post(self, request, *args, **kwargs) -> Response:
         response = super().post(request, *args, **kwargs)
@@ -48,7 +40,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
             samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"],
         )
 
-        # Remove tokens from response body for enchanced security.
+        # Remove tokens from response body for enhanced security.
         del response.data[settings.SIMPLE_JWT["AUTH_COOKIE"]]
         del response.data[settings.SIMPLE_JWT["REFRESH_COOKIE"]]
 
