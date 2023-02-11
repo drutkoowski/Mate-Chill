@@ -19,12 +19,11 @@ class Manufacturer(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=100)
     parent = models.ForeignKey('self', related_name='children', on_delete=models.CASCADE, blank=True, null=True)
-    # sub_categories = models.ManyToManyField(SubCategory)
     slug = models.SlugField(max_length=255)
 
     class Meta:
         verbose_name_plural = 'Categories'
-        ordering = ('name',)
+        ordering = ('id',)
 
     def __str__(self):
         return self.name

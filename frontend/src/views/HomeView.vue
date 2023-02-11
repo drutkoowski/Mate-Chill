@@ -39,7 +39,7 @@
         threshold: 0.5,
       }"
     >
-      <Section :headerText="'Nowości'" />
+      <Section :headerText="'Nowości'" :items="latestProducts" />
     </v-lazy>
   </v-sheet>
 
@@ -51,7 +51,7 @@
         threshold: 0.5,
       }"
     >
-      <Section :headerText="'Bestsellery'" />
+      <Section :headerText="'Bestsellery'" :items="latestProducts" />
     </v-lazy>
   </v-sheet>
 
@@ -89,8 +89,15 @@ import WebsiteFooter from "@/components/home/Footer.vue";
 import About from "@/components/home/About.vue";
 import PopularCategories from "@/components/home/PopularCategories.vue";
 import PolicyAcceptance from "@/components/home/PolicyAcceptance.vue";
+import axios from "axios";
 
 export default {
+  name: "HomeView",
+  data() {
+    return {
+      latestProducts: [],
+    };
+  },
   components: {
     About,
     // eslint-disable-next-line vue/no-reserved-component-names
@@ -99,6 +106,11 @@ export default {
     WebsiteFooter,
     PopularCategories,
     PolicyAcceptance,
+  },
+  async beforeMount() {
+    const latestProductsResponse = await axios.get("products/latest");
+    this.latestProducts = latestProductsResponse.data;
+    console.log(latestProductsResponse);
   },
 };
 </script>

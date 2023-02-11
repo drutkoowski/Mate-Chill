@@ -4,33 +4,65 @@
       <v-img
         class="align-center text-white"
         height="200"
-        src="/section1.png"
+        :src="imageLocation"
         contain
       >
       </v-img>
 
-      <v-card-subtitle class="pt-4"> 35.99 zł </v-card-subtitle>
+      <v-card-subtitle class="pt-4"> {{ item.price }} zł </v-card-subtitle>
     </v-card>
-    <h3 class="text-center mt-5">Guarani Let It Snow 400g</h3>
+    <div class="card__info">
+      <h3 class="text-center mt-5 card__info__header">{{ item.name }}</h3>
+      <p class="card__info__categories">
+        Kategoria:
+        <span v-for="category in item.category" :key="category.id">{{
+          category.name
+        }}</span>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "SectionCard",
+  props: {
+    item: Object,
+  },
+  computed: {
+    imageLocation() {
+      return import.meta.env.VITE_STATIC_ORGIN + this.item.images;
+    },
+  },
 };
 </script>
 
 <style scoped lang="scss">
 .card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
   transition: all 0.3s ease-in;
   &:hover {
     transform: scale(1.05) translateY(-25px) rotate(1deg);
   }
+  &__info {
+    display: flex;
+    flex-direction: column;
+    height: 7rem;
+    p {
+      color: var(--primary-white);
+      margin-top: auto;
+    }
+  }
   .v-card-subtitle {
-    color: var(--primary-green);
+    color: var(--primary-white);
     font-weight: bold;
     font-size: 1.5rem;
+    padding: 0.5rem;
+    width: max-content;
+    background-color: var(--primary-green);
+    border-top-right-radius: 10px;
   }
 }
 </style>

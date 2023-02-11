@@ -3,10 +3,7 @@
     <h1 class="text-center mt-20 text-5xl">{{ headerText }}</h1>
     <div class="wrapper">
       <div class="section-container">
-        <SectionCard />
-        <SectionCard />
-        <SectionCard />
-        <SectionCard />
+        <SectionCard v-for="item in items" :key="item.id" :item="item" />
       </div>
     </div>
   </div>
@@ -17,7 +14,10 @@ import SectionCard from "./SectionCard.vue";
 export default {
   // eslint-disable-next-line vue/no-reserved-component-names
   name: "Section",
-  props: ["headerText"],
+  props: {
+    headerText: String,
+    items: Array,
+  },
   components: {
     SectionCard,
   },
