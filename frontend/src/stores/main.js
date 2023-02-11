@@ -1,9 +1,11 @@
 import { defineStore } from "pinia";
+import cookies from "@/utils/cookies";
 
 export default defineStore("main", {
   state: () => ({
     isLoading: false,
     isPolicyAccepted: false,
+    cartItems: JSON.parse(cookies.getCookie("cartItems")) || [],
   }),
   actions: {
     on() {

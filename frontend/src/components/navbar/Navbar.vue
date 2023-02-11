@@ -17,28 +17,30 @@
       </li>
       <li
         @click.prevent="this.$emit('openModal', 'login')"
-        v-if="!store.isAuthenticated"
+        v-if="!userStore.isAuthenticated"
       >
         Zaloguj
       </li>
       <li
         @click.prevent="this.$emit('openModal', 'signup')"
-        v-if="!store.isAuthenticated"
+        v-if="!userStore.isAuthenticated"
       >
         Zarejestruj
       </li>
       <li
         @click.prevent="this.$emit('openModal', 'signup')"
-        v-if="store.isAuthenticated"
+        v-if="userStore.isAuthenticated"
       >
         Twój Panel
       </li>
-      <li @click.prevent="userLogout" v-if="store.isAuthenticated">Wyloguj</li>
+      <li @click.prevent="userLogout" v-if="userStore.isAuthenticated">
+        Wyloguj
+      </li>
 
       <li class="cart">
         <img class="cart-logo" src="/bag.svg" alt="Shopping cart logo" />
         <div>
-          <span>1</span>
+          <span>{{ mainStore.cartItems.length }}</span>
         </div>
       </li>
     </ul>
@@ -49,8 +51,9 @@
 <script>
 import LowerNav from "./LowerNav.vue";
 import useUserStore from "@/stores/user";
-import userAuth from "@/utils/userAuth";
 import useToastStore from "@/stores/toast";
+import useMainStore from "@/stores/main";
+import userAuth from "@/utils/userAuth";
 
 export default {
   name: "Navbar",
@@ -58,8 +61,9 @@ export default {
     LowerNav,
   },
   setup() {
-    const store = useUserStore();
-    return { store };
+    const userStore = useUserStore();
+    const mainStore = useMainStore();
+    return { userStore, mainStore };
   },
   methods: {
     async userLogout() {

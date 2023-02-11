@@ -16,8 +16,8 @@
         <div class="filter-element">
           <filterInput
             :type="'select'"
-            :text="'Podkategorie'"
-            :items="['Prezentowe', 'Dla par', 'Na początek']"
+            :text="'Kategorie'"
+            :items="['Yerba Mate', 'Dla par', 'Na początek']"
           />
         </div>
         <div class="filter-element">
@@ -65,37 +65,12 @@
             />
           </div>
         </div>
-        <small class="mb-2">3 wyszukanych produktów</small>
+        <small class="mb-2">{{ products.length }} wyszukanych produktów</small>
         <div class="products-container__products__container__wrapper">
           <ProductCard
-            :name="'Yerba mate El Pajaro Tradicional'"
-            :price="32.82"
-            :photoUrl="'https://www.yerbamarket.com/pol_il_Yerba-Mate-Yari-Menta-Peper-500g-13914.png'"
-          />
-          <ProductCard
-            :name="'Yerba Mate Green DESPALADA'"
-            :price="32.82"
-            :photoUrl="'https://www.yerbamarket.com/pol_il_Yerba-Mate-Green-DESPALADA-8172.jpg'"
-          />
-          <ProductCard
-            :name="'Yerba Mate Green LEMON'"
-            :price="32.82"
-            :photoUrl="'https://www.yerbamarket.com/pol_pm_Yerba-Mate-Green-LEMON-8183_10.jpg'"
-          />
-          <ProductCard
-            :name="'Yerba mate El Pajaro Tradicional'"
-            :price="32.82"
-            :photoUrl="'https://www.yerbamarket.com/pol_il_Yerba-Mate-Yari-Menta-Peper-500g-13914.png'"
-          />
-          <ProductCard
-            :name="'Yerba Mate Green DESPALADA'"
-            :price="32.82"
-            :photoUrl="'https://www.yerbamarket.com/pol_il_Yerba-Mate-Green-DESPALADA-8172.jpg'"
-          />
-          <ProductCard
-            :name="'Yerba Mate Green LEMON'"
-            :price="32.82"
-            :photoUrl="'https://www.yerbamarket.com/pol_pm_Yerba-Mate-Green-LEMON-8183_10.jpg'"
+            v-for="product in products"
+            :key="product.id"
+            :product="product"
           />
         </div>
       </div>
@@ -111,6 +86,7 @@ import filterInput from "@/components/filters/filterInput.vue";
 import Button from "@/components/Button.vue";
 import Paginator from "@/components/Paginator.vue";
 import ProductCard from "@/components/products/ProductCard.vue";
+import axios from "axios";
 
 export default {
   name: "ProductsView",
@@ -125,12 +101,17 @@ export default {
     return {
       page: 1,
       maxPages: 15,
+      products: [],
     };
   },
-  // created() {
-  //   const store = useToastStore();
-  //   store.displayToast("eloeloeloelo", "success");
-  // },
+  async beforeMount() {
+    try {
+      const response = await axios.get("products");
+      this.products = response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
   methods: {
     resetFilters() {
       this.$refs.form.reset();

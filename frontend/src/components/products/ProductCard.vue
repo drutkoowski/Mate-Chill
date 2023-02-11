@@ -1,21 +1,30 @@
 <template>
-  <v-card
-    class="mx-auto products-container__products__container__wrapper__product-card"
+  <router-link
+    :to="{
+      name: 'product-detail',
+      params: {
+        productSlug: product.slug,
+      },
+    }"
   >
-    <div
-      class="products-container__products__container__wrapper__product-card__image"
-      ref="image"
-    ></div>
-    <div
-      class="products-container__products__container__wrapper__product-card__description"
+    <v-card
+      class="mx-auto products-container__products__container__wrapper__product-card"
     >
-      <h3 class="text-center">{{ name }}</h3>
-      <div>
-        <small>{{ price }} zł</small
-        ><Button :text="'Zobacz'" class="button" type="submit" />
+      <div
+        class="products-container__products__container__wrapper__product-card__image"
+        ref="image"
+      ></div>
+      <div
+        class="products-container__products__container__wrapper__product-card__description"
+      >
+        <h3 class="text-center">{{ product.name }}</h3>
+        <div>
+          <small>{{ product.price }} zł</small
+          ><Button :text="'Zobacz'" class="button" type="submit" />
+        </div>
       </div>
-    </div>
-  </v-card>
+    </v-card>
+  </router-link>
 </template>
 
 <script>
@@ -27,13 +36,12 @@ export default {
     Button,
   },
   props: {
-    name: String,
-    price: Number,
-    photoUrl: String,
-    detailsUrl: String,
+    product: Object,
   },
   mounted() {
-    this.$refs.image.style.backgroundImage = `url(${this.photoUrl})`;
+    this.$refs.image.style.backgroundImage = `url(${
+      import.meta.env.VITE_STATIC_ORGIN + this.product.images
+    })`;
   },
 };
 </script>
