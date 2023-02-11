@@ -65,7 +65,7 @@
             />
           </div>
         </div>
-        <small class="mb-2">{{ products.length }} wyszukanych produktów</small>
+        <small class="mb-2">{{ pagination_count }} wyszukanych produktów</small>
         <div class="products-container__products__container__wrapper">
           <ProductCard
             v-for="product in products"
@@ -75,7 +75,11 @@
         </div>
       </div>
       <div class="products-container__products__paginator">
-        <Paginator :pageNum="page" :length="maxPages" />
+        <Paginator
+          :pageNum="pagination.page"
+          :length="pagination.maxPages"
+          @pageChange="paginate"
+        />
       </div>
     </div>
   </div>
@@ -99,15 +103,18 @@ export default {
   },
   data() {
     return {
-      page: 1,
-      maxPages: 15,
+      pagination: {
+        page: 1,
+        maxPages: 1,
+      },
       products: [],
+      pagination_count: 0,
     };
   },
   async beforeMount() {
     try {
       const response = await axios.get("products");
-      this.products = response.data;
+      this.fillCards(response);
     } catch (error) {
       console.log(error);
     }
@@ -115,6 +122,19 @@ export default {
   methods: {
     resetFilters() {
       this.$refs.form.reset();
+    },
+    fillCards(response) {
+      this.products = response.data.results;
+      this.pagination_count = response.data.count;
+      this.pagination.maxPages = Number(this.pagination_count % 8) + 1;
+    },
+    async paginate(page) {
+      try {
+        const response = await axios.get(`products?page=${page}`);
+        this.fillCards(response);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

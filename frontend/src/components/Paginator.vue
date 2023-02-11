@@ -5,6 +5,7 @@
     :length="length"
     size="small"
     total-visible="5"
+    @update:modelValue="this.$emit('pageChange', $event)"
   />
 </template>
 
