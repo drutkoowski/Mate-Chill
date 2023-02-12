@@ -1,6 +1,5 @@
 from rest_framework import viewsets, status
-from rest_framework.generics import get_object_or_404, ListAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -9,7 +8,7 @@ from products.models import Product, Category
 
 
 class ProductViewSet(viewsets.ViewSet):
-    permission_classes = [AllowAny, ]
+    authentication_classes = []
 
     def get_queryset(self, obj):
         return Product.objects.filter(num_available__gt=0)
@@ -36,7 +35,7 @@ class ProductViewSet(viewsets.ViewSet):
 class ProductLatestListView(APIView):
     model = Product
     serializer_class = ProductSerializer(many=True)
-    permission_classes = [AllowAny, ]
+    authentication_classes = []
 
     def get(self, request):
         queryset = Product.objects.all()[:4]
@@ -45,7 +44,7 @@ class ProductLatestListView(APIView):
 
 
 class CategoryViewSet(viewsets.ViewSet):
-    permission_classes = [AllowAny, ]
+    authentication_classes = []
 
     def list(self, request):
         queryset = Category.objects.all()

@@ -64,10 +64,15 @@
 import ProductGallery from "@/components/products/ProductGallery.vue";
 import filterInput from "@/components/filters/filterInput.vue";
 import Button from "@/components/Button.vue";
+import axios from "axios";
 export default {
   name: "ProductDetailView",
   // eslint-disable-next-line vue/no-reserved-component-names
   components: { Button, ProductGallery, filterInput },
+  async beforeMount() {
+    const response = await axios.get("products/");
+    console.log(this.$props);
+  },
   data: () => ({
     rating: 3,
   }),
