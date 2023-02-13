@@ -1,29 +1,21 @@
 <template>
   <div class="wrapper">
     <div class="product-image-container">
-      <ProductGallery
-        :slides="[
-          'https://www.yerbamarket.com/pol_pm_Yerba-Mate-Green-LEMON-8183_10.jpg',
-          'https://www.yerbamarket.com/pol_pm_Yerba-Mate-Green-LEMON-8183_1.png',
-          'https://www.yerbamarket.com/pol_pm_Yerba-Mate-Green-LEMON-8183_2.jpg',
-          'https://www.yerbamarket.com/pol_pm_Yerba-Mate-Laranjeiras-Yari-terere-limao-siciliano-500-g-15104_1.png',
-        ]"
-      />
+      <ProductGallery :slides="[item.images]" />
     </div>
     <div class="product-info-container">
-      <h1>Yerba Mate Laranjeiras Yari terere - limao siciliano 500 g</h1>
+      <h1>{{ item.name }}</h1>
       <div class="product-info-container__rating">
         <v-rating v-model="rating" readonly color="white" />
         <span>3.2/5.00 <span class="text-stone-50">(3 opinie)</span></span>
       </div>
       <div class="product-info-container__description mt-10">
-        <p>Producent: Asadas</p>
-        <p>Dostępność: <span>Bardzo duża ilość</span></p>
-        <p>Kraj producenta: Polska</p>
+        <p>Producent: {{ item.manufacturer?.name }}</p>
         <p>
-          Opis: Brazylijska yerba mate zawierająca listki i patyczki z porcją
-          naturalnego aromatu cytrynowego. Idealna do przygotowywania na zimno
+          Dostępność: <span>{{ item.num_available }}</span>
         </p>
+        <p>Kraj producenta: {{ item.country }}</p>
+        <p>Opis: {{ item.description }}</p>
       </div>
 
       <div class="product-info-container__customizable">
@@ -44,7 +36,7 @@
         />
       </div>
       <h3 class="product-info-container__price">
-        24,99 zł <small>brutto / szt.</small>
+        {{ item.price }} <small>brutto / szt.</small>
       </h3>
       <div class="product-info-container__actions">
         <div class="product-info-container__actions__counter">
@@ -69,11 +61,14 @@ export default {
   name: "ProductDetailView",
   // eslint-disable-next-line vue/no-reserved-component-names
   components: { Button, ProductGallery, filterInput },
-  async beforeMount() {
-    const response = await axios.get("products/");
-    console.log(this.$props);
+  async beforeCreate() {
+    const productSlug = this.$route.params.productSlug;
+    const response = await axios.get(`products/${productSlug}`);
+    this.item = response.data;
+    console.log(response.data);
   },
   data: () => ({
+    item: {},
     rating: 3,
   }),
 };

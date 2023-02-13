@@ -41,7 +41,9 @@
     <v-carousel-item
       v-for="(slide, i) in slides"
       :key="i"
-      :style="`background-image: url(${slide}); background-position: center`"
+      :style="`background-image: url(${getPath(
+        slide
+      )}); background-position: center`"
       class="slider__image"
     >
     </v-carousel-item>
@@ -50,7 +52,7 @@
     <div
       v-for="(slide, i) in slides"
       :key="i"
-      :style="`background-image: url(${slide})`"
+      :style="`background-image: url(${getPath(slide)})`"
       :class="{ 'not-current': i !== this.current }"
       @click.prevent="this.current = i"
     ></div>
@@ -67,6 +69,11 @@ export default {
     return {
       current: 0,
     };
+  },
+  methods: {
+    getPath(slide) {
+      return import.meta.env.VITE_STATIC_ORGIN + slide;
+    },
   },
 };
 </script>

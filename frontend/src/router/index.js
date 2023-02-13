@@ -21,6 +21,9 @@ const router = createRouter({
       path: "/produkty/:productSlug",
       name: "product-detail",
       params: true,
+      props: {
+        slug: String,
+      },
       component: ProductDetailView,
     },
     {
