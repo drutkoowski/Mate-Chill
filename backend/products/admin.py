@@ -14,6 +14,7 @@ class CategoryAdmin(admin.ModelAdmin):
         "slug": ("name",)
     }
 
+
 class ManufacturerAdmin(admin.ModelAdmin):
     prepopulated_fields = {
         "slug": ("name",)

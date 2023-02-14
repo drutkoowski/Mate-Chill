@@ -1,7 +1,11 @@
+import re
+
+from django.db.models import Q
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 
 from products.api.serializers import ProductSerializer, CategorySerializer, ManufacturerSerializer
 from products.models import Product, Category, Manufacturer
@@ -16,13 +20,16 @@ class ProductViewSet(viewsets.ViewSet):
     def list(self, request):
         min_price = self.request.query_params.get('minPrice') if self.request.query_params.get('minPrice') else None
         max_price = self.request.query_params.get('maxPrice') if self.request.query_params.get('maxPrice') else None
+
         manufacturer = self.request.query_params.get('manufacturer').split(',') \
             if self.request.query_params.get('manufacturer') else None
-        category = self.request.query_params.get('category').split(',') if self.request.query_params.get('category') \
-            else None
+
+        category = self.request.query_params.get('category') if self.request.query_params.get('category') else None
+
+        subcategory = self.request.query_params.get('subcategory').split(',') \
+            if self.request.query_params.get('subcategory') else None
+
         grams = self.request.query_params.get('grams').split(',') if self.request.query_params.get('grams') else None
-        print(min_price, max_price, manufacturer, category, grams)
-        from rest_framework.pagination import PageNumberPagination
         queryset = Product.objects.all()
         if min_price:
             queryset = queryset.filter(price__gte=min_price)
@@ -31,7 +38,14 @@ class ProductViewSet(viewsets.ViewSet):
         if manufacturer:
             queryset = queryset.filter(manufacturer__name__in=manufacturer)
         if category:
-            queryset = queryset.filter(category__name__in=category)
+            queryset = queryset.filter(category__name__iexact=category)
+        if subcategory:
+            queryset = queryset.filter(Q(category__name__in=subcategory) & Q(category__parent__name__iexact=category))
+        if grams:
+            filtered_grams = [re.search(r'\d+', i).group(0) for i in grams if i != 'większe']
+            if 'większe' in grams:
+                queryset = queryset.filter(grams_weight__gt=1000)
+            queryset = queryset.filter(grams_weight__in=filtered_grams)
 
         paginator = PageNumberPagination()
         page = paginator.paginate_queryset(queryset, request)

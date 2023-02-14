@@ -21,7 +21,7 @@ export default {
     items: Array,
     multiple: {
       type: Boolean,
-      default: true,
+      default: false,
       required: false,
     },
   },

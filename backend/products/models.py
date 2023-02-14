@@ -18,8 +18,8 @@ class Manufacturer(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    parent = models.ForeignKey('self', related_name='children', on_delete=models.CASCADE, blank=True, null=True)
     slug = models.SlugField(max_length=255)
+    parent = models.ForeignKey('self', related_name='subcategories', on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Categories'
@@ -35,7 +35,8 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=150)
     parent = models.ForeignKey('self', related_name='variants', on_delete=models.CASCADE, blank=True, null=True)
-    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, default='', related_name='products', null=True, blank=True)
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE, default='', related_name='products',
+                                     null=True, blank=True)
     country = models.CharField(max_length=100, blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=True)
     num_available = models.IntegerField(default=1)

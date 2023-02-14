@@ -20,6 +20,7 @@
             :text="'Producent'"
             v-model="manufacturer.value.value"
             :items="manufacturers"
+            multiple
           />
         </div>
         <div class="filter-element">
@@ -27,21 +28,26 @@
             :type="'select'"
             :text="'Kategorie'"
             v-model="category.value.value"
-            :items="['Yerba Mate', 'Dla par', 'Na początek']"
+            :items="categories.map((item) => item.name)"
+          />
+        </div>
+        <div class="filter-element" v-if="category.value.value">
+          <filterInput
+            :type="'select'"
+            :text="`Podkategorie
+          ${category.value.value}`"
+            v-model="subCategory.value.value"
+            :items="getSubCategories(category.value.value)"
+            multiple
           />
         </div>
         <div class="filter-element">
           <filterInput
             :type="'select'"
             :text="'Gramatura'"
-            :items="[
-              'mniejsza',
-              'do 250g',
-              'do 500g',
-              'do 1kg',
-              '2kg i większe',
-            ]"
+            :items="['25g', '50g', '250g', '500g', '1000g', 'większe']"
             v-model="grams.value.value"
+            multiple
           />
         </div>
         <div class="products-container__filters__buttons">
@@ -49,7 +55,7 @@
           <Button
             :text="'Wyczyść'"
             class="button"
-            @click.prevent="resetFilters"
+            @click.prevent="handleReset"
           />
         </div>
       </form>
@@ -119,6 +125,7 @@ export default {
     const maxPrice = useField("maxPrice");
     const manufacturer = useField("manufacturer");
     const category = useField("category");
+    const subCategory = useField("subcategory");
     const grams = useField("grams");
     const submit = handleSubmit(async function (values) {
       const manufacturerString = values.manufacturer
@@ -127,6 +134,9 @@ export default {
       const categoryString = values.category
         ? values.category.toString()
         : values.category;
+      const subCategoryString = values.subcategory
+        ? values.subcategory.toString()
+        : values.subcategory;
       const gramsString = values.grams ? values.grams.toString() : values.grams;
       return await axios.get("products/", {
         params: {
@@ -134,6 +144,7 @@ export default {
           maxPrice: values.maxPrice,
           manufacturer: manufacturerString,
           category: categoryString,
+          subcategory: subCategoryString,
           grams: gramsString,
         },
       });
@@ -144,6 +155,7 @@ export default {
       manufacturer,
       grams,
       category,
+      subCategory,
       submit,
       handleReset,
     };
@@ -166,13 +178,16 @@ export default {
       products: [],
       pagination_count: 0,
       manufacturers: [],
+      categories: [],
     };
   },
   async beforeMount() {
     try {
       const products = await axios.get("products/");
+      const manufacturers = await axios.get("manufacturers/");
       const categories = await axios.get("categories/");
-      this.manufacturers = categories.data.map((item) => item.name);
+      this.manufacturers = manufacturers.data.map((item) => item.name);
+      this.categories = categories.data;
       this.fillCards(products);
     } catch (error) {
       console.log(error);
@@ -182,9 +197,6 @@ export default {
     async submitFilters(event) {
       const response = await this.submit(event);
       this.fillCards(response);
-    },
-    resetFilters() {
-      this.$refs.form.reset();
     },
     fillCards(response) {
       this.pagination.nextUrl = response.data.next;
@@ -206,6 +218,11 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    getSubCategories(name) {
+      return this.categories
+        .filter((item) => item.name === name)[0]
+        ["subcategories"].map((item) => item.name);
     },
   },
 };

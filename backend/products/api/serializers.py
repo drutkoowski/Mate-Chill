@@ -1,17 +1,23 @@
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
 from products.models import Product, Category, Manufacturer
 
 
 class CategorySerializer(ModelSerializer):
+
     class Meta:
         model = Category
-        fields = "__all__"
+        fields = ("name", "slug", "subcategories",)
+
+    def get_fields(self):
+        fields = super(CategorySerializer, self).get_fields()
+        fields['subcategories'] = CategorySerializer(many=True)
+        return fields
 
 
 class ManufacturerSerializer(ModelSerializer):
-
     class Meta:
         model = Manufacturer
         fields = "__all__"
@@ -25,4 +31,3 @@ class ProductSerializer(ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
-
