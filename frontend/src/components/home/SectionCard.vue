@@ -1,26 +1,35 @@
 <template>
-  <div>
-    <v-card class="card">
-      <v-img
-        class="align-center text-white"
-        height="200"
-        :src="imageLocation"
-        contain
-      >
-      </v-img>
+  <router-link
+    :to="{
+      name: 'product-detail',
+      params: {
+        productSlug: item.slug,
+      },
+    }"
+  >
+    <div>
+      <v-card class="card">
+        <v-img
+          class="align-center text-white"
+          height="200"
+          :src="imageLocation"
+          contain
+        >
+        </v-img>
 
-      <v-card-subtitle class="pt-4"> {{ item.price }} zł </v-card-subtitle>
-    </v-card>
-    <div class="card__info">
-      <h3 class="text-center mt-5 card__info__header">{{ item.name }}</h3>
-      <p class="card__info__categories">
-        Kategoria:
-        <span v-for="category in item.category" :key="category.id">{{
-          category.name
-        }}</span>
-      </p>
+        <v-card-subtitle class="pt-4"> {{ item.price }} zł </v-card-subtitle>
+      </v-card>
+      <div class="card__info">
+        <h3 class="text-center mt-5 card__info__header">{{ item.name }}</h3>
+        <p class="card__info__categories">
+          Kategoria:
+          <span v-for="category in item.category" :key="category.id">{{
+            category.name
+          }}</span>
+        </p>
+      </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
@@ -31,7 +40,7 @@ export default {
   },
   computed: {
     imageLocation() {
-      return import.meta.env.VITE_STATIC_ORGIN + this.item.images;
+      return import.meta.env.VITE_STATIC_ORGIN + this.item.main_image;
     },
   },
 };

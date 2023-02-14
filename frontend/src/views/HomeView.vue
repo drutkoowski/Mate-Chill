@@ -110,7 +110,6 @@ export default {
   async beforeMount() {
     const latestProductsResponse = await axios.get("products/latest");
     this.latestProducts = latestProductsResponse.data;
-    console.log(latestProductsResponse);
   },
 };
 </script>

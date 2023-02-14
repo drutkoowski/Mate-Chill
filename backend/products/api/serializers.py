@@ -1,8 +1,7 @@
 from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
-from products.models import Product, Category, Manufacturer
+from products.models import Product, Category, Manufacturer, ProductImage
 
 
 class CategorySerializer(ModelSerializer):
@@ -23,10 +22,17 @@ class ManufacturerSerializer(ModelSerializer):
         fields = "__all__"
 
 
+class ProductImageSerializer(ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ("image",)
+
+
 class ProductSerializer(ModelSerializer):
     category = CategorySerializer(many=True)
     manufacturer = ManufacturerSerializer()
     link = serializers.URLField(source='get_absolute_url')
+    images = ProductImageSerializer(many=True)
 
     class Meta:
         model = Product

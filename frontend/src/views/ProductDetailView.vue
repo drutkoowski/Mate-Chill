@@ -1,7 +1,9 @@
 <template>
   <div class="wrapper">
     <div class="product-image-container">
-      <ProductGallery :slides="[item.images]" />
+      <ProductGallery
+        :slides="[item.main_image, ...item.images.map((item) => item.image)]"
+      />
     </div>
     <div class="product-info-container">
       <h1>{{ item.name }}</h1>

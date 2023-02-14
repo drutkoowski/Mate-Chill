@@ -40,7 +40,7 @@ export default {
   },
   mounted() {
     this.$refs.image.style.backgroundImage = `url(${
-      import.meta.env.VITE_STATIC_ORGIN + this.product.images
+      import.meta.env.VITE_STATIC_ORGIN + this.product.main_image
     })`;
   },
 };

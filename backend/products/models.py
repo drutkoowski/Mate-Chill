@@ -8,6 +8,11 @@ def upload_location(instance, filename):
         "products", "%s" % instance.name, filename)
 
 
+def upload_location_gallery(instance, filename):
+    return os.path.join(
+        "products", "%s" % instance.product.name, filename)
+
+
 class Manufacturer(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=255)
@@ -43,7 +48,7 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     price = models.FloatField()
     category = models.ManyToManyField(Category)
-    images = models.ImageField(upload_to=upload_location, blank=True, null=True)
+    main_image = models.ImageField(upload_to=upload_location, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     grams_weight = models.IntegerField(blank=True, null=True)
     capacity = models.IntegerField(blank=True, null=True)
@@ -60,3 +65,11 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return '/products/%s/' % self.slug
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=upload_location_gallery, blank=True, null=True)
+
+    def __str__(self):
+        return self.image.name
