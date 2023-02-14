@@ -203,7 +203,7 @@ export default {
       this.pagination.prevUrl = response.data.previous;
       this.products = response.data.results;
       this.pagination_count = response.data.count;
-      this.pagination.maxPages = Number(this.pagination_count % 8) + 1;
+      this.pagination.maxPages = Math.ceil(this.pagination_count / 8);
     },
     async paginate(page) {
       let url;
