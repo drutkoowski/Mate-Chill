@@ -1,22 +1,32 @@
 <template>
   <div class="products-container">
     <div class="products-container__filters">
-      <v-form ref="form" lazy-validation>
+      <form ref="form" lazy-validation @submit.prevent="submitFilters">
         <div class="filter-element">
-          <filterInput :type="'number'" :text="'Cena od'" />
-          <filterInput :type="'number'" :text="'Cena do'" />
+          <filterInput
+            :type="'number'"
+            :text="'Cena od'"
+            v-model="minPrice.value.value"
+          />
+          <filterInput
+            :type="'number'"
+            :text="'Cena do'"
+            v-model="maxPrice.value.value"
+          />
         </div>
         <div class="filter-element">
           <filterInput
             :type="'select'"
             :text="'Producent'"
-            :items="['Guarani', 'Verde Mate']"
+            v-model="manufacturer.value.value"
+            :items="manufacturers"
           />
         </div>
         <div class="filter-element">
           <filterInput
             :type="'select'"
             :text="'Kategorie'"
+            v-model="category.value.value"
             :items="['Yerba Mate', 'Dla par', 'Na początek']"
           />
         </div>
@@ -31,6 +41,7 @@
               'do 1kg',
               '2kg i większe',
             ]"
+            v-model="grams.value.value"
           />
         </div>
         <div class="products-container__filters__buttons">
@@ -41,7 +52,7 @@
             @click.prevent="resetFilters"
           />
         </div>
-      </v-form>
+      </form>
     </div>
     <div class="products-container__products">
       <div class="products-container__products__container">
@@ -91,6 +102,7 @@ import Button from "@/components/Button.vue";
 import Paginator from "@/components/Paginator.vue";
 import ProductCard from "@/components/products/ProductCard.vue";
 import axios from "axios";
+import { useField, useForm } from "vee-validate";
 
 export default {
   name: "ProductsView",
@@ -101,36 +113,95 @@ export default {
     Paginator,
     ProductCard,
   },
+  setup() {
+    const { handleSubmit, handleReset } = useForm({});
+    const minPrice = useField("minPrice");
+    const maxPrice = useField("maxPrice");
+    const manufacturer = useField("manufacturer");
+    const category = useField("category");
+    const grams = useField("grams");
+    const submit = handleSubmit(async function (values) {
+      const manufacturerString = values.manufacturer
+        ? values.manufacturer.toString()
+        : values.manufacturer;
+      const categoryString = values.category
+        ? values.category.toString()
+        : values.category;
+      const gramsString = values.grams ? values.grams.toString() : values.grams;
+      return await axios.get("products/", {
+        params: {
+          minPrice: values.minPrice,
+          maxPrice: values.maxPrice,
+          manufacturer: manufacturerString,
+          category: categoryString,
+          grams: gramsString,
+        },
+      });
+    });
+    return {
+      minPrice,
+      maxPrice,
+      manufacturer,
+      grams,
+      category,
+      submit,
+      handleReset,
+    };
+  },
   data() {
     return {
       pagination: {
         page: 1,
         maxPages: 1,
+        prevUrl: "",
+        nextUrl: "",
+      },
+      filters: {
+        min: "",
+        max: "",
+        category: "",
+        manufacturer: "",
+        grams: "",
       },
       products: [],
       pagination_count: 0,
+      manufacturers: [],
     };
   },
   async beforeMount() {
     try {
-      const response = await axios.get("products");
-      this.fillCards(response);
+      const products = await axios.get("products/");
+      const categories = await axios.get("categories/");
+      this.manufacturers = categories.data.map((item) => item.name);
+      this.fillCards(products);
     } catch (error) {
       console.log(error);
     }
   },
   methods: {
+    async submitFilters(event) {
+      const response = await this.submit(event);
+      this.fillCards(response);
+    },
     resetFilters() {
       this.$refs.form.reset();
     },
     fillCards(response) {
+      this.pagination.nextUrl = response.data.next;
+      this.pagination.prevUrl = response.data.previous;
       this.products = response.data.results;
       this.pagination_count = response.data.count;
       this.pagination.maxPages = Number(this.pagination_count % 8) + 1;
     },
     async paginate(page) {
+      let url;
+      if (page > this.pagination.page) {
+        url = this.pagination.nextUrl;
+      } else if (page <= this.pagination.page) {
+        url = this.pagination.prevUrl;
+      }
       try {
-        const response = await axios.get(`products?page=${page}`);
+        const response = await axios.get(url);
         this.fillCards(response);
       } catch (error) {
         console.log(error);

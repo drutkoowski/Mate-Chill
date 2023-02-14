@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:8000" + "/api/";
+axios.defaults.baseURL = import.meta.env.VITE_DEVELOPMENT_API_URL;
 axios.defaults.withCredentials = true;
 
 const axiosConfigRequest = axios.interceptors.request.use(
