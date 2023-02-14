@@ -3,30 +3,9 @@
     <template v-slot:activator="{ props }">
       <li v-bind="props">{{ text }}</li>
     </template>
-    <div class="card-container" :class="`col${cols}`">
-      <div v-if="cols === 3" class="card-container__wrapper">
-        <div class="card-container__flex-container">
-          <h1>Kraje</h1>
-          <p v-for="(country, index) in items['countries']" :key="index">
-            {{ country }}
-          </p>
-        </div>
-        <div class="card-container__flex-container">
-          <h1>Rodzaje</h1>
-          <p v-for="(country, index) in items['type']" :key="index">
-            {{ country }}
-          </p>
-        </div>
-        <div class="card-container__flex-container">
-          <h1>Producenci</h1>
-          <p v-for="(country, index) in items['brand']" :key="index">
-            {{ country }}
-          </p>
-        </div>
-      </div>
-
-      <p v-for="(item, index) in items" :key="index" v-else>
-        {{ item.title }}
+    <div class="card-container">
+      <p v-for="(item, index) in items" :key="index">
+        {{ item.name }}
       </p>
     </div>
   </v-menu>
@@ -37,7 +16,6 @@ export default {
   name: "ExpandableCard",
   props: {
     text: String,
-    cols: Number,
     items: Object,
   },
 };
@@ -55,31 +33,16 @@ li {
 .card-container {
   display: grid;
   grid-template-rows: auto;
+  grid-template-columns: repeat(1, 1fr);
   background-color: var(--primary-white);
   padding: 1rem 2rem;
   border-radius: 5px;
   color: var(--color-background);
-  &__wrapper {
-    display: grid;
-    column-gap: 5rem;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  &__flex-container {
-    display: flex;
-    flex-direction: column;
-    h1 {
-      font-size: 1.5rem;
+  p {
+    cursor: pointer;
+    &:hover {
+      color: var(--primary-green);
     }
   }
-}
-
-.col1 {
-  grid-template-columns: repeat(1, 1fr);
-}
-.col2 {
-  grid-template-columns: repeat(2, 1fr);
-}
-.col3 {
-  grid-template-columns: repeat(1, 1fr);
 }
 </style>

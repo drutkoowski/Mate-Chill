@@ -2,68 +2,10 @@
   <div class="lower-nav__wrapper">
     <ul>
       <ExpandableCard
-        :text="'Yerba Mate'"
-        :cols="3"
-        :items="{
-          countries: ['Urugwaj', 'Argentyna', 'Brazylia', 'Peru'],
-          type: ['Klasyczne', 'Pobudzające', 'Smakowe', 'Ziołowe'],
-          brand: ['Producent1', 'Producent2', 'Producent3', 'Producent4'],
-        }"
-      />
-      <ExpandableCard
-        :text="'Bombille'"
-        :cols="1"
-        :items="[
-          { title: 'Paragwaj' },
-          { title: 'Urugwaj' },
-          { title: 'Argentyna' },
-          { title: 'Brazylia' },
-          { title: 'Peru' },
-        ]"
-      />
-      <ExpandableCard
-        :text="'Naczynka'"
-        :cols="1"
-        :items="[
-          { title: 'Paragwaj' },
-          { title: 'Urugwaj' },
-          { title: 'Argentyna' },
-          { title: 'Brazylia' },
-          { title: 'Peru' },
-        ]"
-      />
-      <ExpandableCard
-        :text="'Zestawy'"
-        :cols="1"
-        :items="[
-          { title: 'Paragwaj' },
-          { title: 'Urugwaj' },
-          { title: 'Argentyna' },
-          { title: 'Brazylia' },
-          { title: 'Peru' },
-        ]"
-      />
-      <ExpandableCard
-        :text="'Kawy'"
-        :cols="1"
-        :items="[
-          { title: 'Paragwaj' },
-          { title: 'Urugwaj' },
-          { title: 'Argentyna' },
-          { title: 'Brazylia' },
-          { title: 'Peru' },
-        ]"
-      />
-      <ExpandableCard
-        :text="'Herbaty'"
-        :cols="1"
-        :items="[
-          { title: 'Paragwaj' },
-          { title: 'Urugwaj' },
-          { title: 'Argentyna' },
-          { title: 'Brazylia' },
-          { title: 'Peru' },
-        ]"
+        v-for="category in categories"
+        :key="category"
+        :text="category.name"
+        :items="category.subcategories"
       />
     </ul>
   </div>
@@ -71,12 +13,19 @@
 
 <script>
 import ExpandableCard from "./ExpandableCard.vue";
+import axios from "axios";
 export default {
   name: "LowerNav.vue",
   data() {
     return {
       isExpanded: false,
+      categories: [],
     };
+  },
+  async beforeMount() {
+    const response = await axios.get("categories/main");
+    this.categories = response.data;
+    console.log(response.data);
   },
   components: {
     ExpandableCard,

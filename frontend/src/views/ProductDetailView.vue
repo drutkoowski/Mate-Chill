@@ -2,7 +2,10 @@
   <div class="wrapper">
     <div class="product-image-container">
       <ProductGallery
-        :slides="[item.main_image, ...item.images.map((item) => item.image)]"
+        :slides="[
+          item.main_image,
+          ...item.images.map((element) => element.image),
+        ]"
       />
     </div>
     <div class="product-info-container">

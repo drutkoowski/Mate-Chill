@@ -82,6 +82,15 @@ class CategoryViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
+class CategoryMainViewSet(viewsets.ViewSet):
+    authentication_classes = []
+
+    def list(self, request):
+        queryset = Category.objects.filter(parent=None).all()
+        serializer = CategorySerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
 class ManufacturerViewSet(viewsets.ViewSet):
     authentication_classes = []
 

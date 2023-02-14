@@ -18,6 +18,10 @@ urlpatterns = [
          views.CategoryViewSet.as_view({'get': 'list'}),
          name='categories'
          ),
+    path('categories/main',
+         views.CategoryMainViewSet.as_view({'get': 'list'}),
+         name='main-categories'
+         ),
     path('manufacturers/',
          views.ManufacturerViewSet.as_view({'get': 'list'}),
          name="manufacturers"),
