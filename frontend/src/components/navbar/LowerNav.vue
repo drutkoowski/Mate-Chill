@@ -25,7 +25,6 @@ export default {
   async beforeMount() {
     const response = await axios.get("categories/main");
     this.categories = response.data;
-    console.log(response.data);
   },
   components: {
     ExpandableCard,

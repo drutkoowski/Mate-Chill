@@ -35,7 +35,7 @@
           <filterInput
             :type="'select'"
             :text="`Podkategorie
-          ${category.value.value}`"
+           ${category.value.value}`"
             v-model="subCategory.value.value"
             :items="getSubCategories(category.value.value)"
             multiple
@@ -55,7 +55,7 @@
           <Button
             :text="'Wyczyść'"
             class="button"
-            @click.prevent="handleReset"
+            @click.prevent="handleClear"
           />
         </div>
       </form>
@@ -138,16 +138,14 @@ export default {
         ? values.subcategory.toString()
         : values.subcategory;
       const gramsString = values.grams ? values.grams.toString() : values.grams;
-      return await axios.get("products/", {
-        params: {
-          minPrice: values.minPrice,
-          maxPrice: values.maxPrice,
-          manufacturer: manufacturerString,
-          category: categoryString,
-          subcategory: subCategoryString,
-          grams: gramsString,
-        },
-      });
+      return {
+        minPrice: values.minPrice,
+        maxPrice: values.maxPrice,
+        manufacturer: manufacturerString,
+        category: categoryString,
+        subcategory: subCategoryString,
+        grams: gramsString,
+      };
     });
     return {
       minPrice,
@@ -168,13 +166,6 @@ export default {
         prevUrl: "",
         nextUrl: "",
       },
-      filters: {
-        min: "",
-        max: "",
-        category: "",
-        manufacturer: "",
-        grams: "",
-      },
       products: [],
       pagination_count: 0,
       manufacturers: [],
@@ -183,20 +174,34 @@ export default {
   },
   async beforeMount() {
     try {
-      const products = await axios.get("products/");
       const manufacturers = await axios.get("manufacturers/");
       const categories = await axios.get("categories/");
       this.manufacturers = manufacturers.data.map((item) => item.name);
       this.categories = categories.data;
+      let products;
+      if (this.$route.query) {
+        products = await this.fetchData(this.$route.query, "products/");
+        this.category.value.value = this.$route.query.category;
+        this.subCategory.value.value = this.$route.query?.subcategory;
+      } else {
+        products = await this.fetchData({}, "products/");
+      }
       this.fillCards(products);
     } catch (error) {
       console.log(error);
     }
   },
   methods: {
+    handleClear(event) {
+      this.handleReset(event);
+      this.$router.replace({ query: {} });
+    },
     async submitFilters(event) {
-      const response = await this.submit(event);
-      this.fillCards(response);
+      const params = await this.submit(event);
+      this.$router.replace({ query: params });
+    },
+    async fetchData(filters, url = "products/") {
+      return await axios.get(url, { params: filters });
     },
     fillCards(response) {
       this.pagination.nextUrl = response.data.next;
@@ -213,7 +218,7 @@ export default {
         url = this.pagination.prevUrl;
       }
       try {
-        const response = await axios.get(url);
+        const response = await this.fetchData({}, url);
         this.fillCards(response);
       } catch (error) {
         console.log(error);
@@ -223,6 +228,12 @@ export default {
       return this.categories
         .filter((item) => item.name === name)[0]
         ["subcategories"].map((item) => item.name);
+    },
+  },
+  watch: {
+    async $route(route) {
+      const response = await this.fetchData(route.query);
+      this.fillCards(response);
     },
   },
 };

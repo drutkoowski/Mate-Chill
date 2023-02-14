@@ -1,12 +1,31 @@
 <template>
   <v-menu open-on-hover>
     <template v-slot:activator="{ props }">
-      <li v-bind="props">{{ text }}</li>
+      <li v-bind="props">
+        <router-link
+          :to="{
+            name: 'products',
+            query: {
+              category: text,
+            },
+          }"
+          >{{ text }}</router-link
+        >
+      </li>
     </template>
     <div class="card-container">
-      <p v-for="(item, index) in items" :key="index">
-        {{ item.name }}
-      </p>
+      <router-link
+        v-for="(item, index) in items"
+        :key="index"
+        :to="{
+          name: 'products',
+          query: {
+            category: text,
+            subcategory: item.name,
+          },
+        }"
+        >{{ item.name }}</router-link
+      >
     </div>
   </v-menu>
 </template>
