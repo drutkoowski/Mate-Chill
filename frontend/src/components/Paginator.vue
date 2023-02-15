@@ -1,5 +1,6 @@
 <template>
   <v-pagination
+    v-if="length !== 0"
     :model="pageNum"
     class="my-4"
     :length="length"

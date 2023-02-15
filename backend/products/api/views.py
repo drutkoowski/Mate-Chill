@@ -18,19 +18,17 @@ class ProductViewSet(viewsets.ViewSet):
         return Product.objects.filter(num_available__gt=0)
 
     def list(self, request):
-        min_price = self.request.query_params.get('minPrice') if self.request.query_params.get('minPrice') else None
-        max_price = self.request.query_params.get('maxPrice') if self.request.query_params.get('maxPrice') else None
-
+        min_price = self.request.query_params.get('minPrice')
+        max_price = self.request.query_params.get('maxPrice')
         manufacturer = self.request.query_params.get('manufacturer').split(',') \
             if self.request.query_params.get('manufacturer') else None
-
-        category = self.request.query_params.get('category') if self.request.query_params.get('category') else None
-
+        category = self.request.query_params.get('category')
         subcategory = self.request.query_params.get('subcategory').split(',') \
             if self.request.query_params.get('subcategory') else None
-
         grams = self.request.query_params.get('grams').split(',') if self.request.query_params.get('grams') else None
-        sorting = self.request.query_params.get('sorting') if self.request.query_params.get('sorting') else None
+        sorting = self.request.query_params.get('sorting')
+        query = self.request.query_params.get('q')
+
         queryset = Product.objects.all()
         if min_price:
             queryset = queryset.filter(price__gte=min_price)
@@ -47,6 +45,8 @@ class ProductViewSet(viewsets.ViewSet):
             if 'większe' in grams:
                 queryset = queryset.filter(grams_weight__gt=1000)
             queryset = queryset.filter(grams_weight__in=filtered_grams)
+        if query:
+            queryset = queryset.filter(name__icontains=query)
         if sorting:
             sorting_type = 'price'
             if sorting == '0':

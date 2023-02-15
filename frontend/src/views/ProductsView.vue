@@ -28,7 +28,7 @@
             :type="'select'"
             :text="'Kategorie'"
             v-model="category.value.value"
-            :items="categories.map((item) => item.name)"
+            :items="mainCategories.map((item) => item.name)"
           />
         </div>
         <div class="filter-element" v-if="category.value.value">
@@ -69,8 +69,17 @@
             <v-text-field
               bg-color="white"
               label="Wyszukaj produkt"
-              append-inner-icon="mdi-magnify"
-            />
+              v-model="query"
+              ><template v-slot:append-inner>
+                <v-icon
+                  color="#04b60e"
+                  size="large"
+                  @click.prevent="submitSearch"
+                  @keyup.enter="submitSearch"
+                  >mdi-magnify</v-icon
+                >
+              </template></v-text-field
+            >
           </div>
           <div
             class="products-container__products__container__indicators--sorting"
@@ -180,6 +189,8 @@ export default {
       pagination_count: 0,
       manufacturers: [],
       categories: [],
+      mainCategories: [],
+      query: "",
     };
   },
   async beforeMount() {
@@ -188,6 +199,9 @@ export default {
       const categories = await axios.get("categories/");
       this.manufacturers = manufacturers.data.map((item) => item.name);
       this.categories = categories.data;
+      this.mainCategories = categories.data.filter(
+        (item) => item.subcategories.length > 0
+      );
       // categories.data.some((item) => item.name === this.$route.query.category)
       let products;
       if (this.$route.query) {
@@ -203,6 +217,13 @@ export default {
     }
   },
   methods: {
+    submitSearch() {
+      let queryParams = this.$route.query;
+      this.$router.replace({
+        query: { ...queryParams, q: this.query },
+      });
+      this.query = "";
+    },
     setSorting(value) {
       let query = this.$route.query;
       this.$router.replace({

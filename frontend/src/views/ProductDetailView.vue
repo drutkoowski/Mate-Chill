@@ -4,7 +4,7 @@
       <ProductGallery
         :slides="[
           item.main_image,
-          ...item.images.map((element) => element.image),
+          ...item.images?.map((element) => element.image),
         ]"
       />
     </div>

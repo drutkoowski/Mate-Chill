@@ -8,6 +8,9 @@ class ProductAdmin(admin.ModelAdmin):
         "slug": ("name",)
     }
 
+    class Media:
+        js = ("add_model_admin.js",)
+
 
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {
