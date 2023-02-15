@@ -78,7 +78,8 @@
             <v-select
               bg-color="white"
               label="Sortuj"
-              :items="['Cena rosnąco', 'Cena malejąco ']"
+              :items="['Cena rosnąco', 'Cena malejąco']"
+              @update:modelValue="setSorting"
             />
           </div>
         </div>
@@ -89,6 +90,15 @@
             :key="product.id"
             :product="product"
           />
+          <div
+            v-if="products.length === 0"
+            class="products-container__products__container__wrapper__no-results"
+          >
+            <img src="/no-results.svg" alt="No results icon" />
+            <h3 class="text-center my-10">
+              Niestety, nie znaleziono wyników spełniających Twoje wymogi.
+            </h3>
+          </div>
         </div>
       </div>
       <div class="products-container__products__paginator">
@@ -178,6 +188,7 @@ export default {
       const categories = await axios.get("categories/");
       this.manufacturers = manufacturers.data.map((item) => item.name);
       this.categories = categories.data;
+      // categories.data.some((item) => item.name === this.$route.query.category)
       let products;
       if (this.$route.query) {
         products = await this.fetchData(this.$route.query, "products/");
@@ -192,6 +203,12 @@ export default {
     }
   },
   methods: {
+    setSorting(value) {
+      let query = this.$route.query;
+      this.$router.replace({
+        query: { ...query, sorting: value === "Cena rosnąco" ? 0 : 1 },
+      });
+    },
     handleClear(event) {
       this.handleReset(event);
       this.$router.replace({ query: {} });
@@ -232,6 +249,8 @@ export default {
   },
   watch: {
     async $route(route) {
+      this.category.value.value = route.query?.category;
+      this.subCategory.value.value = route.query?.subcategory;
       const response = await this.fetchData(route.query);
       this.fillCards(response);
     },
@@ -290,6 +309,15 @@ export default {
       grid-column-gap: 2rem;
       grid-row-gap: 2rem;
       padding: 0.5rem 0.5rem;
+      &__no-results {
+        grid-row: 1/-1;
+        grid-column: 1/-1;
+        img {
+          width: 15rem;
+          height: 15rem;
+          margin: 0 auto;
+        }
+      }
     }
     &__indicators {
       display: flex;
@@ -298,7 +326,7 @@ export default {
         flex-grow: 1;
       }
       &--sorting {
-        width: 10rem;
+        width: 15rem;
       }
     }
   }

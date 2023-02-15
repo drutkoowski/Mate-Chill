@@ -30,6 +30,7 @@ class ProductViewSet(viewsets.ViewSet):
             if self.request.query_params.get('subcategory') else None
 
         grams = self.request.query_params.get('grams').split(',') if self.request.query_params.get('grams') else None
+        sorting = self.request.query_params.get('sorting') if self.request.query_params.get('sorting') else None
         queryset = Product.objects.all()
         if min_price:
             queryset = queryset.filter(price__gte=min_price)
@@ -46,7 +47,13 @@ class ProductViewSet(viewsets.ViewSet):
             if 'większe' in grams:
                 queryset = queryset.filter(grams_weight__gt=1000)
             queryset = queryset.filter(grams_weight__in=filtered_grams)
-
+        if sorting:
+            sorting_type = 'price'
+            if sorting == '0':
+                sorting_type = 'price'
+            elif sorting == '1':
+                sorting_type = '-price'
+            queryset = queryset.order_by(sorting_type)
         paginator = PageNumberPagination()
         page = paginator.paginate_queryset(queryset, request)
         if page is not None:
