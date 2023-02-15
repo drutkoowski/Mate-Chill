@@ -1,12 +1,7 @@
 <template>
   <div class="wrapper">
     <div class="product-image-container">
-      <ProductGallery
-        :slides="[
-          item.main_image,
-          ...item.images?.map((element) => element.image),
-        ]"
-      />
+      <ProductGallery :slides="images" />
     </div>
     <div class="product-info-container">
       <h1>{{ item.name }}</h1>
@@ -23,25 +18,19 @@
         <p>Opis: {{ item.description }}</p>
       </div>
 
-      <div class="product-info-container__customizable">
-        <filterInput
+      <div
+        class="product-info-container__customizable"
+        v-if="item.variants?.length > 0"
+      >
+        <variationFilter
           class="mt-2"
-          :type="'select'"
-          :text="'Rozmiar'"
-          :multiple="false"
-          :items="['25g', '500g', '1000g']"
-        />
-      </div>
-      <div class="product-info-container__customizable">
-        <filterInput
-          :type="'select'"
-          :text="'Rozmiar'"
-          :multiple="false"
-          :items="['25g', '500g', '1000g']"
+          :text="'Warianty'"
+          :items="item.variants.map((item) => item.name)"
+          @handleRedirect="changeRoute"
         />
       </div>
       <h3 class="product-info-container__price">
-        {{ item.price }} <small>brutto / szt.</small>
+        {{ item.price }} <small>zł brutto / szt.</small>
       </h3>
       <div class="product-info-container__actions">
         <div class="product-info-container__actions__counter">
@@ -59,23 +48,53 @@
 
 <script>
 import ProductGallery from "@/components/products/ProductGallery.vue";
-import filterInput from "@/components/filters/filterInput.vue";
 import Button from "@/components/Button.vue";
 import axios from "axios";
+import VariationFilter from "@/components/filters/variationFilter.vue";
 export default {
   name: "ProductDetailView",
   // eslint-disable-next-line vue/no-reserved-component-names
-  components: { Button, ProductGallery, filterInput },
-  async beforeCreate() {
-    const productSlug = this.$route.params.productSlug;
-    const response = await axios.get(`products/${productSlug}`);
-    this.item = response.data;
-    console.log(response.data);
+  components: { VariationFilter, Button, ProductGallery },
+  async created() {
+    await this.fetchData();
   },
   data: () => ({
     item: {},
+    images: [],
     rating: 3,
   }),
+  methods: {
+    slugify(string) {
+      return string
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/[\s_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    },
+    async changeRoute(e) {
+      this.$router.push({
+        name: "product-detail",
+        params: {
+          productSlug: this.slugify(e),
+        },
+      });
+    },
+    async fetchData() {
+      const productSlug = this.$route.params.productSlug;
+      const response = await axios.get(`products/${productSlug}`);
+      this.item = response.data;
+      let images = [this.item.main_image];
+      if (this.item.images.length > 0)
+        images = [...this.item.images.map((element) => element.image)];
+      this.images = images;
+    },
+  },
+  watch: {
+    async $route() {
+      await this.fetchData();
+    },
+  },
 };
 </script>
 
@@ -101,7 +120,7 @@ export default {
   &__customizable {
     display: flex;
     align-items: center;
-    width: 15rem;
+    width: 25rem;
   }
   &__price {
     font-size: 2rem;

@@ -40,5 +40,9 @@ class ProductSerializer(ModelSerializer):
         fields = "__all__"
 
     def get_variants(self, obj):
-        print(obj.variants.all().count())
-        return 'tak'
+        all_variants = obj.variants.all()
+        if all_variants.exists():
+            objects = obj.variants.all()
+            serializer = ProductSerializer(objects, many=True)
+            return serializer.data
+        return []

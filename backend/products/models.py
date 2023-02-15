@@ -46,7 +46,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     num_available = models.IntegerField(default=1)
     description = models.TextField(blank=True, null=True)
-    price = models.FloatField()
+    price = models.DecimalField(max_digits=5, decimal_places=2)
     category = models.ManyToManyField(Category, blank=True, null=True)
     main_image = models.ImageField(upload_to=upload_location, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -65,14 +65,11 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if self.parent:
-            self.category = self.parent.category
             self.country = self.parent.country
-            self.grams_weight = self.parent.grams_weight
-            self.capacity = self.parent.capacity
-            self.color = self.parent.color
-            self.cm_length = self.parent.cm_length
             self.manufacturer = self.parent.manufacturer
             self.description = self.parent.description
+            if not self.main_image:
+                self.main_image = self.parent.main_image
         super(Product, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
