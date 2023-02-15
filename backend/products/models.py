@@ -31,6 +31,8 @@ class Category(models.Model):
         ordering = ('id',)
 
     def __str__(self):
+        if self.parent is not None:
+            return f'{self.parent.name} | wariant: {self.name}'
         return self.name
 
     def get_absolute_url(self):
