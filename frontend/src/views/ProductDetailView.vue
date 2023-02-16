@@ -111,12 +111,12 @@ export default {
     },
     addToCart() {
       const store = useToastStore();
-      if (this.item.count > 0) {
+      if (this.itemCounter > 0) {
         cookies.setCartCookie({
           id: this.item.id,
           count: this.itemCounter,
         });
-        this.itemCounter = 0;
+        this.itemCounter = 1;
         store.displayToast("Produkt dodany do koszyka", "success");
       } else {
         store.displayToast("Wybierz ilość produktu", "#E85959FF");

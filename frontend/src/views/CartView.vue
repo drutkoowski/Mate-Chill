@@ -166,7 +166,7 @@ export default {
   },
   watch: {
     itemsPriceSum() {
-      this.shippingCost = this.itemsPriceSum >= 60 ? 0 : this.shippingCost;
+      this.shippingCost = this.itemsPriceSum >= 60 ? 0 : 9.99;
     },
   },
   computed: {
