@@ -1,5 +1,5 @@
 <template>
-  <div class="cart-wrapper">
+  <div class="cart-wrapper" v-if="this.items.length > 0">
     <div class="cart-wrapper__products">
       <div
         class="cart-wrapper__products__element"
@@ -34,7 +34,15 @@
 
         <p class="cart-wrapper__products__element__actions">
           {{ (item.count * item.price).toFixed(2) }} zł
-          <v-icon color="#EE0D0DFF" size="large">mdi-trash-can</v-icon>
+          <v-icon
+            color="#EE0D0DFF"
+            size="large"
+            @click.prevent="
+              isModalVisible = true;
+              modalItem = item;
+            "
+            >mdi-trash-can</v-icon
+          >
         </p>
       </div>
     </div>
@@ -45,14 +53,42 @@
       <p>
         Dostawa: <span>{{ shippingCost }} zł</span>
       </p>
-      <p>Cena końcowa: {{ totalPrice }} zł</p>
-      <Button :text="'Przejdź do zakupu'" class="mt-4" />
+      <p>Cena końcowa: {{ totalPrice.toFixed(2) }} zł</p>
+      <Button :text="'Przejdź do zakupu'" class="mt-8" />
     </div>
   </div>
+  <div class="cart-wrapper__empty" v-else>
+    <v-icon color="#EE0D0DFF" size="200">mdi-cart-off</v-icon>
+    <h3 class="mt-10">Nie masz żadnych produktów w koszyku...</h3>
+    <router-link :to="{ name: 'products' }"
+      ><p>Przeglądaj produkty &#8594;</p></router-link
+    >
+  </div>
+  <ModalOverlay
+    v-if="isModalVisible"
+    class="cart-confirm-modal"
+    @closeModal="isModalVisible = false"
+  >
+    <h3>Potwierdź usunięcie produktu z koszyka</h3>
+    <p>
+      Czy na pewno chcesz usunąć <span>{{ modalItem.name }}</span> z koszyka?
+    </p>
+    <Button
+      :text="'Potwierdź'"
+      class="mt-8"
+      @click.prevent="
+        deleteCartItem(this.modalItem);
+        this.items = this.items.filter((el) => el.id !== modalItem.id);
+        isModalVisible = false;
+        modalItem = {};
+      "
+    />
+  </ModalOverlay>
 </template>
 
 <script>
 import ProductCounter from "@/components/ProductCounter.vue";
+import ModalOverlay from "@/components/ModalOverlay.vue";
 import Button from "@/components/Button.vue";
 import cookies from "@/utils/cookies";
 import axios from "axios";
@@ -62,12 +98,15 @@ export default {
     ProductCounter,
     // eslint-disable-next-line vue/no-reserved-component-names
     Button,
+    ModalOverlay,
   },
   data() {
     return {
       items: [],
       itemsPriceSum: 0,
       shippingCost: 9.99,
+      isModalVisible: false,
+      modalItem: {},
     };
   },
   async created() {
@@ -88,7 +127,7 @@ export default {
     getPhotoUrl(item) {
       return import.meta.env.VITE_STATIC_ORGIN + item.main_image;
     },
-    handleMinus(item) {
+    deleteCartItem(item) {
       const newCartItem = {
         id: item.id,
         count: item.count - 1,
@@ -101,6 +140,14 @@ export default {
         sum += el;
       });
       this.itemsPriceSum = sum;
+    },
+    handleMinus(item) {
+      if (item.count === 1) {
+        this.isModalVisible = true;
+        this.modalItem = item;
+        return;
+      }
+      this.deleteCartItem(item);
     },
     handlePlus(item) {
       const newCartItem = {
@@ -131,6 +178,17 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.cart-confirm-modal {
+  color: var(--primary-white);
+  h3 {
+    font-size: 2rem;
+  }
+  p {
+    span {
+      color: var(--primary-green);
+    }
+  }
+}
 .cart-wrapper {
   margin-top: 5rem;
   flex-grow: 1;
@@ -214,6 +272,26 @@ export default {
     }
     p:first-of-type {
       margin-top: 2rem;
+    }
+  }
+}
+
+.cart-wrapper__empty {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--primary-white);
+  h3 {
+    font-size: 2.5rem;
+  }
+  p {
+    font-size: 1.5rem;
+    transition: all 0.3s ease-in;
+    &:hover {
+      transform: scale(1.05);
+      color: var(--primary-green);
     }
   }
 }

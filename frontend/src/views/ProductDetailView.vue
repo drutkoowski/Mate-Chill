@@ -81,7 +81,7 @@ export default {
     item: {},
     images: [],
     rating: 3,
-    itemCounter: 0,
+    itemCounter: 1,
   }),
   methods: {
     slugify(string) {
@@ -110,13 +110,17 @@ export default {
       this.images = images;
     },
     addToCart() {
-      cookies.setCartCookie({
-        id: this.item.id,
-        count: this.itemCounter,
-      });
-      this.itemCounter = 0;
       const store = useToastStore();
-      store.displayToast("Produkt dodany do koszyka", "success");
+      if (this.item.count > 0) {
+        cookies.setCartCookie({
+          id: this.item.id,
+          count: this.itemCounter,
+        });
+        this.itemCounter = 0;
+        store.displayToast("Produkt dodany do koszyka", "success");
+      } else {
+        store.displayToast("Wybierz ilość produktu", "#E85959FF");
+      }
     },
   },
   watch: {
