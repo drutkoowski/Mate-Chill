@@ -40,20 +40,11 @@
       </h3>
       <div class="product-info-container__actions">
         <div class="product-info-container__actions__counter">
-          <v-icon
-            class="mr-auto"
-            color="red"
-            @click.prevent="itemCounter === 0 ? null : itemCounter--"
-            >mdi-minus</v-icon
-          >
-
-          <h5 class="text-center font-weight-bold text-h5">
-            {{ itemCounter }}
-          </h5>
-
-          <v-icon class="ml-auto" @click.prevent="itemCounter++"
-            >mdi-plus</v-icon
-          >
+          <ProductCounter
+            :itemCounter="itemCounter"
+            @minus="itemCounter--"
+            @plus="itemCounter++"
+          />
         </div>
         <Button :text="'Dodaj do koszyka'" @click.prevent="addToCart" />
       </div>
@@ -71,11 +62,18 @@ import ShippingInfo from "@/components/products/product/shippingInfo.vue";
 import cookies from "@/utils/cookies";
 import useToastStore from "@/stores/toast";
 import axios from "axios";
+import ProductCounter from "@/components/ProductCounter.vue";
 
 export default {
   name: "ProductDetailView",
-  // eslint-disable-next-line vue/no-reserved-component-names
-  components: { ShippingInfo, VariationFilter, Button, ProductGallery },
+  components: {
+    ProductCounter,
+    ShippingInfo,
+    VariationFilter,
+    // eslint-disable-next-line vue/no-reserved-component-names
+    Button,
+    ProductGallery,
+  },
   async created() {
     await this.fetchData();
   },
@@ -190,7 +188,8 @@ export default {
     height: 3rem;
     width: 7rem;
     border-radius: 5px;
-    background-color: var(--white);
+    padding: 0 5px;
+    outline: 1px solid var(--primary-white);
     h5 {
       color: var(--color-background);
     }

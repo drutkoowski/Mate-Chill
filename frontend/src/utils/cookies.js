@@ -1,3 +1,5 @@
+import useMainStore from "@/stores/main";
+
 export default {
   getCookie(name) {
     let value = `; ${document.cookie}`;
@@ -24,11 +26,26 @@ export default {
     } else {
       newCookie.push(item);
     }
+    const store = useMainStore();
+    store.setCartItems(newCookie);
     document.cookie = `cartItems=${JSON.stringify(newCookie)};max-age=${
       60 * 60 * 24 * 14
     };path=/;`;
   },
   deleteCookie(name) {
     document.cookie = `${name}=delete; path=/; max-age=0;`;
+  },
+  changeCartItem(item) {
+    const currentCookie = JSON.parse(this.getCookie("cartItems"));
+    const filteredCookieArray = currentCookie.filter((el) => el.id !== item.id);
+    if (item.count !== 0) {
+      filteredCookieArray.push(item);
+    }
+    this.deleteCookie("cartItems");
+    const store = useMainStore();
+    store.setCartItems(filteredCookieArray);
+    document.cookie = `cartItems=${JSON.stringify(
+      filteredCookieArray
+    )};max-age=${60 * 60 * 24 * 14};path=/;`;
   },
 };

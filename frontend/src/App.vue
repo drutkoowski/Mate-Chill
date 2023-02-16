@@ -37,6 +37,7 @@ export default {
   name: "App",
   setup() {
     const mainStore = useMainStore();
+    mainStore.getCartItems();
     return { mainStore };
   },
   async created() {

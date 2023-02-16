@@ -38,10 +38,12 @@
       </li>
 
       <li class="cart">
-        <img class="cart-logo" src="/bag.svg" alt="Shopping cart logo" />
-        <div>
-          <span>{{ mainStore.cartItems.length }}</span>
-        </div>
+        <router-link :to="{ name: 'cart' }"
+          ><img class="cart-logo" src="/bag.svg" alt="Shopping cart logo" />
+          <div>
+            <span>{{ mainStore.cartItems.length }}</span>
+          </div></router-link
+        >
       </li>
     </ul>
     <LowerNav />
@@ -63,7 +65,6 @@ export default {
   setup() {
     const userStore = useUserStore();
     const mainStore = useMainStore();
-    console.log(mainStore.cartItems);
     return { userStore, mainStore };
   },
   methods: {

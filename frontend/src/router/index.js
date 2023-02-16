@@ -3,6 +3,7 @@ import HomeView from "@/views/HomeView.vue";
 import ProductsView from "@/views/ProductsView.vue";
 import ProductDetailView from "@/views/ProductDetailView.vue";
 import useMainStore from "@/stores/main";
+import CartView from "@/views/CartView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +26,11 @@ const router = createRouter({
         slug: String,
       },
       component: ProductDetailView,
+    },
+    {
+      path: "/koszyk",
+      name: "cart",
+      component: CartView,
     },
     {
       path: "/:catchAll(.*)*",

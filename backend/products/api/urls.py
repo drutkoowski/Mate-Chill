@@ -14,6 +14,9 @@ urlpatterns = [
     path('products/<slug:slug>',
          views.ProductViewSet.as_view({'get': 'retrieve'}),
          name="product-detail"),
+    path('product/<int:pk>',
+         views.SingleProductView.as_view({'get': 'retrieve'}),
+         name="product-by-id"),
     path('categories/',
          views.CategoryViewSet.as_view({'get': 'list'}),
          name='categories'

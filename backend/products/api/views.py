@@ -80,6 +80,15 @@ class ProductLatestListView(APIView):
         return Response(serializer.data)
 
 
+class SingleProductView(viewsets.ViewSet):
+    authentication_classes = []
+
+    def retrieve(self, request, pk=None):
+        item = get_object_or_404(Product, pk=pk)
+        serializer = ProductSerializer(item)
+        return Response(serializer.data)
+
+
 class CategoryViewSet(viewsets.ViewSet):
     authentication_classes = []
 

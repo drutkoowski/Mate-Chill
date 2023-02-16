@@ -5,7 +5,7 @@ export default defineStore("main", {
   state: () => ({
     isLoading: false,
     isPolicyAccepted: false,
-    cartItems: JSON.parse(cookies.getCookie("cartItems")) || [],
+    cartItems: [],
   }),
   actions: {
     on() {
@@ -18,6 +18,13 @@ export default defineStore("main", {
     },
     acceptPolicy() {
       this.isPolicyAccepted = true;
+    },
+    setCartItems(items) {
+      this.cartItems = items;
+    },
+    getCartItems() {
+      const cartCookie = cookies.getCookie("cartItems");
+      this.cartItems = cartCookie ? JSON.parse(cartCookie) : [];
     },
   },
 });
