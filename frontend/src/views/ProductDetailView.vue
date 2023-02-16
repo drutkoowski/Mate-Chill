@@ -55,7 +55,7 @@
             >mdi-plus</v-icon
           >
         </div>
-        <Button :text="'Dodaj do koszyka'" />
+        <Button :text="'Dodaj do koszyka'" @click.prevent="addToCart" />
       </div>
       <p class="mt-2">Suma {{ (itemCounter * item.price).toFixed(2) }} zł</p>
       <ShippingInfo />
@@ -66,9 +66,12 @@
 <script>
 import ProductGallery from "@/components/products/ProductGallery.vue";
 import Button from "@/components/Button.vue";
-import axios from "axios";
 import VariationFilter from "@/components/filters/variationFilter.vue";
 import ShippingInfo from "@/components/products/product/shippingInfo.vue";
+import cookies from "@/utils/cookies";
+import useToastStore from "@/stores/toast";
+import axios from "axios";
+
 export default {
   name: "ProductDetailView",
   // eslint-disable-next-line vue/no-reserved-component-names
@@ -107,6 +110,15 @@ export default {
       if (this.item.images.length > 0)
         images = [...this.item.images.map((element) => element.image)];
       this.images = images;
+    },
+    addToCart() {
+      cookies.setCartCookie({
+        id: this.item.id,
+        count: this.itemCounter,
+      });
+      this.itemCounter = 0;
+      const store = useToastStore();
+      store.displayToast("Produkt dodany do koszyka", "success");
     },
   },
   watch: {

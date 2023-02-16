@@ -63,6 +63,7 @@ export default {
   setup() {
     const userStore = useUserStore();
     const mainStore = useMainStore();
+    console.log(mainStore.cartItems);
     return { userStore, mainStore };
   },
   methods: {
