@@ -96,10 +96,9 @@
 import Button from "@/components/Button.vue";
 import cookies from "@/utils/cookies";
 import useUserStore from "@/stores/user";
-
 import { useField, useForm } from "vee-validate";
 import axios from "axios";
-
+import { ref } from "vue";
 export default {
   name: "OrderView",
   data() {
@@ -107,6 +106,7 @@ export default {
       items: [],
       itemsPriceSum: 0,
       shippingCost: 0,
+      publishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
     };
   },
   components: {
@@ -114,6 +114,9 @@ export default {
     Button,
   },
   setup() {
+    const sessionId = ref("");
+    const sessionUrl = ref("");
+
     const { handleSubmit, handleReset } = useForm({
       validationSchema: {
         fname(value) {
@@ -144,6 +147,7 @@ export default {
         },
       },
     });
+
     const fname = useField("fname");
     const lname = useField("lname");
     const phone = useField("phone");
@@ -159,7 +163,14 @@ export default {
     phone.value.value = userStore.user.phone;
 
     const submit = handleSubmit(async function (values) {
-      console.log(values);
+      const response = await axios.post("payments/create-session/", {
+        product_name: "yerbka dobra",
+        price: Number(21),
+      });
+      console.log(response);
+      sessionId.value = response.data.session.id;
+      sessionUrl.value = response.data.session.url;
+      window.location.href = sessionUrl.value;
     });
 
     return {
@@ -172,8 +183,10 @@ export default {
       cityCode,
       city,
       paymentMethod,
-      submit,
+      sessionId,
+      sessionUrl,
       handleReset,
+      submit,
     };
   },
   async created() {

@@ -65,6 +65,7 @@ router.beforeEach(async (to, from, next) => {
   await userStore.checkAuth();
   if (!userStore.isAuthenticated) {
     next({ name: "home" });
+    return;
   }
   next();
 });

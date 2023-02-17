@@ -8,5 +8,6 @@ urlpatterns = [
     # path("orders/",
     #      views.OrderViewSet.as_view({'get': 'list'}),
     #      name='orders'),
-    path("secret/", views.secret)
+    path("create-session/", views.CreateCheckoutSession.as_view(), name='create-session'),
+    path('webhook-test/', views.WebHook.as_view()),
 ]
