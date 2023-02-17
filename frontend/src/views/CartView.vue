@@ -1,4 +1,5 @@
 <template>
+  <!--	cart-->
   <div class="cart-wrapper" v-if="this.items.length > 0">
     <div class="cart-wrapper__products">
       <div
@@ -38,7 +39,7 @@
             color="#EE0D0DFF"
             size="large"
             @click.prevent="
-              isModalVisible = true;
+              isModalAcceptVisible = true;
               modalItem = item;
             "
             >mdi-trash-can</v-icon
@@ -54,9 +55,15 @@
         Dostawa: <span>{{ shippingCost }} zł</span>
       </p>
       <p>Cena końcowa: {{ totalPrice.toFixed(2) }} zł</p>
-      <Button :text="'Przejdź do zakupu'" class="mt-8" />
+      <Button
+        :text="'Przejdź do zakupu'"
+        class="mt-8"
+        @click.prevent="handleCartForward"
+      />
     </div>
   </div>
+
+  <!--	empty cart information-->
   <div class="cart-wrapper__empty" v-else>
     <v-icon color="#EE0D0DFF" size="200">mdi-cart-off</v-icon>
     <h3 class="mt-10">Nie masz żadnych produktów w koszyku...</h3>
@@ -64,10 +71,19 @@
       ><p>Przeglądaj produkty &#8594;</p></router-link
     >
   </div>
+
   <ModalOverlay
-    v-if="isModalVisible"
+    v-if="isModalLoginVisible"
+    @closeModal="isModalLoginVisible = false"
+  >
+    <LoginModal @closeModal="isModalLoginVisible = false" />
+  </ModalOverlay>
+
+  <!--	modal confirm delete-->
+  <ModalOverlay
+    v-if="isModalAcceptVisible"
     class="cart-confirm-modal"
-    @closeModal="isModalVisible = false"
+    @closeModal="isModalAcceptVisible = false"
   >
     <h3>Potwierdź usunięcie produktu z koszyka</h3>
     <p>
@@ -79,7 +95,7 @@
       @click.prevent="
         deleteCartItem(this.modalItem);
         this.items = this.items.filter((el) => el.id !== modalItem.id);
-        isModalVisible = false;
+        isModalAcceptVisible = false;
         modalItem = {};
       "
     />
@@ -90,12 +106,16 @@
 import ProductCounter from "@/components/ProductCounter.vue";
 import ModalOverlay from "@/components/ModalOverlay.vue";
 import Button from "@/components/Button.vue";
+import LoginModal from "@/components/login/LoginModal.vue";
 import cookies from "@/utils/cookies";
+import useUserStore from "@/stores/user";
 import axios from "axios";
+
 export default {
   name: "CartView",
   components: {
     ProductCounter,
+    LoginModal,
     // eslint-disable-next-line vue/no-reserved-component-names
     Button,
     ModalOverlay,
@@ -105,9 +125,14 @@ export default {
       items: [],
       itemsPriceSum: 0,
       shippingCost: 9.99,
-      isModalVisible: false,
+      isModalAcceptVisible: false,
+      isModalLoginVisible: false,
       modalItem: {},
     };
+  },
+  setup() {
+    const userStore = useUserStore();
+    return { userStore };
   },
   async created() {
     const cartCookie = cookies.getCookie("cartItems");
@@ -143,7 +168,7 @@ export default {
     },
     handleMinus(item) {
       if (item.count === 1) {
-        this.isModalVisible = true;
+        this.isModalAcceptVisible = true;
         this.modalItem = item;
         return;
       }
@@ -162,6 +187,13 @@ export default {
         sum += el;
       });
       this.itemsPriceSum = sum;
+    },
+    handleCartForward() {
+      if (!this.userStore.isAuthenticated) {
+        this.isModalLoginVisible = true;
+        return;
+      }
+      this.$router.push({ name: "order" });
     },
   },
   watch: {
