@@ -23,4 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('accounts.api.urls', namespace='accounts')),
     path('api/', include('products.api.urls', namespace='products')),
+    path('api/', include('orders.api.urls', namespace='orders')),
+    path('api/', include('payments.api.urls', namespace='payments')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

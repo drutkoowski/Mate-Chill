@@ -48,6 +48,8 @@ INSTALLED_APPS = [
 
     'accounts',
     'products',
+    'orders',
+    'payments'
 ]
 
 MIDDLEWARE = [
@@ -196,3 +198,7 @@ STATICFILES_DIRS = ('static',)
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY', cast=str)
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY', cast=str)
