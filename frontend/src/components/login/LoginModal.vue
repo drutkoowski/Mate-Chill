@@ -90,6 +90,8 @@ export default {
           const toastStore = useToastStore();
           toastStore.displayToast("Pomyślnie zalogowano.", "success");
           userStore.isAuthenticated = true;
+          const currentUser = await axios.get("me/");
+          userStore.user = currentUser.data;
           context.emit("closeModal");
         }
       } catch (error) {

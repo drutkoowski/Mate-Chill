@@ -43,7 +43,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
         # Remove tokens from response body for enhanced security.
         del response.data[settings.SIMPLE_JWT["AUTH_COOKIE"]]
         del response.data[settings.SIMPLE_JWT["REFRESH_COOKIE"]]
-
         return response
 
 

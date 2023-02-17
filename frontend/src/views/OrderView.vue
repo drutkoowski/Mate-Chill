@@ -37,7 +37,6 @@
           :error-messages="streetAddress.errorMessage.value"
           bg-color="white"
           color="green-darken-1"
-          hint="Pole powinno zawierać nazwę ulicy."
           label="Nazwa ulicy"
         ></v-text-field>
 
@@ -62,7 +61,6 @@
             :error-messages="city.errorMessage.value"
             bg-color="white"
             color="green-darken-1"
-            hint="Miasto."
             label="Miasto"
           ></v-text-field>
         </div>
@@ -96,8 +94,10 @@
 
 <script>
 import Button from "@/components/Button.vue";
-import { useField, useForm } from "vee-validate";
 import cookies from "@/utils/cookies";
+import useUserStore from "@/stores/user";
+
+import { useField, useForm } from "vee-validate";
 import axios from "axios";
 
 export default {
@@ -139,7 +139,7 @@ export default {
           return "Pole powinno zawierać poprawny kod pocztowy";
         },
         city(value) {
-          if (/^[0-9]{2}-[0-9]{3}$/.test(value)) return true;
+          if (value?.length >= 3) return true;
           return "Nazwa miasta powinna zawierać conajmniej 3 znaki.";
         },
       },
@@ -153,6 +153,11 @@ export default {
     const city = useField("city");
     const paymentMethod = useField("paymentMethod");
 
+    const userStore = useUserStore();
+    fname.value.value = userStore.user.first_name;
+    lname.value.value = userStore.user.last_name;
+    phone.value.value = userStore.user.phone;
+
     const submit = handleSubmit(async function (values) {
       console.log(values);
     });
@@ -161,6 +166,7 @@ export default {
       fname,
       lname,
       phone,
+      userStore,
       streetAddress,
       streetAddress2,
       cityCode,

@@ -7,9 +7,11 @@ export default {
       const store = useUserStore();
       if (response.status === 200) {
         store.isAuthenticated = true;
+        store.user = response.data;
         return;
       }
       store.isAuthenticated = false;
+      store.user = {};
     } catch (error) {
       console.log(error);
     }
@@ -19,6 +21,7 @@ export default {
       const response = await axios.post("auth/logout/");
       if (response.status === 200) {
         const store = useUserStore();
+        store.user = {};
         store.isAuthenticated = false;
       }
     } catch (error) {
