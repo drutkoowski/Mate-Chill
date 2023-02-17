@@ -69,7 +69,6 @@ router.beforeEach(async (to, from, next) => {
   if (!userStore.isAuthenticated) {
     next({ name: "home" });
   }
-  console.log(userStore.isAuthenticated, !userStore.isAuthenticated);
   next();
 });
 

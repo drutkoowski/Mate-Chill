@@ -4,8 +4,8 @@
       <div class="order__contact">
         <h3>Informacje kontaktowe</h3>
         <v-text-field
-          v-model="email.value.value"
-          :error-messages="email.errorMessage.value"
+          v-model="fname.value.value"
+          :error-messages="fname.errorMessage.value"
           bg-color="white"
           color="green-darken-1"
           hint="Imię powinno zawierać conajmniej 3 znaki."
@@ -13,8 +13,8 @@
           label="Imię"
         ></v-text-field>
         <v-text-field
-          v-model="email.value.value"
-          :error-messages="email.errorMessage.value"
+          v-model="lname.value.value"
+          :error-messages="lname.errorMessage.value"
           bg-color="white"
           color="green-darken-1"
           hint="Nazwisko powinno zawierać conajmniej 3 znaki."
@@ -22,9 +22,10 @@
           label="Nazwisko"
         ></v-text-field>
         <v-text-field
-          v-model="email.value.value"
+          v-model="phone.value.value"
           :counter="9"
-          :error-messages="email.errorMessage.value"
+          :error-messages="phone.errorMessage.value"
+          type="number"
           bg-color="white"
           color="green-darken-1"
           hint="Numer telefonu powinien składać się z 9 cyfr."
@@ -32,35 +33,33 @@
         ></v-text-field>
         <h3>Adres dostawy</h3>
         <v-text-field
-          v-model="email.value.value"
-          :error-messages="email.errorMessage.value"
+          v-model="streetAddress.value.value"
+          :error-messages="streetAddress.errorMessage.value"
           bg-color="white"
           color="green-darken-1"
-          hint="Adres dostawy."
+          hint="Pole powinno zawierać nazwę ulicy."
           label="Nazwa ulicy"
         ></v-text-field>
 
         <v-text-field
-          v-model="email.value.value"
-          :error-messages="email.errorMessage.value"
+          v-model="streetAddress2.value.value"
           bg-color="white"
           color="green-darken-1"
-          hint="Adres dostawy."
           label="Nazwa ulicy linia 2"
         ></v-text-field>
 
         <div class="order__contact__city">
           <v-text-field
-            v-model="email.value.value"
-            :error-messages="email.errorMessage.value"
+            v-model="cityCode.value.value"
+            :error-messages="cityCode.errorMessage.value"
             bg-color="white"
             color="green-darken-1"
-            hint="Kod pocztowy."
+            hint="Pole powinno zawierać poprawny kod pocztowy, np. 37-682."
             label="Kod pocztowy"
           ></v-text-field>
           <v-text-field
-            v-model="email.value.value"
-            :error-messages="email.errorMessage.value"
+            v-model="city.value.value"
+            :error-messages="city.errorMessage.value"
             bg-color="white"
             color="green-darken-1"
             hint="Miasto."
@@ -80,6 +79,7 @@
         <p>Dostawa: {{ shippingCost }} zł</p>
         <p>Cena końcowa: {{ itemsPriceSum + shippingCost }} zł</p>
         <v-select
+          v-model="paymentMethod.value.value"
           :label="'Metoda płatności'"
           :items="['tak']"
           bg-color="white"
@@ -116,23 +116,56 @@ export default {
   setup() {
     const { handleSubmit, handleReset } = useForm({
       validationSchema: {
-        email(value) {
-          if (/^[a-z0-9.]{1,64}@[a-z0-9.]{1,64}$/i.test(value)) return true;
+        fname(value) {
+          if (value?.length >= 3) return true;
 
-          return "Pole musi zawierać poprawny adres e-mail.";
+          return "Imię powinno zawierać conajmniej 3 znaki.";
+        },
+        lname(value) {
+          if (value?.length >= 3) return true;
+
+          return "Nazwisko powinno zawierać conajmniej 3 znaki.";
+        },
+        phone(value) {
+          if (value?.length === 9) return true;
+          return "Numer telefonu powinien składać się z 9 cyfr.";
+        },
+        streetAddress(value) {
+          if (value?.length >= 3) return true;
+          return "Pole powinno zawierać nazwę ulicy dłuższą od 5 znaków";
+        },
+        cityCode(value) {
+          if (/^[0-9]{2}-[0-9]{3}$/.test(value)) return true;
+          return "Pole powinno zawierać poprawny kod pocztowy";
+        },
+        city(value) {
+          if (/^[0-9]{2}-[0-9]{3}$/.test(value)) return true;
+          return "Nazwa miasta powinna zawierać conajmniej 3 znaki.";
         },
       },
     });
-    const email = useField("email");
-    const password = useField("password");
+    const fname = useField("fname");
+    const lname = useField("lname");
+    const phone = useField("phone");
+    const streetAddress = useField("streetAddress");
+    const streetAddress2 = useField("streetAddress2");
+    const cityCode = useField("cityCode");
+    const city = useField("city");
+    const paymentMethod = useField("paymentMethod");
 
     const submit = handleSubmit(async function (values) {
       console.log(values);
     });
 
     return {
-      email,
-      password,
+      fname,
+      lname,
+      phone,
+      streetAddress,
+      streetAddress2,
+      cityCode,
+      city,
+      paymentMethod,
       submit,
       handleReset,
     };
@@ -169,7 +202,12 @@ form {
   display: flex;
   flex-direction: column;
   grid-column: 1/2;
+  color: var(--primary-white);
+  h3 {
+    color: var(--primary-green);
+  }
   .v-text-field {
+    margin-top: 1rem;
     width: 25rem;
   }
   &__city {
