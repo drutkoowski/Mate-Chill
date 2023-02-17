@@ -8,11 +8,30 @@
         :key="item.id"
       >
         <div class="cart-wrapper__products__element__photo">
-          <img :src="getPhotoUrl(item)" :alt="item.name" />
+          <router-link
+            :to="{
+              name: 'product-detail',
+              params: {
+                productSlug: item.slug,
+              },
+            }"
+          >
+            <img :src="getPhotoUrl(item)" :alt="item.name"
+          /></router-link>
         </div>
 
         <div class="cart-wrapper__products__element__name">
-          <h3>{{ item.name }}</h3>
+          <h3>
+            <router-link
+              :to="{
+                name: 'product-detail',
+                params: {
+                  productSlug: item.slug,
+                },
+              }"
+              >{{ item.name }}</router-link
+            >
+          </h3>
           <p>
             Kategorie:
             <span
@@ -76,7 +95,7 @@
     v-if="isModalLoginVisible"
     @closeModal="isModalLoginVisible = false"
   >
-    <LoginModal @closeModal="isModalLoginVisible = false" />
+    <LoginModal @closeModal="isModalLoginVisible = false" :next="'order'" />
   </ModalOverlay>
 
   <!--	modal confirm delete-->

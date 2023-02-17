@@ -28,7 +28,18 @@ class ProductImageSerializer(ModelSerializer):
         fields = ("image",)
 
 
-class ProductSerializer(ModelSerializer):
+class ProductVariantSerializer(ModelSerializer):
+    category = CategorySerializer(many=True)
+    manufacturer = ManufacturerSerializer()
+    link = serializers.URLField(source='get_absolute_url')
+    images = ProductImageSerializer(many=True)
+
+    class Meta:
+        model = Product
+        fields = "__all__"
+
+
+class ProductParentSerializer(ModelSerializer):
     category = CategorySerializer(many=True)
     manufacturer = ManufacturerSerializer()
     link = serializers.URLField(source='get_absolute_url')
@@ -42,7 +53,26 @@ class ProductSerializer(ModelSerializer):
     def get_variants(self, obj):
         all_variants = obj.variants.all()
         if all_variants.exists():
-            objects = obj.variants.all()
-            serializer = ProductSerializer(objects, many=True)
+            serializer = ProductVariantSerializer(all_variants, many=True)
+            return serializer.data
+        return []
+
+
+class ProductSerializer(ModelSerializer):
+    category = CategorySerializer(many=True)
+    manufacturer = ManufacturerSerializer()
+    link = serializers.URLField(source='get_absolute_url')
+    images = ProductImageSerializer(many=True)
+    variants = SerializerMethodField()
+    parent = ProductParentSerializer(many=False)
+
+    class Meta:
+        model = Product
+        fields = "__all__"
+
+    def get_variants(self, obj):
+        all_variants = obj.variants.all()
+        if all_variants.exists():
+            serializer = ProductSerializer(all_variants, many=True)
             return serializer.data
         return []

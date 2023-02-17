@@ -1,6 +1,7 @@
 import os
 
 from django.db import models
+from django.utils.text import slugify
 
 
 def upload_location(instance, filename):
@@ -72,6 +73,7 @@ class Product(models.Model):
             self.description = self.parent.description
             if not self.main_image:
                 self.main_image = self.parent.main_image
+        self.slug = slugify(self.name)
         super(Product, self).save(*args, **kwargs)
 
     def get_absolute_url(self):

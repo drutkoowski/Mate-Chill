@@ -24,14 +24,11 @@
         <p><span class="primary-green">Opis:</span> {{ item.description }}</p>
       </div>
 
-      <div
-        class="product-info-container__customizable"
-        v-if="item.variants?.length > 0"
-      >
+      <div class="product-info-container__customizable" v-if="hasVariants">
         <variationFilter
           class="mt-2"
           :text="'Warianty'"
-          :items="item.variants.map((item) => item.name)"
+          :items="variants"
           @handleRedirect="changeRoute"
         />
       </div>
@@ -82,6 +79,8 @@ export default {
     images: [],
     rating: 3,
     itemCounter: 1,
+    hasVariants: false,
+    variants: [],
   }),
   methods: {
     slugify(string) {
@@ -101,13 +100,17 @@ export default {
       });
     },
     async fetchData() {
-      const productSlug = this.$route.params.productSlug;
-      const response = await axios.get(`products/${productSlug}`);
-      this.item = response.data;
-      let images = [this.item.main_image];
-      if (this.item.images.length > 0)
-        images = [...this.item.images.map((element) => element.image)];
-      this.images = images;
+      try {
+        const productSlug = this.$route.params.productSlug;
+        const response = await axios.get(`products/${productSlug}`);
+        this.item = response.data;
+        let images = [this.item.main_image];
+        if (this.item.images.length > 0)
+          images = [...this.item.images.map((element) => element.image)];
+        this.images = images;
+      } catch (error) {
+        this.$router.push({ name: "products" });
+      }
     },
     addToCart() {
       const store = useToastStore();
@@ -122,10 +125,33 @@ export default {
         store.displayToast("Wybierz ilość produktu", "#E85959FF");
       }
     },
+    getVariants() {
+      const variants = [];
+      this.item?.variants.forEach((item) => variants.push(item.name));
+      this.item?.parent ? variants.push(this.item?.parent.name) : null;
+      this.item?.parent?.variants.forEach((item) => {
+        if (item.name !== this.item.name) variants.push(item.name);
+      });
+      this.variants = variants;
+    },
   },
   watch: {
     async $route() {
       await this.fetchData();
+    },
+    item() {
+      const variantsCount =
+        this.item?.variants.length +
+        (this.item?.parent ? 1 : 0) +
+        (this.item?.parent?.variants.length
+          ? this.item?.parent?.variants.length
+          : 0);
+      if (variantsCount > 0) {
+        this.getVariants();
+        this.hasVariants = true;
+        return;
+      }
+      this.hasVariants = false;
     },
   },
 };

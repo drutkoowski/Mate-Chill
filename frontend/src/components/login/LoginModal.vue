@@ -40,9 +40,16 @@ import useToastStore from "@/stores/toast";
 import Button from "@/components/Button.vue";
 import FormMessage from "@/components/FormMessage.vue";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "LoginModal",
+  props: {
+    next: {
+      type: String,
+      required: false,
+    },
+  },
   data() {
     return {
       showPassword: false,
@@ -72,6 +79,7 @@ export default {
     });
     const email = useField("email");
     const password = useField("password");
+    const router = useRouter();
 
     const submit = handleSubmit(async function (values) {
       try {
@@ -89,6 +97,9 @@ export default {
           ? (errorMsg.value = "Błędne dane do logowania.")
           : (errorMsg.value =
               "Nie udało się zalogować użytkownika z tymi danymi.");
+      }
+      if (props.next) {
+        router.push({ name: props.next });
       }
     });
 

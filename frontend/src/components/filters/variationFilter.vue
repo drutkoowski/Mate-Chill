@@ -2,6 +2,7 @@
   <v-select
     :label="text"
     :items="items"
+    v-model="selectValue"
     bg-color="white"
     @update:modelValue="redirect"
   />
@@ -10,12 +11,18 @@
 <script>
 export default {
   name: "variationFilter",
+  data() {
+    return {
+      selectValue: null,
+    };
+  },
   props: {
     text: String,
     items: Array,
   },
   methods: {
     redirect(e) {
+      this.selectValue = null;
       this.$emit("handleRedirect", e);
     },
   },
