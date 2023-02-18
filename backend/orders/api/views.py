@@ -21,12 +21,11 @@ class OrderViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        request.data._mutable = True
-        request.data['user'] = request.user.pk
-        request.data._mutable = False
-        serializer = OrderSerializer(data=request.data)
+        data = request.data
+        data['data']['user'] = request.user.pk
+        serializer = OrderSerializer(data=data['data'])
         serializer.is_valid(raise_exception=True)
-        products = list(json.loads(request.data['products']))
+        products = list(data['products'])
         if products:
             serializer.save()
             for product in products:

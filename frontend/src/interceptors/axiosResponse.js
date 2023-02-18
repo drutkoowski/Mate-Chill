@@ -1,7 +1,11 @@
 import axios from "axios";
+import userAuth from "@/utils/userAuth";
 
 const axiosConfigResponse = axios.interceptors.response.use(
-  function (response) {
+  async function (response) {
+    if (response.status === 401) {
+      await userAuth.logoutUser();
+    }
     return response;
   },
   (error) => {

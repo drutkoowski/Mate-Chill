@@ -70,21 +70,19 @@
         <hr />
         <ul>
           <li v-for="item in items" :key="item.id">
-            <span>{{ item.name }}</span> ({{ item.price }} zł)
-            {{ item.count }} szt.
+            <span class="primary-green">{{ item.name }}</span> ({{
+              item.price
+            }}
+            zł) {{ item.count }} szt.
           </li>
         </ul>
         <p>Dostawa: {{ shippingCost }} zł</p>
-        <p>Cena końcowa: {{ itemsPriceSum + shippingCost }} zł</p>
-        <v-select
-          v-model="paymentMethod.value.value"
-          :label="'Metoda płatności'"
-          :items="['tak']"
-          bg-color="white"
-        />
+        <p class="text-3xl">
+          Cena do zapłaty: <b>{{ itemsPriceSum + shippingCost }}</b> zł
+        </p>
         <Button
-          :text="'Przejdź do płatności'"
-          class="order__submit"
+          :text="'Zatwierdź kupno i przejdź do płatności'"
+          class="order__submit mt-8"
           type="submit"
         />
       </div>
@@ -99,13 +97,11 @@ import useUserStore from "@/stores/user";
 import { useField, useForm } from "vee-validate";
 import axios from "axios";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 export default {
   name: "OrderView",
   data() {
     return {
-      items: [],
-      itemsPriceSum: 0,
-      shippingCost: 0,
       publishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
     };
   },
@@ -114,6 +110,21 @@ export default {
     Button,
   },
   setup() {
+    const items = ref([]);
+    const itemsPriceSum = ref(0);
+    const shippingCost = ref(0);
+    const cartCookie = ref(cookies.getCookie("cartItems"));
+    const router = useRouter();
+    if (!cartCookie.value) router.push({ name: "cart" });
+    let parsedArray = JSON.parse(cartCookie.value);
+    const cookieItems = [];
+    parsedArray.map(async (item) => {
+      const response = await axios.get(`product/${item.id}`);
+      cookieItems.push({ ...response.data, count: item.count });
+      itemsPriceSum.value += response.data.price * item.count;
+      items.value = cookieItems;
+      shippingCost.value = itemsPriceSum.value >= 60 ? 0 : 9.99;
+    });
     const sessionId = ref("");
     const sessionUrl = ref("");
 
@@ -163,14 +174,28 @@ export default {
     phone.value.value = userStore.user.phone;
 
     const submit = handleSubmit(async function (values) {
+      const payload = {
+        data: {
+          city: values.city,
+          city_code: values.cityCode,
+          additional_address: values.streetAddress2,
+          address: values.streetAddress,
+          last_name: values.lname,
+          first_name: values.fname,
+        },
+        products: parsedArray,
+      };
+      const orderResponse = await axios.post("order/create", payload);
       const response = await axios.post("payments/create-session/", {
-        product_name: "yerbka dobra",
-        price: Number(21),
+        data: items.value,
+        shippingCost: shippingCost.value,
+        orderId: orderResponse.data.id,
       });
       console.log(response);
       sessionId.value = response.data.session.id;
       sessionUrl.value = response.data.session.url;
-      window.location.href = sessionUrl.value;
+      // window.location.href = sessionUrl.value;
+      window.open(sessionUrl.value, "_blank");
     });
 
     return {
@@ -185,22 +210,12 @@ export default {
       paymentMethod,
       sessionId,
       sessionUrl,
+      items,
+      itemsPriceSum,
+      shippingCost,
       handleReset,
       submit,
     };
-  },
-  async created() {
-    const cartCookie = cookies.getCookie("cartItems");
-    if (!cartCookie) this.$router.push({ name: "cart" });
-    let items = [];
-    let parsedArray = JSON.parse(cartCookie);
-    await parsedArray.map(async (item) => {
-      const response = await axios.get(`product/${item.id}`);
-      items.push({ ...response.data, count: item.count });
-      this.itemsPriceSum += response.data.price * item.count;
-      this.items = items;
-      this.shippingCost = this.itemsPriceSum >= 60 ? 0 : 9.99;
-    });
   },
 };
 </script>

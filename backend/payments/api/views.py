@@ -1,12 +1,15 @@
 import stripe
-from django.http import JsonResponse
-from django.shortcuts import redirect
-from rest_framework import status
+from django.http import HttpResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from stripe.error import SignatureVerificationError
 
 from mate import settings
 from mate.settings import FRONTEND_CHECKOUT_SUCCESS_URL, FRONTEND_CHECKOUT_FAILED_URL
+from orders.models import Order
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 webhook_secret = settings.STRIPE_WEBHOOK_SECRET
@@ -14,57 +17,75 @@ webhook_secret = settings.STRIPE_WEBHOOK_SECRET
 
 class CreateCheckoutSession(APIView):
     def post(self, request):
-        dataDict = dict(request.data)
-        price = dataDict['price']
-        product_name = dataDict['product_name']
+        data = request.data['data']
+        shipping_cost = request.data['shippingCost']
+        order_id = request.data['orderId']
         try:
-            checkout_session = stripe.checkout.Session.create(
-                line_items=[{
-                    'price_data': {
-                        'currency': 'pln',
-                        'product_data': {
-                            'name': product_name,
+            line_items = []
+            shipping_options = [
+                {
+                  "shipping_rate_data": {
+                    "type": "fixed_amount",
+                    "fixed_amount": {"amount": shipping_cost, "currency": "pln"},
+                    "display_name": "Dostawa"
+                  },
+                }
+              ]
+            for element in data:
+                line_items.append(
+                    {
+                        'price_data': {
+                            'currency': 'pln',
+                            'product_data': {
+                                'name': element['name'],
+                            },
+                            'unit_amount': round(float(element['price']) * 100.00)
                         },
-                        'unit_amount': price * 100
-                    },
-                    'quantity': 1
-                }],
+                        'quantity': int(element['count'])
+                    }
+                )
+            checkout_session = stripe.checkout.Session.create(
+                line_items=line_items,
+                shipping_options=shipping_options,
+                customer_email=request.user.email,
+                locale='pl',
                 mode='payment',
+                metadata={
+                    'orderId': order_id
+                },
                 success_url=FRONTEND_CHECKOUT_SUCCESS_URL,
                 cancel_url=FRONTEND_CHECKOUT_FAILED_URL,
             )
-            return Response({'session': checkout_session})
+            return Response({'session': checkout_session}, status=status.HTTP_201_CREATED)
         except Exception as e:
             print(e)
             return e
 
 
-class WebHook(APIView):
-    def post(self, request):
-        event = None
+@method_decorator(csrf_exempt, name='dispatch')
+class WebHook(generics.GenericAPIView):
+    def post(self, request, *args, **kwargs):
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        endpoint_secret = webhook_secret
         payload = request.body
         sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+        event = None
 
         try:
             event = stripe.Webhook.construct_event(
-                payload, sig_header, webhook_secret
+                payload, sig_header, endpoint_secret
             )
-        except ValueError as err:
+        except ValueError as e:
             # Invalid payload
-            raise err
-        except stripe.error.SignatureVerificationError as err:
+            return HttpResponse(status=400)
+        except SignatureVerificationError as e:
             # Invalid signature
-            raise err
+            return HttpResponse(status=400)
 
-        # Handle the event
-        if event.type == 'payment_intent.succeeded':
-            payment_intent = event.data.object
-            print("--------payment_intent ---------->", payment_intent)
-        elif event.type == 'payment_method.attached':
-            payment_method = event.data.object
-            print("--------payment_method ---------->", payment_method)
-        # ... handle other event types
-        else:
-            print('Unhandled event type {}'.format(event.type))
-
-        return JsonResponse(success=True, safe=False)
+        # Handle the checkout.session.completed event
+        if event['type'] == 'checkout.session.completed':
+            order_id = event['data']['object']['metadata']['orderId']
+            order = Order.objects.get(pk=order_id)
+            order.status = 'opłacone'
+            order.save()
+        return HttpResponse(status=200)
