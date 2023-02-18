@@ -3,15 +3,15 @@ import json
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-
 from orders.api.serializers import OrderSerializer
 from orders.models import Order, OrderProduct
 from products.models import Product
 
 
 class OrderViewSet(viewsets.ViewSet):
+
     def list(self, request):
-        queryset = Order.objects.filter(user=request.user).all()
+        queryset = Order.objects.filter(user__pk=request.user.pk).order_by('created_at').all()
         serializer = OrderSerializer(queryset, many=True)
         return Response(serializer.data)
 

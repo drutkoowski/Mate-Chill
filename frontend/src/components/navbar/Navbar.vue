@@ -27,11 +27,8 @@
       >
         Zarejestruj
       </li>
-      <li
-        @click.prevent="this.$emit('openModal', 'signup')"
-        v-if="userStore.isAuthenticated"
-      >
-        Twój Panel
+      <li v-if="userStore.isAuthenticated">
+        <router-link :to="{ name: 'profile' }">Twój Panel</router-link>
       </li>
       <li @click.prevent="userLogout" v-if="userStore.isAuthenticated">
         Wyloguj

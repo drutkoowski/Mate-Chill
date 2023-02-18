@@ -7,6 +7,7 @@ import useUserStore from "@/stores/user";
 import CartView from "@/views/CartView.vue";
 import OrderView from "@/views/OrderView.vue";
 import PaymentStatusView from "@/views/PaymentStatusView.vue";
+import ProfileView from "@/views/ProfileView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,14 @@ const router = createRouter({
       path: "/zamowienie",
       name: "order",
       component: OrderView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/profil",
+      name: "profile",
+      component: ProfileView,
       meta: {
         requiresAuth: true,
       },

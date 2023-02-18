@@ -18,6 +18,7 @@ webhook_secret = settings.STRIPE_WEBHOOK_SECRET
 
 class CreateCheckoutSession(APIView):
     def post(self, request):
+        print(request.data)
         data = request.data['data']
         shipping_cost = request.data['shippingCost']
         order_id = request.data['orderId']
@@ -27,11 +28,12 @@ class CreateCheckoutSession(APIView):
                 {
                   "shipping_rate_data": {
                     "type": "fixed_amount",
-                    "fixed_amount": {"amount": round(int(shipping_cost) * 100), "currency": "pln"},
+                    "fixed_amount": {"amount": round(float(shipping_cost) * 100), "currency": "pln"},
                     "display_name": "Dostawa"
                   },
                 }
               ]
+            print(data)
             for element in data:
                 line_items.append(
                     {

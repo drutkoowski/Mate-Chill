@@ -3,7 +3,7 @@ from accounts.models import Account
 from products.models import Product
 
 ORDER_STATUS_CHOICES = (
-    ('otrzymane', 'otrzymane'),
+    ('nieopłacone', 'nieopłacone'),
     ('opłacone', 'opłacone'),
     ('w dostawie', 'w dostawie'),
     ('zakończone', 'zakończone')
@@ -22,7 +22,7 @@ class Order(models.Model):
     city_code = models.CharField(max_length=6)
     city = models.CharField(max_length=50)
     status = models.CharField(choices=ORDER_STATUS_CHOICES, default='otrzymane', max_length=20)
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.user} / {self.id}"

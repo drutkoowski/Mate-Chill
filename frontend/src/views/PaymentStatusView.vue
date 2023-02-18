@@ -6,7 +6,11 @@
       Dziękujemy za zakupy oraz zaufanie, proces wysyłania produktu właśnie się
       rozpoczął.
     </p>
-    <h5>Sprawdź swoje zamówienia</h5>
+    <Button
+      :text="'Sprawdź swoje zamówienia'"
+      class="button"
+      @click="this.$router.push({ name: 'profile' })"
+    />
   </div>
   <div class="order-response-wrapper" v-else>
     <v-icon size="200" color="#EE0D0DFF">mdi-alert-circle</v-icon>
@@ -16,7 +20,11 @@
       wysłać produkty. <br />W razie problemów z płatnością, skontaktuj się z
       działem pomocy.
     </p>
-    <Button :text="'Sprawdź swoje zamówienia'" class="button" />
+    <Button
+      :text="'Sprawdź swoje zamówienia'"
+      class="button"
+      @click="this.$router.push({ name: 'profile' })"
+    />
   </div>
 </template>
 
