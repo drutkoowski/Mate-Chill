@@ -12,6 +12,7 @@ from accounts.api.views import (
 
 urlpatterns = [
     path('register/', views.CreateUserView.as_view(), name="register"),
+    path('account/update', views.UpdateUserView.as_view(), name="update"),
     path("me/", views.ManageUserView.as_view(), name="me"),
     path(
         "auth/login/",

@@ -1,14 +1,23 @@
 from rest_framework import generics
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenBlacklistView
 
 from accounts.api.serializers import AccountSerializer, CookieTokenRefreshSerializer, CookieTokenBlacklistSerializer
+from accounts.models import Account
 from mate import settings
 
 
 class CreateUserView(generics.CreateAPIView):
     serializer_class = AccountSerializer
+
+
+class UpdateUserView(generics.UpdateAPIView):
+    serializer_class = AccountSerializer
+
+    def get_object(self):
+        return get_object_or_404(Account, pk=self.request.user.pk)
 
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
