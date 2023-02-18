@@ -93,15 +93,15 @@ export default {
           const currentUser = await axios.get("me/");
           userStore.user = currentUser.data;
           context.emit("closeModal");
+          if (props.next) {
+            router.push({ name: props.next });
+          }
         }
       } catch (error) {
         error.response.status === 401
           ? (errorMsg.value = "Błędne dane do logowania.")
           : (errorMsg.value =
               "Nie udało się zalogować użytkownika z tymi danymi.");
-      }
-      if (props.next) {
-        router.push({ name: props.next });
       }
     });
 
