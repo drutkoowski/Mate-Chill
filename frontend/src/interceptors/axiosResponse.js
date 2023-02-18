@@ -1,10 +1,11 @@
 import axios from "axios";
-import userAuth from "@/utils/userAuth";
+import useUserStore from "@/stores/user";
 
 const axiosConfigResponse = axios.interceptors.response.use(
-  async function (response) {
+  function (response) {
     if (response.status === 401) {
-      await userAuth.logoutUser();
+      const userStore = useUserStore();
+      userStore.isAuthenticated = false;
     }
     return response;
   },

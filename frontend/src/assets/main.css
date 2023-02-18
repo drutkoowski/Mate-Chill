@@ -8,6 +8,10 @@
     color: var(--primary-green)
 }
 
+.primary-red {
+    color: var(--primary-red)
+}
+
 #app {
     position: relative;
     padding: 2rem 2rem;

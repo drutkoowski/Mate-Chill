@@ -6,6 +6,7 @@ import useMainStore from "@/stores/main";
 import useUserStore from "@/stores/user";
 import CartView from "@/views/CartView.vue";
 import OrderView from "@/views/OrderView.vue";
+import PaymentStatusView from "@/views/PaymentStatusView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +36,15 @@ const router = createRouter({
       path: "/zamowienie",
       name: "order",
       component: OrderView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/zamowienie/status/:orderId/",
+      name: "payment-status",
+      component: PaymentStatusView,
+      params: true,
       meta: {
         requiresAuth: true,
       },

@@ -78,7 +78,8 @@
         </ul>
         <p>Dostawa: {{ shippingCost }} zł</p>
         <p class="text-3xl">
-          Cena do zapłaty: <b>{{ itemsPriceSum + shippingCost }}</b> zł
+          Cena do zapłaty:
+          <b>{{ (itemsPriceSum + shippingCost).toFixed(2) }}</b> zł
         </p>
         <Button
           :text="'Zatwierdź kupno i przejdź do płatności'"
@@ -94,10 +95,12 @@
 import Button from "@/components/Button.vue";
 import cookies from "@/utils/cookies";
 import useUserStore from "@/stores/user";
-import { useField, useForm } from "vee-validate";
+import useMainStore from "@/stores/main";
 import axios from "axios";
+import { useField, useForm } from "vee-validate";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+
 export default {
   name: "OrderView",
   data() {
@@ -166,7 +169,6 @@ export default {
     const streetAddress2 = useField("streetAddress2");
     const cityCode = useField("cityCode");
     const city = useField("city");
-    const paymentMethod = useField("paymentMethod");
 
     const userStore = useUserStore();
     fname.value.value = userStore.user.first_name;
@@ -174,6 +176,9 @@ export default {
     phone.value.value = userStore.user.phone;
 
     const submit = handleSubmit(async function (values) {
+      const mainStore = useMainStore();
+      cookies.deleteCookie("cartItems");
+      mainStore.clearCartItems();
       const payload = {
         data: {
           city: values.city,
@@ -191,11 +196,9 @@ export default {
         shippingCost: shippingCost.value,
         orderId: orderResponse.data.id,
       });
-      console.log(response);
       sessionId.value = response.data.session.id;
       sessionUrl.value = response.data.session.url;
-      // window.location.href = sessionUrl.value;
-      window.open(sessionUrl.value, "_blank");
+      window.location.href = sessionUrl.value;
     });
 
     return {
@@ -207,7 +210,6 @@ export default {
       streetAddress2,
       cityCode,
       city,
-      paymentMethod,
       sessionId,
       sessionUrl,
       items,

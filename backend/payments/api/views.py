@@ -26,7 +26,7 @@ class CreateCheckoutSession(APIView):
                 {
                   "shipping_rate_data": {
                     "type": "fixed_amount",
-                    "fixed_amount": {"amount": shipping_cost, "currency": "pln"},
+                    "fixed_amount": {"amount": round(int(shipping_cost) * 100), "currency": "pln"},
                     "display_name": "Dostawa"
                   },
                 }
@@ -41,7 +41,7 @@ class CreateCheckoutSession(APIView):
                             },
                             'unit_amount': round(float(element['price']) * 100.00)
                         },
-                        'quantity': int(element['count'])
+                        'quantity': round(int(element['count']))
                     }
                 )
             checkout_session = stripe.checkout.Session.create(
@@ -53,8 +53,8 @@ class CreateCheckoutSession(APIView):
                 metadata={
                     'orderId': order_id
                 },
-                success_url=FRONTEND_CHECKOUT_SUCCESS_URL,
-                cancel_url=FRONTEND_CHECKOUT_FAILED_URL,
+                success_url=f"{FRONTEND_CHECKOUT_SUCCESS_URL}/{order_id}",
+                cancel_url=f"{FRONTEND_CHECKOUT_SUCCESS_URL}/{order_id}",
             )
             return Response({'session': checkout_session}, status=status.HTTP_201_CREATED)
         except Exception as e:

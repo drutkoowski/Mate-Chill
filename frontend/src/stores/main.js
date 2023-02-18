@@ -26,5 +26,8 @@ export default defineStore("main", {
       const cartCookie = cookies.getCookie("cartItems");
       this.cartItems = cartCookie ? JSON.parse(cartCookie) : [];
     },
+    clearCartItems() {
+      this.cartItems = [];
+    },
   },
 });
