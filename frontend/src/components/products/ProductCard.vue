@@ -84,6 +84,7 @@ export default {
     display: flex;
     align-items: center;
     margin-top: auto;
+    position: relative;
     .button {
       height: 1.5rem;
       font-size: 0.85rem;
@@ -92,7 +93,14 @@ export default {
   }
 }
 small {
-  color: var(--primary-red);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 2px 5px;
+  background-color: var(--primary-green);
+  color: var(--primary-white);
   font-weight: bold;
+  font-size: 0.65rem;
+  border-radius: 5px;
 }
 </style>

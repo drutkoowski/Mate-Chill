@@ -11,17 +11,19 @@
       </div>
       <div class="product-info-container__description mt-5">
         <p>
-          <span class="primary-green">Producent:</span>
+          <span class="primary-green">Producent: </span>
           {{ item.manufacturer?.name }}
         </p>
         <p>
-          <span class="primary-green">Dostępność:</span>
+          <span class="primary-green">Dostępność: </span>
+          <v-icon :color="counterColor" size="16">mdi-circle</v-icon>
           {{ item.num_available }}
         </p>
         <p>
-          <span class="primary-green">Kraj producenta:</span> {{ item.country }}
+          <span class="primary-green">Kraj producenta: </span>
+          {{ item.country }}
         </p>
-        <p><span class="primary-green">Opis:</span> {{ item.description }}</p>
+        <p><span class="primary-green">Opis: </span> {{ item.description }}</p>
       </div>
 
       <div class="product-info-container__customizable" v-if="hasVariants">
@@ -40,7 +42,7 @@
           <ProductCounter
             :itemCounter="itemCounter"
             @minus="itemCounter--"
-            @plus="itemCounter++"
+            @plus="handlePlus"
           />
         </div>
         <Button :text="'Dodaj do koszyka'" @click.prevent="addToCart" />
@@ -79,10 +81,21 @@ export default {
     images: [],
     rating: 3,
     itemCounter: 1,
+    maxAvailable: 0,
+    counterColor: "green",
     hasVariants: false,
     variants: [],
   }),
   methods: {
+    handlePlus() {
+      const toastStore = useToastStore();
+      this.itemCounter < this.maxAvailable
+        ? this.itemCounter++
+        : toastStore.displayToast(
+            "Wybrano maksymalną dostępną ilość produktu.",
+            "#E85959FF"
+          );
+    },
     slugify(string) {
       return string
         .toLowerCase()
@@ -104,6 +117,16 @@ export default {
         const productSlug = this.$route.params.productSlug;
         const response = await axios.get(`products/${productSlug}`);
         this.item = response.data;
+        this.maxAvailable = response.data.num_available;
+        if (response.data.num_available < 5) this.counterColor = "#EE0D0DFF";
+        else if (
+          response.data.num_available >= 5 &&
+          response.data.num_available <= 15
+        )
+          this.counterColor = "#ff8604";
+        else {
+          this.counterColor = "#04B60EFF";
+        }
         let images = [this.item.main_image];
         if (this.item.images.length > 0)
           images = [...this.item.images.map((element) => element.image)];

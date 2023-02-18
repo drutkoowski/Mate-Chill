@@ -10,6 +10,7 @@ from stripe.error import SignatureVerificationError
 from mate import settings
 from mate.settings import FRONTEND_CHECKOUT_SUCCESS_URL, FRONTEND_CHECKOUT_FAILED_URL
 from orders.models import Order
+from payments.models import Payment
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 webhook_secret = settings.STRIPE_WEBHOOK_SECRET
@@ -54,7 +55,7 @@ class CreateCheckoutSession(APIView):
                     'orderId': order_id
                 },
                 success_url=f"{FRONTEND_CHECKOUT_SUCCESS_URL}/{order_id}",
-                cancel_url=f"{FRONTEND_CHECKOUT_SUCCESS_URL}/{order_id}",
+                cancel_url=f"{FRONTEND_CHECKOUT_FAILED_URL}/{order_id}",
             )
             return Response({'session': checkout_session}, status=status.HTTP_201_CREATED)
         except Exception as e:
@@ -88,4 +89,5 @@ class WebHook(generics.GenericAPIView):
             order = Order.objects.get(pk=order_id)
             order.status = 'opłacone'
             order.save()
+            Payment.objects.create(user=request.user, order=order, amount=order.summary_cost)
         return HttpResponse(status=200)

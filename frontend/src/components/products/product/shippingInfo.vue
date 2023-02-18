@@ -1,13 +1,16 @@
 <template>
   <div class="shipping-wrapper">
     <div class="shipping-wrapper__element">
-      <v-icon color="#04b60e">mdi-calendar</v-icon> 14 dni na darmowy zwrot
+      <v-icon color="#04b60e">mdi-calendar</v-icon>
+      <span>14 dni na darmowy zwrot</span>
     </div>
     <div class="shipping-wrapper__element">
-      <v-icon color="#04b60e">mdi-shield-check</v-icon> Bezpieczne zakupy
+      <v-icon color="#04b60e">mdi-shield-check</v-icon>
+      <span>Bezpieczne zakupy</span>
     </div>
     <div class="shipping-wrapper__element">
-      <v-icon color="#04b60e">mdi-truck</v-icon> Darmowa przesyłka dla zamówień
+      <v-icon color="#04b60e">mdi-truck</v-icon>
+      <span>Darmowa przesyłka dla zamówień</span>
       +60 zł
     </div>
   </div>
@@ -25,7 +28,13 @@ export default {
   color: var(--primary-white);
   &__element {
     display: table-row;
-    vertical-align: center;
+    vertical-align: middle;
+    span {
+      margin-left: 5px;
+    }
+    .v-icon {
+      margin-top: -5px;
+    }
   }
 }
 </style>

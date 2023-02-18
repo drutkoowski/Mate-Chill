@@ -128,6 +128,7 @@ import Button from "@/components/Button.vue";
 import LoginModal from "@/components/login/LoginModal.vue";
 import cookies from "@/utils/cookies";
 import useUserStore from "@/stores/user";
+import useToastStore from "@/stores/toast";
 import axios from "axios";
 
 export default {
@@ -194,6 +195,14 @@ export default {
       this.deleteCartItem(item);
     },
     handlePlus(item) {
+      if (item.count >= item.num_available) {
+        const toastStore = useToastStore();
+        toastStore.displayToast(
+          "Wybrano maksymalną dostępną ilość produktu.",
+          "#E85959FF"
+        );
+        return;
+      }
       const newCartItem = {
         id: item.id,
         count: item.count + 1,
@@ -293,7 +302,7 @@ export default {
         cursor: pointer;
         transition: all 0.3s ease-in;
         &:hover {
-          transform: scale(1.05);
+          transform: scale(1.01);
         }
         p {
           color: var(--primary-white);

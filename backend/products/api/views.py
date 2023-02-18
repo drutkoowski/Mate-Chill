@@ -1,6 +1,6 @@
 import re
 
-from django.db.models import Q
+from django.db.models import Q, Count
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -76,6 +76,17 @@ class ProductLatestListView(APIView):
 
     def get(self, request):
         queryset = Product.objects.all()[:4]
+        serializer = ProductSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class ProductBestsellersListView(APIView):
+    model = Product
+    serializer_class = ProductSerializer(many=True)
+    authentication_classes = []
+
+    def get(self, request):
+        queryset = Product.objects.annotate(orders_count=Count('orders')).order_by('-orders_count')[:4]
         serializer = ProductSerializer(queryset, many=True)
         return Response(serializer.data)
 

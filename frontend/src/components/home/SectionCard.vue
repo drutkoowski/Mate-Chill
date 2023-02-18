@@ -23,9 +23,7 @@
         <h3 class="text-center mt-5 card__info__header">{{ item.name }}</h3>
         <p class="card__info__categories">
           Kategoria:
-          <span v-for="category in item.category" :key="category.id">{{
-            category.name
-          }}</span>
+          <span>{{ item.category[0].name }}</span>
         </p>
       </div>
     </div>
@@ -42,6 +40,9 @@ export default {
     imageLocation() {
       return import.meta.env.VITE_STATIC_ORGIN + this.item.main_image;
     },
+  },
+  created() {
+    console.log(this.item);
   },
 };
 </script>

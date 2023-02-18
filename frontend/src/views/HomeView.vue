@@ -11,7 +11,7 @@
       <PopularCategories
         :categories="[
           {
-            name: 'Yerba mate',
+            name: 'Yerba Mate',
             url: '/logo.svg',
           },
           {
@@ -51,7 +51,7 @@
         threshold: 0.5,
       }"
     >
-      <Section :headerText="'Bestsellery'" :items="latestProducts" />
+      <Section :headerText="'Bestsellery'" :items="bestsellingProducts" />
     </v-lazy>
   </v-sheet>
 
@@ -96,6 +96,7 @@ export default {
   data() {
     return {
       latestProducts: [],
+      bestsellingProducts: [],
     };
   },
   components: {
@@ -109,7 +110,9 @@ export default {
   },
   async beforeMount() {
     const latestProductsResponse = await axios.get("products/latest");
+    const bestsellingProductsResponse = await axios.get("products/bestsellers");
     this.latestProducts = latestProductsResponse.data;
+    this.bestsellingProducts = bestsellingProductsResponse.data;
   },
 };
 </script>

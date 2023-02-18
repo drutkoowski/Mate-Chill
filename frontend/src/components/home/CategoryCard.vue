@@ -1,7 +1,16 @@
 <template>
   <div>
-    <img :src="category.url" :alt="category.name" />
-    <p class="text-center mt-10">{{ category.name }}</p>
+    <router-link
+      :to="{
+        name: 'products',
+        query: {
+          category: category.name,
+        },
+      }"
+    >
+      <img :src="category.url" :alt="category.name" />
+      <p class="text-center mt-10">{{ category.name }}</p></router-link
+    >
   </div>
 </template>
 
@@ -14,6 +23,16 @@ export default {
   data: () => ({
     show: false,
   }),
+  methods: {
+    slugify(string) {
+      return string
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/[\s_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    },
+  },
 };
 </script>
 
