@@ -96,6 +96,7 @@ import Button from "@/components/Button.vue";
 import cookies from "@/utils/cookies";
 import useUserStore from "@/stores/user";
 import useMainStore from "@/stores/main";
+import useToastStore from "@/stores/toast";
 import axios from "axios";
 import { useField, useForm } from "vee-validate";
 import { ref } from "vue";
@@ -190,15 +191,20 @@ export default {
         },
         products: parsedArray,
       };
-      const orderResponse = await axios.post("order/create", payload);
-      const response = await axios.post("payments/create-session/", {
-        data: items.value,
-        shippingCost: shippingCost.value,
-        orderId: orderResponse.data.id,
-      });
-      sessionId.value = response.data.session.id;
-      sessionUrl.value = response.data.session.url;
-      window.location.href = sessionUrl.value;
+      try {
+        const orderResponse = await axios.post("order/create", payload);
+        const response = await axios.post("payments/create-session/", {
+          data: items.value,
+          shippingCost: shippingCost.value,
+          orderId: orderResponse.data.id,
+        });
+        sessionId.value = response.data.session.id;
+        sessionUrl.value = response.data.session.url;
+        window.location.href = sessionUrl.value;
+      } catch (error) {
+        const toastStore = useToastStore();
+        toastStore.displayToast("Płatność nie powiodła się.", "#E85959FF");
+      }
     });
 
     return {

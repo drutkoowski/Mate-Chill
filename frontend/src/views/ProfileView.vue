@@ -30,15 +30,17 @@
             label="Telefon"
           ></v-text-field>
           <div class="profile__info__actions">
-            <Button :text="'Edytuj'" type="submit" /><Button
+            <Button :text="'Edytuj'" type="submit" />
+            <Button
               :text="'Zmień hasło'"
+              @click.prevent="passwordModalVisible = true"
             />
           </div>
         </form>
       </div>
       <div class="profile__orders">
         <h3>Moje zamówienia</h3>
-        <v-table fixed-header height="300px">
+        <v-table height="300px">
           <thead>
             <tr>
               <th class="text-left">ID</th>
@@ -74,6 +76,35 @@
       </div>
     </div>
   </div>
+  <ModalOverlay
+    v-if="passwordModalVisible"
+    @closeModal="passwordModalVisible = false"
+  >
+    <div class="password-change">
+      <form @submit.prevent="handlePasswordChange">
+        <v-text-field
+          v-model="newPassword"
+          bg-color="white"
+          type="password"
+          color="green-darken-1"
+          label="Nowe hasło"
+        ></v-text-field>
+        <v-text-field
+          v-model="newPassword2"
+          bg-color="white"
+          type="password"
+          color="green-darken-1"
+          label="Potwierdź hasło"
+        ></v-text-field>
+        <p v-if="passwordErrorMessage">{{ passwordErrorMessage }}</p>
+        <Button
+          :text="'Zmień hasło'"
+          type="submit"
+          class="password-change__button"
+        />
+      </form>
+    </div>
+  </ModalOverlay>
 </template>
 
 <script>
@@ -82,16 +113,21 @@ import useToastStore from "@/stores/toast";
 import Button from "@/components/Button.vue";
 import { useField, useForm } from "vee-validate";
 import axios from "axios";
+import ModalOverlay from "@/components/ModalOverlay.vue";
 
 export default {
   name: "ProfileView",
   data() {
     return {
       orders: [],
+      passwordModalVisible: false,
+      newPassword2: "",
+      newPassword: "",
+      passwordErrorMessage: "",
     };
   },
   // eslint-disable-next-line vue/no-reserved-component-names
-  components: { Button },
+  components: { ModalOverlay, Button },
   setup() {
     const { handleSubmit, handleReset } = useForm({
       validationSchema: {
@@ -115,27 +151,44 @@ export default {
     const fname = useField("fname");
     const lname = useField("lname");
     const phone = useField("phone");
-
-    const submit = handleSubmit(async function (values) {
-      await axios.patch("account/update", {
-        first_name: values.fname,
-        last_name: values.lname,
-        phone: values.phone,
-      });
-      fname.value.value = values.fname;
-      lname.value.value = values.lname;
-      phone.value.value = values.phone;
-      const toastStore = useToastStore();
-      toastStore.displayToast(
-        "Pomyślnie zaktualizowano informacje.",
-        "success"
-      );
-    });
     const userStore = useUserStore();
+    const submit = handleSubmit(async function (values) {
+      const toastStore = useToastStore();
+      try {
+        await axios.patch("account/update", {
+          first_name: values.fname,
+          last_name: values.lname,
+          phone: values.phone,
+        });
+        fname.value.value = values.fname;
+        lname.value.value = values.lname;
+        phone.value.value = values.phone;
+        userStore.user.first_name = values.fname;
+        userStore.user.last_name = values.fname;
+        userStore.user.phone = values.phone;
+
+        toastStore.displayToast(
+          "Pomyślnie zaktualizowano informacje.",
+          "success"
+        );
+      } catch (error) {
+        toastStore.displayToast(
+          "Nie udało się zaktualizować informacji.",
+          "#E85959FF"
+        );
+      }
+    });
+
     fname.value.value = userStore.user.first_name;
     lname.value.value = userStore.user.last_name;
     phone.value.value = userStore.user.phone;
-    return { fname, lname, phone, submit, handleReset };
+    return {
+      fname,
+      lname,
+      phone,
+      submit,
+      handleReset,
+    };
   },
   async created() {
     const ordersResponse = await axios.get("orders/");
@@ -143,6 +196,7 @@ export default {
   },
   methods: {
     async handlePayment(order) {
+      const toastStore = useToastStore();
       const data = [];
       order.products.forEach((el) =>
         data.push({
@@ -151,12 +205,35 @@ export default {
           price: el.price,
         })
       );
-      const response = await axios.post("payments/create-session/", {
-        data: data,
-        shippingCost: order.shipping_cost,
-        orderId: order.id,
+      try {
+        const response = await axios.post("payments/create-session/", {
+          data: data,
+          shippingCost: order.shipping_cost,
+          orderId: order.id,
+        });
+        window.location.href = response.data.session.url;
+      } catch (error) {
+        toastStore.displayToast("Operacja nie powiodła się.", "#E85959FF");
+      }
+    },
+    async handlePasswordChange() {
+      this.passwordErrorMessage = "";
+      if (this.newPassword.length <= 3 || this.newPassword2.length <= 3) {
+        this.passwordErrorMessage = "Hasło powinno być dłuższe od 3 znaków.";
+        return;
+      }
+      if (this.newPassword !== this.newPassword2) {
+        this.passwordErrorMessage = "Hasła nie są identyczne.";
+        return;
+      }
+      await axios.patch("account/update", {
+        password: this.password,
       });
-      window.location.href = response.data.session.url;
+      const toastStore = useToastStore();
+      toastStore.displayToast("Pomyślnie zmieniono hasło", "success");
+      this.passwordModalVisible = false;
+      this.newPassword = "";
+      this.newPassword2 = "";
     },
   },
 };
@@ -198,6 +275,15 @@ export default {
   }
   .v-table {
     border-radius: 10px;
+  }
+}
+.password-change {
+  min-width: 25rem;
+  p {
+    height: 2rem;
+  }
+  &__button {
+    margin-top: 1rem;
   }
 }
 </style>
