@@ -178,6 +178,7 @@ export default {
 
     const submit = handleSubmit(async function (values) {
       const mainStore = useMainStore();
+      mainStore.on();
       cookies.deleteCookie("cartItems");
       mainStore.clearCartItems();
       const payload = {
@@ -205,6 +206,7 @@ export default {
         const toastStore = useToastStore();
         toastStore.displayToast("Płatność nie powiodła się.", "#E85959FF");
       }
+      mainStore.off();
     });
 
     return {

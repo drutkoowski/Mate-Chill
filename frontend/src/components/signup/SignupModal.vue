@@ -81,6 +81,7 @@ import Button from "@/components/Button.vue";
 import FormMessage from "@/components/FormMessage.vue";
 import axios from "axios";
 import useToastStore from "@/stores/toast";
+import useMainStore from "@/stores/main";
 import { ref } from "vue";
 
 export default {
@@ -147,6 +148,8 @@ export default {
     const password = useField("password");
     const passwordConfirm = useField("passwordConfirm");
     const submit = handleSubmit(async (values) => {
+      const mainStore = useMainStore();
+      mainStore.on();
       try {
         errorMsg.value = "";
         const response = await axios.post("register/", {
@@ -166,6 +169,7 @@ export default {
           ? (errorMsg.value = "Konto z podanymi danymi już istnieje.")
           : (errorMsg.value = "Założenie konta nie powiodło się.");
       }
+      mainStore.off();
     });
     return {
       fname,

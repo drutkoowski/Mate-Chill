@@ -1,5 +1,5 @@
 <template>
-  <v-btn>{{ text }}</v-btn>
+  <v-btn :color="color">{{ text }}</v-btn>
 </template>
 
 <script>
@@ -8,6 +8,10 @@ export default {
   name: "Button",
   props: {
     text: String,
+    color: {
+      required: false,
+      type: String,
+    },
   },
 };
 </script>

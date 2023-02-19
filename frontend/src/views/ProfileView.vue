@@ -48,9 +48,10 @@
               <th class="text-left font-weight-bold">Cena</th>
               <th class="text-left font-weight-bold">Data</th>
               <th class="text-left font-weight-bold">Status</th>
+              <th class="text-left font-weight-bold">Akcje</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody v-if="orders.length > 0">
             <tr v-for="order in orders" :key="order.id">
               <td>{{ order.id }}</td>
               <td>
@@ -62,13 +63,28 @@
               </td>
               <td>{{ order.summary_cost }} zł</td>
               <td>{{ order.created_at }}</td>
-              <td>
+              <td>{{ order.status }}</td>
+              <td class="profile__orders__actions">
                 <Button
                   :text="'Opłać'"
                   v-if="order.status === 'nieopłacone'"
+                  :color="'#E85959FF'"
                   @click.prevent="handlePayment(order)"
                 />
-                <span v-else>{{ order.status }}</span>
+                <Button
+                  :text="'Oceń'"
+                  v-if="order.status === 'zakończone'"
+                  @click.prevent="openReviewModal(order)"
+                />
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <tr>
+              <td colspan="5">
+                <h3 class="text-center mt-5">
+                  Nie złożyłeś jeszcze żadnych zamówień.
+                </h3>
               </td>
             </tr>
           </tbody>
@@ -76,6 +92,7 @@
       </div>
     </div>
   </div>
+  <!--	modal password change-->
   <ModalOverlay
     v-if="passwordModalVisible"
     @closeModal="passwordModalVisible = false"
@@ -105,11 +122,31 @@
       </form>
     </div>
   </ModalOverlay>
+
+  <!--	modal review-->
+  <ModalOverlay
+    v-if="passwordModalVisible"
+    @closeModal="passwordModalVisible = false"
+  >
+    <div class="review-modal">
+      <form @submit.prevent="reviewModalVisible">
+        <v-text-field
+          v-model="reviewComment"
+          bg-color="white"
+          type="password"
+          color="green-darken-1"
+          label="Twój komentarz do produktu"
+        ></v-text-field>
+        <Button :text="'Dodaj ocenę'" type="submit" />
+      </form>
+    </div>
+  </ModalOverlay>
 </template>
 
 <script>
 import useUserStore from "@/stores/user";
 import useToastStore from "@/stores/toast";
+import useMainStore from "@/stores/main";
 import Button from "@/components/Button.vue";
 import { useField, useForm } from "vee-validate";
 import axios from "axios";
@@ -121,9 +158,12 @@ export default {
     return {
       orders: [],
       passwordModalVisible: false,
+      reviewModalVisible: false,
       newPassword2: "",
       newPassword: "",
       passwordErrorMessage: "",
+      reviewComment: "",
+      commentedOrder: {},
     };
   },
   // eslint-disable-next-line vue/no-reserved-component-names
@@ -153,6 +193,7 @@ export default {
     const phone = useField("phone");
     const userStore = useUserStore();
     const submit = handleSubmit(async function (values) {
+      const mainStore = useMainStore();
       const toastStore = useToastStore();
       try {
         await axios.patch("account/update", {
@@ -177,6 +218,7 @@ export default {
           "#E85959FF"
         );
       }
+      mainStore.on();
     });
 
     fname.value.value = userStore.user.first_name;
@@ -195,6 +237,11 @@ export default {
     this.orders = ordersResponse.data;
   },
   methods: {
+    async openReviewModal(order) {
+      console.log(order);
+      this.reviewModalVisible = true;
+      this.commentedOrder = order;
+    },
     async handlePayment(order) {
       const toastStore = useToastStore();
       const data = [];
@@ -275,6 +322,11 @@ export default {
   }
   .v-table {
     border-radius: 10px;
+  }
+  &__actions {
+    button {
+      width: 100%;
+    }
   }
 }
 .password-change {
