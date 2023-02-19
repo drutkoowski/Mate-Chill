@@ -66,7 +66,12 @@ export default {
     const { handleSubmit, handleReset } = useForm({
       validationSchema: {
         email(value) {
-          if (/^[a-z0-9.]{1,64}@[a-z0-9.]{1,64}$/i.test(value)) return true;
+          if (
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+              value
+            )
+          )
+            return true;
 
           return "Pole musi zawierać poprawny adres e-mail.";
         },

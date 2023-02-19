@@ -117,7 +117,12 @@ export default {
           return "Numer telefonu powinien składać się z 9 cyfr.";
         },
         email(value) {
-          if (/^[a-z.-]+@[a-z.-]+\.[a-z]+$/i.test(value)) return true;
+          if (
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+              value
+            )
+          )
+            return true;
 
           return "Pole musi zawierać poprawny adres e-mail.";
         },
