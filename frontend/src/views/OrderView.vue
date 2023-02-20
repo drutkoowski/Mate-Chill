@@ -81,6 +81,12 @@
           Cena do zapłaty:
           <b>{{ (itemsPriceSum + shippingCost).toFixed(2) }}</b> zł
         </p>
+        <h5 class="mt-12">Metody płatności</h5>
+        <div class="order__resume__payment-methods">
+          <img src="/blik.svg" alt="Visa" />
+          <img src="/visa.svg" alt="Mastercard" />
+          <img src="/mastercard.svg" alt="Blik" />
+        </div>
         <Button
           :text="'Zatwierdź kupno i przejdź do płatności'"
           class="order__submit mt-8"
@@ -281,6 +287,15 @@ form {
   }
   h3 {
     font-size: 2.5rem;
+  }
+  &__payment-methods {
+    display: flex;
+    column-gap: 1rem;
+    align-items: center;
+    img {
+      width: 3rem;
+      height: 3rem;
+    }
   }
 }
 .order__submit {

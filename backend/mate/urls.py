@@ -25,4 +25,5 @@ urlpatterns = [
     path('api/', include('products.api.urls', namespace='products')),
     path('api/', include('orders.api.urls', namespace='orders')),
     path('api/payments/', include('payments.api.urls', namespace='payments')),
+    path('api/reviews/', include('reviews.api.urls', namespace='reviews')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

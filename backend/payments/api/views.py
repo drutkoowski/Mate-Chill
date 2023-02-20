@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from stripe.error import SignatureVerificationError
 
+from accounts.models import Account
 from mate import settings
 from mate.settings import FRONTEND_CHECKOUT_SUCCESS_URL, FRONTEND_CHECKOUT_FAILED_URL
 from orders.models import Order
@@ -18,7 +19,6 @@ webhook_secret = settings.STRIPE_WEBHOOK_SECRET
 
 class CreateCheckoutSession(APIView):
     def post(self, request):
-        print(request.data)
         data = request.data['data']
         shipping_cost = request.data['shippingCost']
         order_id = request.data['orderId']
@@ -33,7 +33,6 @@ class CreateCheckoutSession(APIView):
                   },
                 }
               ]
-            print(data)
             for element in data:
                 line_items.append(
                     {
@@ -91,5 +90,5 @@ class WebHook(generics.GenericAPIView):
             order = Order.objects.get(pk=order_id)
             order.status = 'opłacone'
             order.save()
-            Payment.objects.create(user=request.user, order=order, amount=order.summary_cost)
+            Payment.objects.create(user=order.user, order=order, amount=order.summary_cost)
         return HttpResponse(status=200)

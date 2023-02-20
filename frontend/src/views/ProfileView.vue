@@ -124,23 +124,12 @@
   </ModalOverlay>
 
   <!--	modal review-->
-  <ModalOverlay
-    v-if="passwordModalVisible"
-    @closeModal="passwordModalVisible = false"
-  >
-    <div class="review-modal">
-      <form @submit.prevent="reviewModalVisible">
-        <v-text-field
-          v-model="reviewComment"
-          bg-color="white"
-          type="password"
-          color="green-darken-1"
-          label="Twój komentarz do produktu"
-        ></v-text-field>
-        <Button :text="'Dodaj ocenę'" type="submit" />
-      </form>
-    </div>
-  </ModalOverlay>
+  <OrderProductReview
+    :order="commentedOrder"
+    v-if="reviewModalVisible"
+    @closeModal="reviewModalVisible = false"
+    @isReviewPosted="reviewModalVisible = false"
+  />
 </template>
 
 <script>
@@ -151,6 +140,7 @@ import Button from "@/components/Button.vue";
 import { useField, useForm } from "vee-validate";
 import axios from "axios";
 import ModalOverlay from "@/components/ModalOverlay.vue";
+import OrderProductReview from "@/components/orders/OrderProductReview.vue";
 
 export default {
   name: "ProfileView",
@@ -162,12 +152,11 @@ export default {
       newPassword2: "",
       newPassword: "",
       passwordErrorMessage: "",
-      reviewComment: "",
       commentedOrder: {},
     };
   },
   // eslint-disable-next-line vue/no-reserved-component-names
-  components: { ModalOverlay, Button },
+  components: { OrderProductReview, ModalOverlay, Button },
   setup() {
     const { handleSubmit, handleReset } = useForm({
       validationSchema: {
@@ -191,6 +180,7 @@ export default {
     const fname = useField("fname");
     const lname = useField("lname");
     const phone = useField("phone");
+
     const userStore = useUserStore();
     const submit = handleSubmit(async function (values) {
       const mainStore = useMainStore();
@@ -237,8 +227,7 @@ export default {
     this.orders = ordersResponse.data;
   },
   methods: {
-    async openReviewModal(order) {
-      console.log(order);
+    openReviewModal(order) {
       this.reviewModalVisible = true;
       this.commentedOrder = order;
     },
@@ -336,6 +325,17 @@ export default {
   }
   &__button {
     margin-top: 1rem;
+  }
+}
+.review-modal {
+  h3 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  &__error {
+    height: 2rem;
+    font-size: 1.2rem;
+    color: var(--primary-red);
   }
 }
 </style>

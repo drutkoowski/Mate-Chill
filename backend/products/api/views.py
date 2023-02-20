@@ -3,12 +3,15 @@ import re
 from django.db.models import Q, Count
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 
+from orders.models import Order
 from products.api.serializers import ProductSerializer, CategorySerializer, ManufacturerSerializer
 from products.models import Product, Category, Manufacturer
+from reviews.api.serializers import ReviewSerializer
 
 
 class ProductViewSet(viewsets.ViewSet):
@@ -65,8 +68,10 @@ class ProductViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, slug=None):
         item = get_object_or_404(Product, slug=slug)
-        serializer = ProductSerializer(item)
-        return Response(serializer.data)
+        product = ProductSerializer(item)
+        reviews = ReviewSerializer(item.reviews.all(), many=True)
+        data = product.data | {'reviews': reviews.data}
+        return Response(data)
 
 
 class ProductLatestListView(APIView):
@@ -92,12 +97,17 @@ class ProductBestsellersListView(APIView):
 
 
 class SingleProductView(viewsets.ViewSet):
-    authentication_classes = []
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def retrieve(self, request, pk=None):
         item = get_object_or_404(Product, pk=pk)
-        serializer = ProductSerializer(item)
-        return Response(serializer.data)
+        product = ProductSerializer(item)
+        reviews = ReviewSerializer(item.reviews.all(), many=True)
+        is_current_buyer = Order.objects.filter(~Q(status='nieopłacone'),
+                                                user__pk=request.user.pk,
+                                                products__product=pk).exists()
+        data = product.data | {'reviews': reviews.data} | {"is_bought_by_current" : is_current_buyer}
+        return Response(data)
 
 
 class CategoryViewSet(viewsets.ViewSet):
