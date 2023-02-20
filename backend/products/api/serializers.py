@@ -1,3 +1,4 @@
+from django.db.models import Avg, Value, DecimalField
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
@@ -65,6 +66,7 @@ class ProductSerializer(ModelSerializer):
     images = ProductImageSerializer(many=True)
     variants = SerializerMethodField()
     parent = ProductParentSerializer(many=False)
+    rating = SerializerMethodField()
 
     class Meta:
         model = Product
@@ -76,3 +78,6 @@ class ProductSerializer(ModelSerializer):
             serializer = ProductSerializer(all_variants, many=True)
             return serializer.data
         return []
+
+    def get_rating(self, obj):
+        return obj.reviews.all().aggregate(Avg('stars')).get('stars__avg') or 0

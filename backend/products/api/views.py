@@ -15,7 +15,7 @@ from reviews.api.serializers import ReviewSerializer
 
 
 class ProductViewSet(viewsets.ViewSet):
-    authentication_classes = []
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self, obj):
         return Product.objects.filter(num_available__gt=0)
@@ -70,7 +70,10 @@ class ProductViewSet(viewsets.ViewSet):
         item = get_object_or_404(Product, slug=slug)
         product = ProductSerializer(item)
         reviews = ReviewSerializer(item.reviews.all(), many=True)
-        data = product.data | {'reviews': reviews.data}
+        is_current_buyer = Order.objects.filter(~Q(status='nieopłacone'),
+                                                user__pk=request.user.pk,
+                                                products__product=item.pk).exists()
+        data = product.data | {'reviews': reviews.data} | {"is_bought_by_current": is_current_buyer}
         return Response(data)
 
 
@@ -106,7 +109,7 @@ class SingleProductView(viewsets.ViewSet):
         is_current_buyer = Order.objects.filter(~Q(status='nieopłacone'),
                                                 user__pk=request.user.pk,
                                                 products__product=pk).exists()
-        data = product.data | {'reviews': reviews.data} | {"is_bought_by_current" : is_current_buyer}
+        data = product.data | {'reviews': reviews.data} | {"is_bought_by_current": is_current_buyer}
         return Response(data)
 
 

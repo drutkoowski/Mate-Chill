@@ -41,9 +41,6 @@ export default {
       return import.meta.env.VITE_STATIC_ORGIN + this.item.main_image;
     },
   },
-  created() {
-    console.log(this.item);
-  },
 };
 </script>
 

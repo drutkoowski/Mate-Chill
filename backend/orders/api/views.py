@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from orders.api.serializers import OrderSerializer
 
@@ -8,6 +9,7 @@ from products.models import Product
 
 
 class OrderViewSet(viewsets.ViewSet):
+    permission_classes = (IsAuthenticated,)
 
     def list(self, request):
         queryset = Order.objects.filter(user__pk=request.user.pk).order_by('-created_at').all()

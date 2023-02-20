@@ -5,9 +5,16 @@
     </div>
     <div class="product-info-container">
       <h1>{{ item.name }}</h1>
-      <div class="product-info-container__rating">
-        <v-rating v-model="rating" readonly color="white" />
-        <span>3.2/5.00 <span class="text-stone-50">(3 opinie)</span></span>
+      <div class="product-info-container__rating" v-if="item.reviews">
+        <v-rating v-model="item.rating" readonly color="white" />
+        <span
+          >{{ item.rating.toFixed(2) }}/5.00
+          <span
+            class="text-stone-50 product-info-container__rating__counter"
+            @click.prevent="openReviewModal"
+            >({{ item.reviews?.length }} opinie)</span
+          ></span
+        >
       </div>
       <div class="product-info-container__description mt-5">
         <p>
@@ -51,6 +58,37 @@
       <ShippingInfo />
     </div>
   </div>
+  <ModalOverlay @closeModal="hideReviewModal" v-if="reviewModalVisible">
+    <div class="review-modal">
+      <h3>Opinie do produktu {{ item.name }}</h3>
+      <ReviewsList :reviews="item.reviews" />
+      <div
+        class="review-modal__add"
+        v-if="userStore.isAuthenticated && item.is_bought_by_current"
+      >
+        <form @submit="reviewProduct">
+          <v-textarea
+            label="Treść Twojej opinii"
+            bg-color="white"
+            v-model="reviewContent.value.value"
+          />
+          <p class="review-modal__error">{{ reviewErrorMessage }}</p>
+          <div>
+            <v-rating
+              color="#04b60e"
+              hover
+              v-model="starsCount.value.value"
+            ></v-rating>
+          </div>
+          <Button :text="'Dodaj opinię'" type="submit" />
+        </form>
+      </div>
+      <span v-else
+        >Tylko zalogowani użytkownicy, którzy zakupili produkt, mogą dodać
+        opinię.</span
+      >
+    </div>
+  </ModalOverlay>
 </template>
 
 <script>
@@ -58,28 +96,85 @@ import ProductGallery from "@/components/products/ProductGallery.vue";
 import Button from "@/components/Button.vue";
 import VariationFilter from "@/components/filters/variationFilter.vue";
 import ShippingInfo from "@/components/products/product/shippingInfo.vue";
+import ProductCounter from "@/components/ProductCounter.vue";
+import ModalOverlay from "@/components/ModalOverlay.vue";
+import ReviewsList from "@/components/reviews/ReviewsList.vue";
 import cookies from "@/utils/cookies";
 import useToastStore from "@/stores/toast";
+import useUserStore from "@/stores/user";
 import axios from "axios";
-import ProductCounter from "@/components/ProductCounter.vue";
+import { useField, useForm } from "vee-validate";
+import { ref } from "vue";
 
 export default {
   name: "ProductDetailView",
   components: {
+    ModalOverlay,
     ProductCounter,
     ShippingInfo,
     VariationFilter,
+    ReviewsList,
     // eslint-disable-next-line vue/no-reserved-component-names
     Button,
     ProductGallery,
+  },
+  setup() {
+    const reviewErrorMessage = ref("");
+    const reviewModalVisible = ref(false);
+    const userStore = ref(useUserStore());
+    const item = ref({});
+    const reviewContent = useField("reviewContent");
+    const starsCount = useField("starsCount");
+    const { handleSubmit, handleReset } = useForm({});
+    const openReviewModal = function () {
+      if (item.value.reviews.length > 0 || item.value.is_bought_by_current) {
+        reviewModalVisible.value = true;
+      }
+    };
+    const hideReviewModal = function () {
+      reviewModalVisible.value = false;
+    };
+    const reviewProduct = handleSubmit(async function () {
+      reviewErrorMessage.value = "";
+      if (starsCount.value.value && reviewContent.value.value.length > 3) {
+        const toastStore = useToastStore();
+        try {
+          await axios.post("reviews/create", {
+            product: item.value.id,
+            content: reviewContent.value.value,
+            stars: starsCount.value.value,
+          });
+          toastStore.displayToast("Opinia została dodana pomyślnie", "success");
+        } catch (error) {
+          toastStore.displayToast(
+            "Dodawanie opinii nie powiodło się.",
+            "#E85959FF"
+          );
+        }
+        hideReviewModal();
+        return;
+      }
+      return (reviewErrorMessage.value =
+        "Pole komentarza powinno zawierać conajmniej 3 znaki.");
+    });
+    return {
+      userStore,
+      item,
+      reviewModalVisible,
+      starsCount,
+      reviewContent,
+      reviewErrorMessage,
+      reviewProduct,
+      handleReset,
+      openReviewModal,
+      hideReviewModal,
+    };
   },
   async created() {
     await this.fetchData();
   },
   data: () => ({
-    item: {},
     images: [],
-    rating: 3,
     itemCounter: 1,
     maxAvailable: 0,
     counterColor: "green",
@@ -134,6 +229,7 @@ export default {
       } catch (error) {
         this.$router.push({ name: "products" });
       }
+      console.log(this.item);
     },
     addToCart() {
       const store = useToastStore();
@@ -204,6 +300,10 @@ export default {
   &__rating {
     display: flex;
     align-items: center;
+    &__counter {
+      cursor: pointer;
+      transition: all 0.3s ease-in;
+    }
   }
   &__customizable {
     display: flex;
@@ -258,5 +358,34 @@ export default {
   button {
     height: 3rem;
   }
+}
+.review-modal {
+  width: 45rem;
+  height: 35rem;
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  &::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+  .review-list {
+    flex-grow: 1;
+    overflow-y: scroll;
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    margin-bottom: 0.5rem;
+  }
+  .review-list::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+  &__add {
+    margin-top: auto;
+  }
+}
+
+.review-modal__error {
+  height: 2rem;
 }
 </style>

@@ -50,7 +50,7 @@ export default {
       required: true,
     },
   },
-  emits: ["isReviewPosted"],
+  emits: ["isReviewPosted", "closeModal"],
   setup(props, { emit }) {
     const reviewErrorMessage = ref("");
     const { handleSubmit } = useForm({});
