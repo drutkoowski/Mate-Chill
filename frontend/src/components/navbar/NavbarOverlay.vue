@@ -1,6 +1,7 @@
 <template>
   <PageOverlay :closeAvailable="true">
-    <div>
+    <img src="/logo.svg" alt="Site logo" class="page-overlay__logo" />
+    <div class="navbar">
       <p>
         <router-link :to="{ name: 'products' }">Produkty</router-link>
       </p>
@@ -33,7 +34,9 @@
         </div>
       </div>
     </div>
-    <span class="page-overlay__close">&#10005;</span>
+    <span class="page-overlay__close" @click.prevent="this.$emit('hideOverlay')"
+      >&#10005;</span
+    >
   </PageOverlay>
 </template>
 
@@ -63,17 +66,29 @@ export default {
 </script>
 
 <style scoped lang="scss">
-p {
-  font-size: 3rem;
+.navbar {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5rem;
+  width: 30rem;
+  p {
+    font-size: 2rem;
+    text-align: center;
+  }
+  &__categories {
+    font-size: 0.75rem;
+  }
 }
+
 .cart {
   display: flex;
   align-items: center;
+  justify-content: center;
   position: relative;
   div {
     img {
       margin-left: 1rem;
-      height: 2.5rem;
+      height: 2rem;
     }
     div {
       display: flex;
@@ -98,5 +113,13 @@ p {
   position: fixed;
   top: 2%;
   right: 5%;
+}
+
+.page-overlay__logo {
+  position: fixed;
+  top: 2%;
+  left: 5%;
+  height: 3rem;
+  width: 2rem;
 }
 </style>

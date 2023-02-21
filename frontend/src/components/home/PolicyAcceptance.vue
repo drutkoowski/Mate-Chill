@@ -40,6 +40,28 @@ export default {
   border-radius: 10px;
   &__accept {
     float: right;
+    button {
+      @include respond(phone-md-sm) {
+        height: 1rem;
+      }
+    }
+  }
+  p {
+    @include respond(tab-sm) {
+      padding: 0.5rem;
+    }
+    @include respond(phone-md) {
+      font-size: 0.85rem;
+    }
+    @include respond(phone-md-sm) {
+      font-size: 0.75rem;
+    }
+  }
+  @include respond(tab-sm) {
+    width: 25rem;
+  }
+  @include respond(phone-md) {
+    width: 92%;
   }
 }
 </style>

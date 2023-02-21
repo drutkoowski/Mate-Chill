@@ -77,7 +77,9 @@
         this.$emit('openModal', type);
         isHamburgerClicked = !isHamburgerClicked;
       "
+      @hideOverlay="isHamburgerClicked = !isHamburgerClicked"
     />
+    <LowerNav class="navbar__phone__categories" />
   </div>
 </template>
 
@@ -300,20 +302,50 @@ ul li:hover {
     font-size: 2rem;
     color: var(--primary-white);
     column-gap: 1rem;
+    @include respond(phone-md-sm) {
+      font-size: 1.5rem;
+    }
+    @include respond(phone-sm) {
+      font-size: 1.15rem;
+    }
     img {
       width: 4rem;
       height: 4rem;
+      @include respond(phone-md-sm) {
+        width: 3rem;
+        height: 3rem;
+      }
+      @include respond(phone-sm) {
+        width: 2rem;
+        height: 2rem;
+      }
     }
     svg {
       height: 2rem;
       width: 2rem;
       margin-left: auto;
+      @include respond(phone-sm) {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
     }
     h3 {
       a,
       span {
         font-family: "Pacifico", cursive;
       }
+    }
+  }
+  &__categories {
+    width: 100%;
+    font-size: 0.85rem;
+    margin: 1rem auto;
+    @include respond(phone-md) {
+      font-size: 0.65rem;
+    }
+    @include respond(phone-sm) {
+      font-size: 0.6rem;
+      font-weight: bolder;
     }
   }
 }

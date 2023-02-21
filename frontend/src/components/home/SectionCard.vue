@@ -57,9 +57,26 @@ export default {
     display: flex;
     flex-direction: column;
     height: 7rem;
-    p {
+    &__categories {
       color: var(--primary-white);
       margin-top: auto;
+      @include respond(tab-sm) {
+        font-size: 0.75rem;
+      }
+      @include respond(phone-md-lg) {
+        margin-bottom: 1rem;
+      }
+      @include respond(phone-md) {
+        font-size: 1rem;
+      }
+    }
+    &__header {
+      @include respond(tab-sm) {
+        font-size: 0.75rem;
+      }
+      @include respond(phone-md) {
+        font-size: 1.2rem;
+      }
     }
   }
   .v-card-subtitle {
