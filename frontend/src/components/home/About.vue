@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-center mt-20 mb-10 text-5xl">O nas</h1>
+  <h1 class="text-center">O nas</h1>
   <div class="wrapper">
     <div class="about__container">
       <p>
@@ -36,15 +36,36 @@ h1,
 p {
   color: var(--primary-white);
 }
-
+h1 {
+  font-size: 3rem;
+  margin-top: 5rem;
+  @include respond(tab-sm) {
+    font-size: 2rem;
+  }
+}
 .wrapper {
   display: grid;
   grid-template-columns: 0.15fr 1fr 0.15fr;
+  margin-top: 5rem;
+  @include respond(md-desktop) {
+    grid-template-columns: 1fr;
+  }
   .about__container {
     grid-column: 2/3;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 5rem;
+    @include respond(md-desktop) {
+      grid-column: 1/2;
+    }
+    @include respond(tab-sm) {
+      font-size: 1rem;
+      grid-template-columns: 1fr;
+      grid-row-gap: 3rem;
+    }
+    @include respond(phone-md-lg) {
+      font-size: 0.8rem;
+    }
   }
 }
 </style>

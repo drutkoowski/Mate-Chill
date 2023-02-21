@@ -51,6 +51,24 @@ div {
   img {
     height: 15rem;
     width: 15rem;
+    @include respond(tab-md) {
+      height: 10rem;
+      width: 10rem;
+    }
+    @include respond(tab-sm) {
+      height: 7rem;
+      width: 7rem;
+    }
+    @include respond(phone-lg) {
+      height: 5rem;
+      width: 5rem;
+    }
+    @include respond(phone-md-lg) {
+      height: 3.5rem;
+      width: 3.5rem;
+      justify-self: center;
+      margin: 0 auto;
+    }
   }
   p {
     color: var(--primary-white);
