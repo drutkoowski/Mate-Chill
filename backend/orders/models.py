@@ -11,7 +11,7 @@ ORDER_STATUS_CHOICES = (
 
 
 class Order(models.Model):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='orders')
     total_product_cost = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, default=0.00)
     shipping_cost = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, default=9.99)
     summary_cost = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)

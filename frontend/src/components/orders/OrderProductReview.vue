@@ -58,6 +58,7 @@ export default {
     const commentContent = useField("commentContent");
     const starsCount = useField("starsCount");
     const reviewProduct = handleSubmit(async function (values) {
+      reviewErrorMessage.value = "";
       const toastStore = useToastStore();
       try {
         await axios.post("reviews/create", {
@@ -69,9 +70,10 @@ export default {
         emit("isReviewPosted");
       } catch (error) {
         toastStore.displayToast(
-          "Wystąpił błąd przy zamieszczaniu opinii,",
+          "Wystąpił błąd przy zamieszczaniu opinii.",
           "#E85959FF"
         );
+        reviewErrorMessage.value = "Wystąpił błąd przy zamieszczaniu opinii.";
       }
     });
     return {

@@ -30,14 +30,9 @@ class ProductImageSerializer(ModelSerializer):
 
 
 class ProductVariantSerializer(ModelSerializer):
-    category = CategorySerializer(many=True)
-    manufacturer = ManufacturerSerializer()
-    link = serializers.URLField(source='get_absolute_url')
-    images = ProductImageSerializer(many=True)
-
     class Meta:
         model = Product
-        fields = "__all__"
+        fields = ("id", "name", "slug",)
 
 
 class ProductParentSerializer(ModelSerializer):

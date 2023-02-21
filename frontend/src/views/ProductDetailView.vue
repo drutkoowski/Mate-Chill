@@ -61,11 +61,9 @@
   <ModalOverlay @closeModal="hideReviewModal" v-if="reviewModalVisible">
     <div class="review-modal">
       <h3>Opinie do produktu {{ item.name }}</h3>
-      <ReviewsList :reviews="item.reviews" />
-      <div
-        class="review-modal__add"
-        v-if="userStore.isAuthenticated && item.is_bought_by_current"
-      >
+      <ReviewsList :reviews="item.reviews" v-if="item.reviews.length > 0" />
+      <p class="my-auto text-stone-200" v-else>Brak dodanych opinii.</p>
+      <div class="review-modal__add" v-if="isBuyer">
         <form @submit="reviewProduct">
           <v-textarea
             label="Treść Twojej opinii"
@@ -121,14 +119,25 @@ export default {
   setup() {
     const reviewErrorMessage = ref("");
     const reviewModalVisible = ref(false);
+    const isBuyer = ref(false);
     const userStore = ref(useUserStore());
     const item = ref({});
     const reviewContent = useField("reviewContent");
     const starsCount = useField("starsCount");
     const { handleSubmit, handleReset } = useForm({});
     const openReviewModal = function () {
-      if (item.value.reviews.length > 0 || item.value.is_bought_by_current) {
+      isBuyer.value =
+        userStore.value.user.products_bought?.filter(
+          (obj) => obj.id === item.value.id
+        ).length > 0;
+      if (item.value.reviews.length > 0 || isBuyer.value) {
         reviewModalVisible.value = true;
+      } else {
+        const toastStore = useToastStore();
+        toastStore.displayToast(
+          "Tylko zalogowani użytkownicy, którzy zakupili produkt, mogą dodać opinię.",
+          "#E85959FF"
+        );
       }
     };
     const hideReviewModal = function () {
@@ -158,6 +167,7 @@ export default {
         "Pole komentarza powinno zawierać conajmniej 3 znaki.");
     });
     return {
+      isBuyer,
       userStore,
       item,
       reviewModalVisible,
@@ -229,7 +239,6 @@ export default {
       } catch (error) {
         this.$router.push({ name: "products" });
       }
-      console.log(this.item);
     },
     addToCart() {
       const store = useToastStore();
