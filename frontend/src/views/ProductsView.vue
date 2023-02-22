@@ -104,13 +104,25 @@
             />
           </div>
         </div>
-
-        <div
-          class="products-container__products__container__filters"
-          @click.prevent="openFilters"
-        >
-          <img src="/options.svg" alt="Filters icon" />
-          <p>Filtry</p>
+        <div class="products-container__products__container__filters-wrapper">
+          <div
+            class="products-container__products__container__filters"
+            @click.prevent="openFilters"
+          >
+            <img src="/options.svg" alt="Filters icon" />
+            <p>Filtry</p>
+          </div>
+          <small v-if="queryParamsCount > 0"
+            >Aktywne ({{ queryParamsCount }})
+            <ul>
+              <li v-if="minPrice.value.value">Cena minimalna</li>
+              <li v-if="maxPrice.value.value">Cena maksymalna</li>
+              <li v-if="manufacturer.value.value">Producent</li>
+              <li v-if="category.value.value">Kategoria</li>
+              <li v-if="subCategory.value.value">Podkategoria</li>
+              <li v-if="grams.value.value">Gramatura</li>
+            </ul>
+          </small>
         </div>
 
         <small class="mt-2">{{ pagination_count }} wyszukanych produktów</small>
@@ -220,6 +232,7 @@ export default {
       categories: [],
       mainCategories: [],
       query: "",
+      queryParamsCount: 0,
     };
   },
   async beforeMount() {
@@ -263,6 +276,7 @@ export default {
     },
     handleClear(event) {
       this.handleReset(event);
+      this.isFilterVisible = false;
       this.$router.replace({ query: {} });
     },
     async submitFilters(event) {
@@ -306,6 +320,7 @@ export default {
       this.minPrice.value.value = route.query?.minPrice;
       this.maxPrice.value.value = route.query?.maxPrice;
       this.grams.value.value = route.query?.grams;
+      this.queryParamsCount = Object.keys(route.query).length;
       const response = await this.fetchData(route.query);
       this.fillCards(response);
     },
@@ -399,6 +414,21 @@ export default {
       }
       &--sorting {
         width: 15rem;
+      }
+    }
+    &__filters-wrapper {
+      display: flex;
+      align-items: center;
+      column-gap: 2rem;
+      small {
+        display: flex;
+        column-gap: 2rem;
+        color: var(--primary-white);
+        ul {
+          display: flex;
+          column-gap: 1rem;
+          color: var(--primary-green);
+        }
       }
     }
     &__filters {
