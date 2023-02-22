@@ -1,65 +1,77 @@
 <template>
   <div class="products-container">
-    <div class="products-container__filters">
-      <form ref="form" lazy-validation @submit.prevent="submitFilters">
-        <div class="filter-element">
-          <filterInput
-            :type="'number'"
-            :text="'Cena od'"
-            v-model="minPrice.value.value"
-          />
-          <filterInput
-            :type="'number'"
-            :text="'Cena do'"
-            v-model="maxPrice.value.value"
-          />
-        </div>
-        <div class="filter-element">
-          <filterInput
-            :type="'select'"
-            :text="'Producent'"
-            v-model="manufacturer.value.value"
-            :items="manufacturers"
-            multiple
-          />
-        </div>
-        <div class="filter-element">
-          <filterInput
-            :type="'select'"
-            :text="'Kategorie'"
-            v-model="category.value.value"
-            :items="mainCategories.map((item) => item.name)"
-          />
-        </div>
-        <div class="filter-element" v-if="category.value.value">
-          <filterInput
-            :type="'select'"
-            :text="`Podkategorie
+    <v-slide-x-transition>
+      <div
+        class="products-container__filters"
+        v-if="isFilterVisible"
+        @keyup.esc="isFilterVisible = false"
+      >
+        <form ref="form" lazy-validation @submit.prevent="submitFilters">
+          <div class="filter-element">
+            <filterInput
+              :type="'number'"
+              :text="'Cena od'"
+              v-model="minPrice.value.value"
+            />
+            <filterInput
+              :type="'number'"
+              :text="'Cena do'"
+              v-model="maxPrice.value.value"
+            />
+          </div>
+          <div class="filter-element">
+            <filterInput
+              :type="'select'"
+              :text="'Producent'"
+              v-model="manufacturer.value.value"
+              :items="manufacturers"
+              multiple
+            />
+          </div>
+          <div class="filter-element">
+            <filterInput
+              :type="'select'"
+              :text="'Kategorie'"
+              v-model="category.value.value"
+              :items="mainCategories.map((item) => item.name)"
+            />
+          </div>
+          <div class="filter-element" v-if="category.value.value">
+            <filterInput
+              :type="'select'"
+              :text="`Podkategorie
            ${category.value.value}`"
-            v-model="subCategory.value.value"
-            :items="getSubCategories(category.value.value)"
-            multiple
-          />
-        </div>
-        <div class="filter-element">
-          <filterInput
-            :type="'select'"
-            :text="'Gramatura'"
-            :items="['25g', '50g', '250g', '500g', '1000g', 'większe']"
-            v-model="grams.value.value"
-            multiple
-          />
-        </div>
-        <div class="products-container__filters__buttons">
-          <Button :text="'Szukaj'" class="button" type="submit" />
-          <Button
-            :text="'Wyczyść'"
-            class="button"
-            @click.prevent="handleClear"
-          />
-        </div>
-      </form>
-    </div>
+              v-model="subCategory.value.value"
+              :items="getSubCategories(category.value.value)"
+              multiple
+            />
+          </div>
+          <div class="filter-element">
+            <filterInput
+              :type="'select'"
+              :text="'Gramatura'"
+              :items="['25g', '50g', '250g', '500g', '1000g', 'większe']"
+              v-model="grams.value.value"
+              multiple
+            />
+          </div>
+          <div class="products-container__filters__buttons">
+            <Button :text="'Szukaj'" class="button" type="submit" />
+            <Button
+              :text="'Wyczyść'"
+              class="button"
+              @click.prevent="handleClear"
+            />
+          </div>
+        </form>
+        <span
+          class="products-container__filters__close"
+          @click.prevent="isFilterVisible = false"
+          >&#10005;</span
+        >
+      </div>
+    </v-slide-x-transition>
+
     <div class="products-container__products">
       <div class="products-container__products__container">
         <div class="products-container__products__container__indicators">
@@ -92,7 +104,16 @@
             />
           </div>
         </div>
-        <small class="mb-2">{{ pagination_count }} wyszukanych produktów</small>
+
+        <div
+          class="products-container__products__container__filters"
+          @click.prevent="openFilters"
+        >
+          <img src="/options.svg" alt="Filters icon" />
+          <p>Filtry</p>
+        </div>
+
+        <small class="mt-2">{{ pagination_count }} wyszukanych produktów</small>
         <div class="products-container__products__container__wrapper">
           <ProductCard
             v-for="product in products"
@@ -128,6 +149,7 @@ import Paginator from "@/components/Paginator.vue";
 import ProductCard from "@/components/products/ProductCard.vue";
 import axios from "axios";
 import { useField, useForm } from "vee-validate";
+import { ref } from "vue";
 
 export default {
   name: "ProductsView",
@@ -146,6 +168,10 @@ export default {
     const category = useField("category");
     const subCategory = useField("subcategory");
     const grams = useField("grams");
+    const isFilterVisible = ref(false);
+    function openFilters() {
+      isFilterVisible.value = !isFilterVisible.value;
+    }
     const submit = handleSubmit(async function (values) {
       const manufacturerString = values.manufacturer
         ? values.manufacturer.toString()
@@ -157,6 +183,7 @@ export default {
         ? values.subcategory.toString()
         : values.subcategory;
       const gramsString = values.grams ? values.grams.toString() : values.grams;
+      isFilterVisible.value = false;
       return {
         minPrice: values.minPrice,
         maxPrice: values.maxPrice,
@@ -173,6 +200,8 @@ export default {
       grams,
       category,
       subCategory,
+      isFilterVisible,
+      openFilters,
       submit,
       handleReset,
     };
@@ -202,12 +231,14 @@ export default {
       this.mainCategories = categories.data.filter(
         (item) => item.subcategories.length > 0
       );
-      // categories.data.some((item) => item.name === this.$route.query.category)
       let products;
       if (this.$route.query) {
         products = await this.fetchData(this.$route.query, "products/");
-        this.category.value.value = this.$route.query.category;
+        this.category.value.value = this.$route.query?.category;
         this.subCategory.value.value = this.$route.query?.subcategory;
+        this.minPrice.value.value = this.$route.query?.minPrice;
+        this.maxPrice.value.value = this.$route.query?.maxPrice;
+        this.grams.value.value = this.$route.query?.grams;
       } else {
         products = await this.fetchData({}, "products/");
       }
@@ -272,6 +303,9 @@ export default {
     async $route(route) {
       this.category.value.value = route.query?.category;
       this.subCategory.value.value = route.query?.subcategory;
+      this.minPrice.value.value = route.query?.minPrice;
+      this.maxPrice.value.value = route.query?.maxPrice;
+      this.grams.value.value = route.query?.grams;
       const response = await this.fetchData(route.query);
       this.fillCards(response);
     },
@@ -281,22 +315,39 @@ export default {
 
 <style lang="scss" scoped>
 .products-container {
-  display: grid;
-  grid-template-columns: 0.4fr 1fr;
-  grid-column-gap: 5rem;
   width: 100%;
 
   padding: 0 5rem;
-  margin-top: 5rem;
+  margin-top: 2.5rem;
 }
 
 .products-container__filters {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--color-background);
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  height: fit-content;
   padding: 1rem 2rem;
   border-radius: 10px;
-
+  border-right: 3px solid var(--primary-green);
+  &__close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: var(--primary-white);
+    transform: scale(1.5);
+    cursor: pointer;
+    transition: all 0.3s ease-in;
+    &:hover {
+      transform: translateX(5px);
+    }
+  }
+  form {
+    margin: auto 0;
+  }
   .filter-element {
     display: flex;
     column-gap: 2rem;
@@ -329,7 +380,7 @@ export default {
       grid-template-columns: repeat(4, 1fr);
       grid-column-gap: 2rem;
       grid-row-gap: 2rem;
-      padding: 0.5rem 0.5rem;
+      padding: 0.5rem 0;
       &__no-results {
         grid-row: 1/-1;
         grid-column: 1/-1;
@@ -350,9 +401,34 @@ export default {
         width: 15rem;
       }
     }
+    &__filters {
+      display: flex;
+      align-items: center;
+      width: 10rem;
+      height: 2rem;
+      color: var(--primary-white);
+      font-weight: bolder;
+      cursor: pointer;
+      transition: all 0.3s ease-in;
+      background-color: var(--color-background);
+      border: 2px solid var(--primary-white);
+      justify-content: center;
+      border-radius: 5px;
+      padding: 20px 0;
+      column-gap: 10px;
+      &:hover {
+        transform: scale(1.03);
+      }
+      img {
+        width: 2rem;
+        height: 2rem;
+      }
+    }
   }
   &__paginator {
     background-color: var(--color-background);
   }
 }
+
+// animations
 </style>

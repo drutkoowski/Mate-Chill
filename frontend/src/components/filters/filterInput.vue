@@ -4,7 +4,7 @@
     :label="text"
     :items="items"
     :multiple="multiple"
-    bg-color="white"
+    :bg-color="'white'"
   />
   <v-text-field :type="type" :label="text" bg-color="white" v-else />
 </template>
@@ -28,4 +28,4 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss"></style>
