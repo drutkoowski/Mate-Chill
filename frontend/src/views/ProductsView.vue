@@ -115,8 +115,8 @@
           <small v-if="queryParamsCount > 0"
             >Aktywne ({{ queryParamsCount }})
             <ul>
-              <li v-if="minPrice.value.value">Cena minimalna</li>
-              <li v-if="maxPrice.value.value">Cena maksymalna</li>
+              <li v-if="minPrice.value.value">Cena min.</li>
+              <li v-if="maxPrice.value.value">Cena maks.</li>
               <li v-if="manufacturer.value.value">Producent</li>
               <li v-if="category.value.value">Kategoria</li>
               <li v-if="subCategory.value.value">Podkategoria</li>
@@ -125,7 +125,9 @@
           </small>
         </div>
 
-        <small class="mt-2">{{ pagination_count }} wyszukanych produktów</small>
+        <small class="mt-2 products-container__products__container__counter"
+          >{{ pagination_count }} wyszukanych produktów</small
+        >
         <div class="products-container__products__container__wrapper">
           <ProductCard
             v-for="product in products"
@@ -291,7 +293,9 @@ export default {
       this.pagination.prevUrl = response.data.previous;
       this.products = response.data.results;
       this.pagination_count = response.data.count;
-      this.pagination.maxPages = Math.ceil(this.pagination_count / 8);
+      this.pagination.maxPages = Math.ceil(
+        this.pagination_count / import.meta.env.VITE_PAGINATION_SIZE
+      );
     },
     async paginate(page) {
       let url;
@@ -334,6 +338,9 @@ export default {
 
   padding: 0 5rem;
   margin-top: 2.5rem;
+  @include respond(tab-desktop) {
+    padding: 0;
+  }
 }
 
 .products-container__filters {
@@ -387,7 +394,9 @@ export default {
     background-color: var(--color-background);
     display: flex;
     flex-direction: column;
-
+    &__counter {
+      color: var(--primary-white);
+    }
     &__wrapper {
       flex-grow: 1;
       display: grid;
@@ -396,6 +405,19 @@ export default {
       grid-column-gap: 2rem;
       grid-row-gap: 2rem;
       padding: 0.5rem 0;
+      @include respond(tab-land) {
+        grid-column-gap: 1rem;
+      }
+      @include respond(tab-md) {
+        grid-template-columns: repeat(2, 1fr);
+        grid-column-gap: 3rem;
+      }
+      @include respond(phone-lg) {
+        grid-column-gap: 1rem;
+      }
+      @include respond(phone-md-lg) {
+        grid-template-columns: 1fr;
+      }
       &__no-results {
         grid-row: 1/-1;
         grid-column: 1/-1;
@@ -403,31 +425,89 @@ export default {
           width: 15rem;
           height: 15rem;
           margin: 0 auto;
+          @include respond(tab-md) {
+            width: 12rem;
+            height: 12rem;
+          }
+          @include respond(tab-sm) {
+            margin-top: 5rem;
+            width: 10rem;
+            height: 10rem;
+          }
         }
       }
     }
     &__indicators {
       display: flex;
       column-gap: 2rem;
+      @include respond(phone-lg) {
+        margin-top: 7rem;
+      }
+      @include respond(phone-md-lg) {
+        column-gap: 0.5rem;
+      }
+      @include respond(phone-md-sm) {
+        flex-direction: column;
+      }
       &--search {
         flex-grow: 1;
       }
       &--sorting {
         width: 15rem;
+        @include respond(tab-sm) {
+          width: 10rem;
+        }
+        @include respond(phone-md-lg) {
+          width: 7rem;
+        }
+        @include respond(phone-md-sm) {
+          width: 10rem;
+        }
       }
     }
     &__filters-wrapper {
       display: flex;
       align-items: center;
       column-gap: 2rem;
+      @include respond(tab-land) {
+        margin: 1rem 0;
+      }
+      @include respond(tab-md) {
+        flex-direction: column;
+      }
+      div {
+        @include respond(tab-md) {
+          margin-right: auto;
+        }
+      }
       small {
         display: flex;
         column-gap: 2rem;
         color: var(--primary-white);
+        @include respond(phone-lg) {
+          font-size: 1rem !important;
+          flex-direction: column;
+          margin-top: 1rem;
+        }
         ul {
           display: flex;
           column-gap: 1rem;
           color: var(--primary-green);
+          @include respond(phone-lg) {
+            font-size: 0.6rem !important;
+            flex-direction: column;
+          }
+        }
+        @include respond(tab-md) {
+          margin-top: 1rem;
+          margin-right: auto;
+        }
+        @include respond(tab-sm) {
+          column-gap: 0.5rem;
+          font-size: 0.7rem;
+        }
+        @include respond(phone-lg) {
+          font-size: 0.55rem;
         }
       }
     }
@@ -459,6 +539,4 @@ export default {
     background-color: var(--color-background);
   }
 }
-
-// animations
 </style>

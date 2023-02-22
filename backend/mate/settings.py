@@ -132,7 +132,7 @@ REST_FRAMEWORK = {
         "accounts.authenticate.CustomAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": ("rest_framework.pagination.PageNumberPagination",),
-    "PAGE_SIZE": 8
+    "PAGE_SIZE": 32
 }
 
 from datetime import timedelta
@@ -179,7 +179,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Warsaw'
 
 USE_I18N = True
 
