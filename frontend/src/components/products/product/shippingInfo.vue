@@ -26,6 +26,9 @@ export default {
 .shipping-wrapper {
   display: table;
   color: var(--primary-white);
+  @include respond(phone-md) {
+    font-size: 0.75rem;
+  }
   &__element {
     display: table-row;
     vertical-align: middle;

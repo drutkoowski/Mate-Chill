@@ -4,6 +4,7 @@
     show-arrows
     hide-delimiter-background
     hide-delimiters
+    contain
     class="carousel"
   >
     <template v-slot:prev="{ props }">
@@ -109,6 +110,15 @@ svg {
   transition: all 0.3s ease-in-out;
   &:hover {
     transform: scale(1.05);
+  }
+}
+
+@include respond(phone-md) {
+  .bi-arrow-right {
+    margin-right: -15px;
+  }
+  .bi-arrow-left {
+    margin-left: -15px;
   }
 }
 </style>

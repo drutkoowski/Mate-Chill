@@ -26,11 +26,18 @@ export default {
 <style scoped lang="scss">
 h5 {
   color: var(--primary-white);
+  @include respond(phone-sm) {
+    font-size: 0.95rem;
+  }
 }
 .icon {
   transition: all 0.3s ease-in;
   &:hover {
     transform: scale(1.1);
+  }
+  @include respond(phone-sm) {
+    width: 0.5rem;
+    height: 0.5rem;
   }
 }
 </style>

@@ -1,5 +1,19 @@
 <template>
   <div class="wrapper">
+    <div class="product-info">
+      <h1>{{ item.name }}</h1>
+      <div class="product-info__rating" v-if="item.reviews">
+        <v-rating v-model="item.rating" readonly color="white" />
+        <span
+          >{{ item.rating.toFixed(2) }}/5.00
+          <span
+            class="text-stone-50 product-info__rating__counter"
+            @click.prevent="openReviewModal"
+            >({{ item.reviews?.length }} opinie)</span
+          ></span
+        >
+      </div>
+    </div>
     <div class="product-image-container">
       <ProductGallery :slides="images" />
     </div>
@@ -32,7 +46,18 @@
         </p>
         <p><span class="primary-green">Opis: </span> {{ item.description }}</p>
       </div>
-
+      <p v-if="item.capacity">
+        <span class="primary-green">Pojemność:</span> {{ item.capacity }} ml
+      </p>
+      <p v-if="item.grams_weight">
+        <span class="primary-green">Gramatura:</span> {{ item.grams_weight }} g
+      </p>
+      <p v-if="item.color">
+        <span class="primary-green">Kolor:</span> {{ item.color }}
+      </p>
+      <p v-if="item.cm_length">
+        <span class="primary-green">Długość:</span> {{ item.cm_length }} cm
+      </p>
       <div class="product-info-container__customizable" v-if="hasVariants">
         <variationFilter
           class="mt-2"
@@ -293,11 +318,69 @@ export default {
   padding: 0 5rem;
   grid-column-gap: 5rem;
   margin-top: 5rem;
+  @include respond(tab-desktop) {
+    padding: 0;
+  }
+  @include respond(tab-land) {
+    grid-template-columns: 0.5fr 1fr;
+  }
+  @include respond(tab-md) {
+    grid-template-columns: 1fr;
+  }
 }
+.product-info {
+  display: none;
+  @include respond(tab-md) {
+    display: block;
+  }
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    @include respond(phone-lg) {
+      margin-top: 5rem;
+    }
+    @include respond(phone-md) {
+      font-size: 1.75rem;
+    }
+    @include respond(phone-sm) {
+      font-size: 1.45rem;
+    }
+  }
+  &__rating {
+    display: flex;
+    align-items: center;
+    margin-left: -7px;
+    @include respond(phone-md) {
+      flex-direction: column;
+      div,
+      span {
+        margin-right: auto;
+      }
+      span {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
 .product-image-container {
   height: 100%;
   width: 30rem;
   justify-self: center;
+  @include respond(tab-md) {
+    margin-top: 3rem;
+  }
+  @include respond(phone-lg) {
+    transform: scale(0.9);
+    width: auto;
+  }
+  @include respond(phone-md) {
+    margin-top: 1rem;
+  }
+  @include respond(phone-sm) {
+    margin-top: 0;
+    transform: scale(0.8);
+  }
 }
 .product-info-container {
   &__description {
@@ -313,11 +396,17 @@ export default {
       cursor: pointer;
       transition: all 0.3s ease-in;
     }
+    @include respond(tab-md) {
+      display: none;
+    }
   }
   &__customizable {
     display: flex;
     align-items: center;
     width: 25rem;
+    @include respond(phone-md) {
+      width: 15rem;
+    }
   }
   &__price {
     font-size: 2rem;
@@ -333,10 +422,19 @@ export default {
     font-size: 2rem;
     font-weight: bold;
     color: var(--primary-green);
+    @include respond(tab-land) {
+      font-size: 1.5rem;
+    }
+    @include respond(tab-md) {
+      display: none;
+    }
   }
   p {
     font-size: 1.2rem;
     color: var(--primary-white);
+    @include respond(tab-land) {
+      font-size: 1rem;
+    }
   }
 }
 
@@ -344,6 +442,9 @@ export default {
   display: flex;
   column-gap: 2rem;
   margin-top: 2rem;
+  @include respond(phone-sm) {
+    column-gap: 1rem;
+  }
   &__counter {
     display: flex;
     align-items: center;
@@ -352,8 +453,9 @@ export default {
     border-radius: 5px;
     padding: 0 5px;
     outline: 1px solid var(--primary-white);
-    h5 {
-      color: var(--color-background);
+    @include respond(phone-sm) {
+      height: 3rem;
+      width: 5rem;
     }
     .v-icon {
       width: 2rem;
@@ -362,10 +464,17 @@ export default {
       &:hover {
         transform: scale(1.15);
       }
+      @include respond(phone-sm) {
+        width: 1.5rem;
+      }
     }
   }
   button {
     height: 3rem;
+    @include respond(phone-sm) {
+      height: 3rem;
+      font-size: 0.75rem;
+    }
   }
 }
 .review-modal {
@@ -396,5 +505,11 @@ export default {
 
 .review-modal__error {
   height: 2rem;
+}
+
+@include respond(phone-md) {
+  .v-rating__wrapper {
+    width: 1rem !important;
+  }
 }
 </style>
