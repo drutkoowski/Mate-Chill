@@ -77,7 +77,7 @@
           </li>
         </ul>
         <p>Dostawa: {{ shippingCost }} zł</p>
-        <p class="text-3xl">
+        <p class="order__resume__price">
           Cena do zapłaty:
           <b>{{ (itemsPriceSum + shippingCost).toFixed(2) }}</b> zł
         </p>
@@ -247,38 +247,122 @@ form {
   grid-column: 1/-1;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  @include respond(md-desktop) {
+    grid-template-columns: 0.5fr 1fr;
+  }
+  @include respond(tab-desktop) {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+  @include respond(phone-sm) {
+    justify-items: center;
+  }
 }
 .order__contact {
   display: flex;
   flex-direction: column;
   grid-column: 1/2;
   color: var(--primary-white);
+  @include respond(tab-desktop) {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-column-gap: 1rem;
+  }
+  @include respond(tab-port) {
+    grid-template-columns: unset;
+  }
+  @include respond(phone-lg) {
+    margin-top: 5rem;
+  }
+
   h3 {
     color: var(--primary-green);
+    @include respond(tab-desktop) {
+      grid-column: 1/-1;
+    }
   }
   .v-text-field {
     margin-top: 1rem;
     width: 25rem;
+    @include respond(tab-port) {
+      width: 15rem;
+    }
+    @include respond(phone-sm) {
+      justify-self: center;
+    }
   }
   &__city {
     display: flex;
     column-gap: 2rem;
+    @include respond(phone-lg) {
+      flex-direction: column;
+    }
     .v-text-field:first-of-type {
       width: 10rem;
+      @include respond(phone-lg) {
+        width: 15rem;
+      }
     }
     .v-text-field:nth-of-type(2) {
       width: 13rem;
+      @include respond(phone-lg) {
+        width: 15rem;
+      }
     }
   }
 }
 .order__resume {
   color: var(--primary-white);
+  @include respond(phone-sm) {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+  }
+  &__price {
+    font-size: 2.5rem;
+    @include respond(tab-desktop) {
+      font-size: 2rem;
+    }
+    @include respond(tab-desktop) {
+      font-size: 1.75rem;
+    }
+    @include respond(tab-desktop) {
+      font-size: 1.5rem;
+    }
+    @include respond(phone-sm) {
+      font-size: 1.35rem;
+    }
+  }
+  hr {
+    @include respond(phone-md) {
+      width: 15rem;
+      margin: 0 auto;
+    }
+  }
   ul {
     margin-top: 2rem;
     li {
       font-size: 1rem;
+      @include respond(phone-md-lg) {
+        font-size: 0.85rem;
+      }
+      @include respond(phone-lg) {
+        font-size: 0.75rem;
+      }
+      @include respond(tab-desktop) {
+        font-size: 0.65rem;
+      }
       span {
         font-size: 1.5rem;
+        @include respond(phone-md-lg) {
+          font-size: 1.25rem;
+        }
+        @include respond(phone-lg) {
+          font-size: 1rem;
+        }
+        @include respond(tab-desktop) {
+          font-size: 0.9rem;
+        }
       }
     }
   }
@@ -287,6 +371,12 @@ form {
   }
   h3 {
     font-size: 2.5rem;
+    @include respond(phone-md-lg) {
+      font-size: 2rem;
+    }
+    @include respond(phone-sm) {
+      text-align: center;
+    }
   }
   &__payment-methods {
     display: flex;
@@ -300,5 +390,13 @@ form {
 }
 .order__submit {
   height: 3rem !important;
+  @include respond(phone-md) {
+    height: 4rem;
+    font-size: 0.75rem;
+  }
+  @include respond(phone-sm) {
+    height: 5rem;
+    font-size: 0.65rem;
+  }
 }
 </style>
