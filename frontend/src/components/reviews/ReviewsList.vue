@@ -37,6 +37,19 @@ export default {
   color: var(--color-background);
   border-radius: 5px;
   padding: 0.5rem;
+  @include respond(phone-lg) {
+    padding: 0 5px;
+  }
+  ::v-deep .v-rating__wrapper {
+    @include respond(phone-lg) {
+      width: 1rem;
+    }
+  }
+  ::v-deep .v-rating {
+    @include respond(phone-lg) {
+      margin-left: 1rem;
+    }
+  }
   &__list {
     margin-bottom: 1rem;
   }
@@ -45,11 +58,17 @@ export default {
     h3 {
       font-weight: bold;
       align-self: center;
+      @include respond(phone-lg) {
+        font-size: 0.8rem;
+      }
     }
   }
   &__content {
     display: flex;
     align-items: center;
+    @include respond(phone-lg) {
+      font-size: 0.8rem;
+    }
     p {
       text-align: start;
       margin: 0 0 5px 0;

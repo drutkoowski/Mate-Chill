@@ -477,6 +477,15 @@ export default {
     }
   }
 }
+::v-deep .modal {
+  @include respond(tab-sm) {
+    padding: 1rem 1rem;
+  }
+  @include respond(phone-lg) {
+    padding: 2rem 1rem;
+  }
+}
+
 .review-modal {
   width: 45rem;
   height: 35rem;
@@ -487,6 +496,18 @@ export default {
   flex-direction: column;
   &::-webkit-scrollbar {
     display: none; /* Safari and Chrome */
+  }
+  @include respond(tab-land) {
+    width: 35rem;
+  }
+  @include respond(phone-lg) {
+    width: 25rem;
+  }
+  @include respond(phone-md-sm) {
+    width: 20rem;
+  }
+  h3 {
+    font-size: 1rem;
   }
   .review-list {
     flex-grow: 1;
