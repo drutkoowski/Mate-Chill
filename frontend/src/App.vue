@@ -1,6 +1,6 @@
 <template>
   <!--	navbar-->
-  <Navbar @openModal="openModal" />
+  <Navbar @openModalLogin="openModalLogin" @openModalSignup="openModalSignup" />
 
   <!--	view-->
   <RouterView />
@@ -58,10 +58,13 @@ export default {
     PageOverlay,
   },
   methods: {
-    openModal(type) {
-      type === "login"
-        ? (this.modalLoginVisible = true)
-        : (this.modalSignupVisible = true);
+    openModalLogin() {
+      this.modalLoginVisible = true;
+      this.modalSignupVisible = false;
+    },
+    openModalSignup() {
+      this.modalSignupVisible = true;
+      this.modalLoginVisible = false;
     },
     closeModal() {
       this.modalSignupVisible = false;

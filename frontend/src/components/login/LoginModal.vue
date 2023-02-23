@@ -24,7 +24,7 @@
         @click:append="showPassword = !showPassword"
       ></v-text-field>
       <FormMessage :text="errorMsg" />
-      <div class="mt-5">
+      <div class="login__buttons">
         <Button :text="'Zaloguj'" class="button" type="submit" />
         <Button :text="'Wyczyść'" class="button" @click.prevent="handleClear" />
       </div>
@@ -125,9 +125,28 @@ export default {
 .login {
   width: 35rem;
   padding: 0 2rem;
+  @include respond(tab-sm) {
+    width: 30rem;
+    padding: 0 1rem;
+  }
+  @include respond(phone-lg) {
+    width: 25rem;
+    height: 20rem;
+  }
+  @include respond(phone-md) {
+    width: 100%;
+    height: 20rem;
+  }
   h3 {
     font-size: 2rem;
     color: var(--primary-white);
+    @include respond(phone-lg) {
+      margin: 1rem 0;
+    }
+  }
+  &__buttons {
+    display: flex;
+    justify-content: center;
   }
 }
 .button {

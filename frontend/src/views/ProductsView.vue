@@ -369,6 +369,9 @@ export default {
   }
   form {
     margin: auto 0;
+    @include respond(tab-port) {
+      width: 20rem;
+    }
   }
   .filter-element {
     display: flex;
@@ -394,6 +397,9 @@ export default {
     background-color: var(--color-background);
     display: flex;
     flex-direction: column;
+    @include respond(phone-lg) {
+      margin-top: 2rem;
+    }
     &__counter {
       color: var(--primary-white);
     }

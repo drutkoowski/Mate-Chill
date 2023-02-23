@@ -2,37 +2,38 @@
   <PageOverlay :closeAvailable="true">
     <img src="/logo.svg" alt="Site logo" class="page-overlay__logo" />
     <div class="navbar">
-      <p>
+      <p @click.prevent="this.$emit('hideOverlay')">
         <router-link :to="{ name: 'products' }">Produkty</router-link>
       </p>
       <p
-        @click.prevent="this.$emit('openModal', 'login')"
+        @click.prevent="this.$emit('openModalLogin')"
         v-if="!userStore.isAuthenticated"
       >
         Zaloguj
       </p>
       <p
-        @click.prevent="this.$emit('openModal', 'signup')"
+        @click.prevent="this.$emit('openModalSignup')"
         v-if="!userStore.isAuthenticated"
       >
         Zarejestruj
       </p>
-      <p v-if="userStore.isAuthenticated">
+      <p v-if="userStore.isAuthenticated" @click="this.$emit('hideOverlay')">
         <router-link :to="{ name: 'profile' }">Twój Panel</router-link>
       </p>
       <p @click.prevent="userLogout" v-if="userStore.isAuthenticated">
         Wyloguj
       </p>
-
-      <div class="cart">
-        <p>Koszyk</p>
-        <div>
-          <img class="cart-logo" src="/bag.svg" alt="Shopping cart logo" />
+      <router-link :to="{ name: 'cart' }">
+        <div class="cart" @click="this.$emit('hideOverlay')">
+          <p>Koszyk</p>
           <div>
-            <span>{{ mainStore.cartItems.length }}</span>
+            <img class="cart-logo" src="/bag.svg" alt="Shopping cart logo" />
+            <div>
+              <span>{{ mainStore.cartItems.length }}</span>
+            </div>
           </div>
-        </div>
-      </div>
+        </div></router-link
+      >
     </div>
     <span class="page-overlay__close" @click.prevent="this.$emit('hideOverlay')"
       >&#10005;</span
@@ -54,7 +55,7 @@ export default {
     const mainStore = useMainStore();
     return { userStore, mainStore };
   },
-  emits: ["openModal"],
+  emits: ["openModalLogin", "openModalSignup"],
   methods: {
     async userLogout() {
       await userAuth.logoutUser();

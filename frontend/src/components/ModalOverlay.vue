@@ -41,6 +41,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 1232132112;
   max-width: 100vw;
   max-height: 100vh;
   height: 100vh;
@@ -63,6 +64,9 @@ export default {
 
   @include respond(phone-lg) {
     padding: 1rem 2rem;
+  }
+  @include respond(phone-sm) {
+    padding: 1rem 1rem;
   }
 
   &__close {

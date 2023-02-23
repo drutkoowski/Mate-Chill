@@ -16,13 +16,13 @@
         <router-link :to="{ name: 'products' }">Produkty</router-link>
       </li>
       <li
-        @click.prevent="this.$emit('openModal', 'login')"
+        @click.prevent="this.$emit('openModalLogin')"
         v-if="!userStore.isAuthenticated"
       >
         Zaloguj
       </li>
       <li
-        @click.prevent="this.$emit('openModal', 'signup')"
+        @click.prevent="this.$emit('openModalSignup')"
         v-if="!userStore.isAuthenticated"
       >
         Zarejestruj
@@ -73,8 +73,12 @@
     </svg>
     <NavbarOverlay
       v-if="isHamburgerClicked"
-      @openModal="
-        this.$emit('openModal', type);
+      @openModalLogin="
+        this.$emit('openModalLogin');
+        isHamburgerClicked = !isHamburgerClicked;
+      "
+      @openModalSignup="
+        this.$emit('openModalSignup');
         isHamburgerClicked = !isHamburgerClicked;
       "
       @hideOverlay="isHamburgerClicked = !isHamburgerClicked"
@@ -107,7 +111,7 @@ export default {
     const mainStore = useMainStore();
     return { userStore, mainStore };
   },
-  emits: ["openModal"],
+  emits: ["openModalLogin", "openModalSignup"],
   methods: {
     async userLogout() {
       await userAuth.logoutUser();
@@ -295,6 +299,7 @@ ul li:hover {
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 2;
     right: 0;
     padding: 10px 10px;
     background-color: var(--color-background);

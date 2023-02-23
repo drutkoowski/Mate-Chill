@@ -22,7 +22,7 @@ export default {
   props: ["color", "text"],
   data: () => ({
     snackbar: false,
-    timeout: 5000,
+    timeout: 215000,
   }),
   setup() {
     const store = useToastStore();
@@ -38,11 +38,20 @@ export default {
 
 .toast-message {
   font-size: 1rem;
+  @include respond(phone-lg) {
+    font-size: 0.75rem;
+  }
 }
 .toast-close {
   position: absolute;
   top: 3%;
   right: 1%;
   cursor: pointer;
+}
+
+::v-deep .v-snackbar__wrapper {
+  @include respond(phone-lg) {
+    min-width: 200px !important;
+  }
 }
 </style>
