@@ -293,7 +293,6 @@ ul li:hover {
     flex-wrap: wrap;
     align-items: center;
     position: fixed;
-    z-index: 15;
     top: 0;
     left: 0;
     right: 0;

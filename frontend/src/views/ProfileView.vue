@@ -281,6 +281,9 @@ export default {
   flex-grow: 1;
   display: grid;
   grid-template-columns: 0.15fr 1fr 0.15fr;
+  @include respond(md-desktop) {
+    grid-template-columns: 1fr;
+  }
 }
 .profile {
   grid-column: 2/3;
@@ -289,6 +292,15 @@ export default {
   grid-column-gap: 5rem;
   justify-items: stretch;
   color: var(--primary-white);
+  @include respond(md-desktop) {
+    grid-column: 1/2;
+  }
+  @include respond(tab-desktop) {
+    grid-template-columns: 1fr;
+  }
+  @include respond(phone-lg) {
+    margin-top: 3rem;
+  }
 }
 .profile__info {
   h3 {
@@ -299,27 +311,68 @@ export default {
     display: flex;
     column-gap: 2rem;
   }
+  form {
+    @include respond(tab-desktop) {
+      width: 25rem;
+    }
+    @include respond(phone-md) {
+      width: 20rem;
+    }
+    @include respond(phone-md-sm) {
+      width: 16.5rem;
+    }
+  }
 }
 
 .profile__orders {
   display: flex;
   flex-direction: column;
   justify-self: stretch;
+
   h3 {
     font-size: 2rem;
     margin-bottom: 2rem;
   }
+  @include respond(tab-port) {
+    overflow-x: auto;
+  }
   .v-table {
     border-radius: 10px;
+    @include respond(tab-port) {
+      width: 55rem;
+      overflow: auto !important;
+      white-space: nowrap;
+      display: unset;
+      font-size: 0.65rem;
+    }
+    @include respond(phone-md-sm) {
+      width: 25rem;
+      font-size: 0.55rem;
+    }
   }
   &__actions {
     button {
       width: 100%;
+      @include respond(tab-port) {
+        width: 1rem;
+        height: 1rem;
+        font-size: 0.5rem;
+      }
     }
   }
 }
 .password-change {
   min-width: 25rem;
+  @include respond(phone-lg) {
+    margin-top: 3rem;
+    width: 20rem;
+    min-width: unset;
+  }
+  @include respond(phone-md-sm) {
+    margin-top: 3rem;
+    width: 16rem;
+    min-width: unset;
+  }
   p {
     height: 2rem;
   }

@@ -87,4 +87,24 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.review-modal {
+  width: 35rem;
+  @include respond(tab-port) {
+    width: 30rem;
+  }
+  @include respond(tab-sm) {
+    width: 25rem;
+  }
+  @include respond(phone-lg) {
+    width: 100%;
+  }
+  h3 {
+    color: var(--primary-white);
+    font-size: 1.5rem;
+    @include respond(phone-md-sm) {
+      font-size: 1.25rem;
+    }
+  }
+}
+</style>

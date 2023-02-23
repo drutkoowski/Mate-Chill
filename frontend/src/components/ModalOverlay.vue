@@ -60,6 +60,11 @@ export default {
   -webkit-box-shadow: 0px 0px 17px -14px rgba(255, 255, 255, 1);
   -moz-box-shadow: 0px 0px 17px -14px rgba(255, 255, 255, 1);
   box-shadow: 0px 0px 17px -14px rgba(255, 255, 255, 1);
+
+  @include respond(phone-lg) {
+    padding: 1rem 2rem;
+  }
+
   &__close {
     position: absolute;
     top: 1rem;
