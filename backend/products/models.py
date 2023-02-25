@@ -16,15 +16,22 @@ def upload_location_gallery(instance, filename):
 
 class Manufacturer(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, blank=True, null=True, unique=True)
 
     def __str__(self):
         return self.name
 
+    def save(
+            self, *args, **kwargs
+    ):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Manufacturer, self).save(*args, **kwargs)
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, blank=True, null=True)
     parent = models.ForeignKey('self', related_name='subcategories', on_delete=models.CASCADE, blank=True, null=True)
 
     class Meta:
@@ -38,6 +45,13 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return 'categories/%s/' % self.slug
+
+    def save(
+            self, *args, **kwargs
+    ):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
 
 
 class Product(models.Model):
