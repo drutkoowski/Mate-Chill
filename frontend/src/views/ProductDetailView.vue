@@ -260,7 +260,7 @@ export default {
         let images = [this.item.main_image];
         if (this.item.images.length > 0)
           images = [...images, ...this.item.images.map((element) => element.image)];
-        this.images = images;
+          this.images = images;
       } catch (error) {
         this.$router.push({ name: "products" });
       }

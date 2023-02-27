@@ -22,7 +22,7 @@ export default {
   props: ["color", "text"],
   data: () => ({
     snackbar: false,
-    timeout: 215000,
+    timeout: 5000,
   }),
   setup() {
     const store = useToastStore();
