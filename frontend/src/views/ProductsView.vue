@@ -135,8 +135,8 @@
             :product="product"
           />
           <div
-            v-if="products.length === 0"
-            class="products-container__products__container__wrapper__no-results"
+              v-if="products.length === 0 && productsFetched"
+              class="products-container__products__container__wrapper__no-results"
           >
             <img src="/no-results.svg" alt="No results icon" />
             <h3 class="text-center my-10">
@@ -162,8 +162,8 @@ import Button from "@/components/Button.vue";
 import Paginator from "@/components/Paginator.vue";
 import ProductCard from "@/components/products/ProductCard.vue";
 import axios from "axios";
-import { useField, useForm } from "vee-validate";
-import { ref } from "vue";
+import {useField, useForm} from "vee-validate";
+import {ref} from "vue";
 
 export default {
   name: "ProductsView",
@@ -229,6 +229,7 @@ export default {
         nextUrl: "",
       },
       products: [],
+      productsFetched: false,
       pagination_count: 0,
       manufacturers: [],
       categories: [],
@@ -261,6 +262,7 @@ export default {
     } catch (error) {
       console.log(error);
     }
+    this.productsFetched = true
   },
   methods: {
     submitSearch() {
