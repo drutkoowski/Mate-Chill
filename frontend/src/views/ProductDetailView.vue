@@ -126,8 +126,8 @@ import cookies from "@/utils/cookies";
 import useToastStore from "@/stores/toast";
 import useUserStore from "@/stores/user";
 import axios from "axios";
-import { useField, useForm } from "vee-validate";
-import { ref } from "vue";
+import {useField, useForm} from "vee-validate";
+import {ref} from "vue";
 
 export default {
   name: "ProductDetailView",
@@ -259,7 +259,7 @@ export default {
         }
         let images = [this.item.main_image];
         if (this.item.images.length > 0)
-          images = [...this.item.images.map((element) => element.image)];
+          images = [...images, ...this.item.images.map((element) => element.image)];
         this.images = images;
       } catch (error) {
         this.$router.push({ name: "products" });
