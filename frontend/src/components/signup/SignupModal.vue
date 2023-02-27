@@ -67,22 +67,22 @@
         @click:append="showPasswordConfirm = !showPasswordConfirm"
       ></v-text-field>
       <FormMessage :text="errorMsg" />
-      <div class="mt-5">
-        <Button :text="'Załóż konto'" class="button" type="submit" />
-        <Button :text="'Wyczyść'" class="button" @click.prevent="handleClear" />
+      <div class="signup__buttons">
+        <Button :text="'Załóż konto'" class="button" type="submit"/>
+        <Button :text="'Wyczyść'" class="button" @click.prevent="handleClear"/>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-import { useField, useForm } from "vee-validate";
+import {useField, useForm} from "vee-validate";
 import Button from "@/components/Button.vue";
 import FormMessage from "@/components/FormMessage.vue";
 import axios from "axios";
 import useToastStore from "@/stores/toast";
 import useMainStore from "@/stores/main";
-import { ref } from "vue";
+import {ref} from "vue";
 
 export default {
   name: "SignupModal",
@@ -196,9 +196,34 @@ export default {
 .signup {
   width: 35rem;
   padding: 0 2rem;
+  @include respond(tab-sm) {
+    width: 30rem;
+    padding: 0 1rem;
+  }
+  @include respond(phone-lg) {
+    width: 25rem;
+    height: auto;
+  }
+  @include respond(phone-md) {
+    width: 100%;
+    height: auto;
+  }
+  @include respond(phone-md-sm) {
+    width: 18rem;
+  }
+
   h3 {
     font-size: 2rem;
     color: var(--primary-white);
+    @include respond(phone-lg) {
+      margin: 1rem 0;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+
   }
 }
 .button {
