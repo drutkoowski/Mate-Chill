@@ -10,6 +10,7 @@ from mate import settings
 
 
 class CreateUserView(generics.CreateAPIView):
+    authentication_classes = []
     serializer_class = AccountSerializer
 
 

@@ -16,4 +16,5 @@ def order_create_handler(sender, instance, created, **kwargs):
         })
         to_email = instance.user.email
         send_email = EmailMessage(from_email=EMAIL_HOST_USER, subject=mail_subject, body=message, to=[to_email])
+        send_email.content_subtype = 'html'
         send_email.send()
