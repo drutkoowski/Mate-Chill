@@ -9,6 +9,6 @@ COPY ./backend .
 RUN python -m pip install -U --force-reinstall pip
 RUN pip install -r requirements.txt
 
-COPY ./backend/production/start.sh /start.sh
+COPY ../docker/backend-start.sh /start.sh
 RUN sed -i 's/\r$//g' /start.sh
 RUN chmod +x ./start.sh

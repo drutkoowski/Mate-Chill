@@ -6,4 +6,4 @@ set -o nounset
 
 
 python manage.py migrate
-exec gunicorn mate.wsgi --bind 0.0.0.0:8000
+python manage.py runserver
