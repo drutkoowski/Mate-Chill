@@ -8,12 +8,12 @@
 Live demo <br>
 • [Polish](http://18.192.210.224) <br>
 
-** Dummy user credentials ** <br>
+**Dummy user credentials** <br>
 <b> Username</b>: testing@o2.pl <br>
 <b> Password</b>: testing123
 
 
-** Doomie card data to test payments ** <br>
+**Doomie card data to test payments** <br>
 Number: 4242 4242 4242 4242 <br>
 Exp date: 12/34 <br>
 CVV: 123 <br>
@@ -74,21 +74,53 @@ List the ready features here:
 
 ## Screenshots
 ![name](/readme/main_image.png)
+
+
 ![name](/readme/photo_1.png)
+
+
 ![name](/readme/photo_2.png)
+
+
 ![name](/readme/photo_3.png)
+
+
 ![name](/readme/photo_4.png)
+
+
 ![name](/readme/photo_5.png)
+
+
 ![name](/readme/photo_6.png)
+
+
 ![name](/readme/photo_7.png)
+
+
 ![name](/readme/photo_8.png)
+
+
 ![name](/readme/photo_9.png)
+
+
 ![name](/readme/photo_10.png)
+
+
 ![name](/readme/photo_11.png)
+
+
 ![name](/readme/photo_12.png)
+
+
 ![name](/readme/photo_13.png)
+
+
 ![name](/readme/photo_14.png)
+
+
 ![name](/readme/photo_15.png)
+
+
 ![name](/readme/photo_16.png)
 ... and many more!
 
@@ -108,8 +140,8 @@ Then <br>
 5. Aggregate the output of each container <br>
 > 'django-compose up' <br>
 
-** Backend will run at port 8000 ** <br>
-** Frontend will run at port 5372 ** <br>
+**Backend will run at port 8000** <br>
+**Frontend will run at port 5372** <br>
 
 ## Project Status
 Project is: :fire: COMPLETED :fire:
